@@ -19,9 +19,9 @@ interface Supplier {
 
 const SuppliersTable: React.FC = () => {
   const icons = {
-    edit: ICONS.editBlack,
-    approve: ICONS.blueTick,
-    delete: ICONS.deleteRed,
+    i1: ICONS.editBlack,
+    i2: ICONS.blueTick,
+    i3: ICONS.deleteRed,
   };
 
   const data: Supplier[] = [
@@ -222,6 +222,9 @@ const SuppliersTable: React.FC = () => {
         enablePagination={true}
         rowsPerPage={5}
         icons={icons}
+        bg_i1 = "bg-secondary-65"
+        bg_i2 = "bg-blue-10"
+        bg_i3 = "bg-primary-40"
        
       />
     </div>
