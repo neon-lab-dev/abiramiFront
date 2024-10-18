@@ -64,18 +64,17 @@ const Table: React.FC<TableProps> = ({
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  const handleEdit = (row) => {
+  const handleEdit = (row: Record<string, any>) => {
     console.log("Edit clicked for:", row);
   };
-
-  const handleDelete = (row) => {
-    console.log("Delete clicked for:", row);
-  };
-
-  const handleApprove = (row) => {
+  
+  const handleApprove = (row: Record<string, any>) => {
     console.log("Approve clicked for:", row);
   };
-
+  
+  const handleDelete = (row: Record<string, any>) => {
+    console.log("Delete clicked for:", row);
+  };
   return (
     <div className=" w-screen lg:w-[1360px]">
       <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 mr-6 shadow-tableShadow">
@@ -161,12 +160,13 @@ const Table: React.FC<TableProps> = ({
                 ))}
                 <td>
                   <div className="flex px-4 space-x-4">
-                    {row.iconsOrder.map((icon) => {
+                    {row.iconsOrder.map((icon:string) => {
                       if (icon === "i1" && row.i1) {
                         return (
                           <button
                             key="i1"
                             onClick={() => handleEdit(row)}
+                            
                             className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
                           >
                             <img
