@@ -20,7 +20,7 @@ type TStatusCardProps = {
         </div>
   
         <div>
-          <p className="text-neutral-10 text-xs leading-[18px]">{title}</p>
+          <p className="text-neutral-5 text-xs leading-[18px]">{title}</p>
           <h1 className="text-black text-xl font-semibold leading-9 mt-2 text-end">
             {value}
           </h1>
