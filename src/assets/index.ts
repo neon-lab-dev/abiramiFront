@@ -8,6 +8,7 @@ import blueTick from "../assets/icons/blueTick.svg"
 import deleteRed from "../assets/icons/deleteRed.svg"
 import search from "../assets/icons/search.svg"
 import graybar from "../assets/icons/graybar.svg"
+import download from "../assets/icons/download.svg"
 
 
 
@@ -18,7 +19,7 @@ import graybar from "../assets/icons/graybar.svg"
 
 
 export const ICONS = {
-    bell, downArrow,leftArrowBlack,rightArrowBlack,editBlack,blueTick,deleteRed,search,graybar
+    bell, downArrow,leftArrowBlack,rightArrowBlack,editBlack,blueTick,deleteRed,search,graybar,download
 }
 
 

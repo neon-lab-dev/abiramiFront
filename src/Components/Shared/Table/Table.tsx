@@ -42,6 +42,7 @@ const Table: React.FC<TableProps> = ({
   enablePagination = false,
   rowsPerPage = 5,
   icons,
+  tableHeight="400px",
   bg_i1 = "bg-blue-500", 
   bg_i2 = "bg-green-500", 
   bg_i3 = "bg-red-500",
@@ -75,8 +76,24 @@ const Table: React.FC<TableProps> = ({
   const handleDelete = (row: Record<string, any>) => {
     console.log("Delete clicked for:", row);
   };
+  const i3CustomClass=(i1: boolean, i2: boolean, i3: boolean)=>{
+    if (i1 && i2 && i3)
+      return;
+    if(i1 && i2)
+      return;
+    if  (i1 && i3) 
+  return "w-[70px] justify-between";
+  }
+  const i1CustomClass=(i1: boolean, i2: boolean, i3: boolean)=>{
+    if (i1 && i2 && i3)
+      return;
+    if(i1 && i2)
+      return ;
+    if  (i1 && i3) 
+  return "w-[55px]";
+  }
   return (
-    <div className=" w-screen lg:w-[1360px]">
+    <div className={` w-screen lg:w-[1360px] my-5`}>
       <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 mr-6 shadow-tableShadow">
       <div className="w-[95%] md:w-[97%] lg:w-[100%] flex justify-between items-center h-10">
         <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
@@ -91,7 +108,10 @@ const Table: React.FC<TableProps> = ({
       </div>
 
       {/* Wrapper to enable horizontal scrolling */}
-      <div className="overflow-x-auto">
+      <div
+          className={`overflow-x-auto ${!enablePagination ? "overflow-y-auto" : ""}`}
+          style={{ maxHeight: tableHeight }}
+        >
         <table className="min-w-full text-left border-separate border-spacing-y-1">
           <thead className="sticky top-0 bg-secondary-60 min-h-10">
             <tr>
@@ -125,7 +145,7 @@ const Table: React.FC<TableProps> = ({
               </th>
             </tr>
           </thead>
-          <tbody className="bg-secondary-60">
+          <tbody className="bg-secondary-60 ">
             {currentData.map((row, rowIndex) => (
               <tr
                 key={rowIndex}
@@ -141,7 +161,9 @@ const Table: React.FC<TableProps> = ({
                     }`}
                     style={{ width: col.width }}
                   >
-                    {col.accessor === "status" ? (
+                     {col.cellRenderer
+                        ? col.cellRenderer(row) // Use custom cellRenderer if defined
+                        : col.accessor === "status" ? (
                       <span
                         className={`${
                           row.status === "Active"
@@ -159,10 +181,11 @@ const Table: React.FC<TableProps> = ({
                   </td>
                 ))}
                 <td>
-                  <div className="flex px-4 space-x-4">
+                  <div className="flex px-4 space-x-4 ">
                     {row.iconsOrder.map((icon:string) => {
                       if (icon === "i1" && row.i1) {
                         return (
+                          <div className={`${i1CustomClass(row.i1, row.i2, row.i3)}`}>
                           <button
                             key="i1"
                             onClick={() => handleEdit(row)}
@@ -175,6 +198,7 @@ const Table: React.FC<TableProps> = ({
                               className="h-3 w-3"
                             />
                           </button>
+                          </div>
                         );
                       }
                       
@@ -200,7 +224,7 @@ const Table: React.FC<TableProps> = ({
                       
                       if (icon === "i3" && row.i3) {
                         return (
-                          <div className="flex items-center gap-4 ml-4">
+                          <div className={`flex items-center gap-4 ml-4 w- ${i3CustomClass(row.i1, row.i2, row.i3)}`}>
                           <img src={ICONS.graybar} alt="|" className="h-3 w-[2px]"/>
                           <button
                             key="i3"
