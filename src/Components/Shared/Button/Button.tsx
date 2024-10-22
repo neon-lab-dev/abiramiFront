@@ -4,7 +4,8 @@ type ButtonProps = {
   text: string;
   icon?: React.ReactNode;
   imgSrc?: string;
-  bgColor?: string;
+  color?: string;
+  type?: "submit" | "reset" | "button" | undefined;
   iconClassName?: string;
   onClick?: () => void;
 };
@@ -13,14 +14,16 @@ const Button: React.FC<ButtonProps> = ({
   text,
   icon,
   imgSrc,
-  bgColor,
+  color,
+  type,
   iconClassName,
   onClick,
 }) => {
   return (
     <button
+      type={type}
       onClick={onClick}
-      className={`px-5 py-2 rounded-md flex justify-center items-center gap-2 ${bgColor}`}
+      className={`px-5 py-2 rounded-lg font-medium flex justify-center items-center gap-2 ${color}`}
     >
       {imgSrc && (
         <img src={imgSrc} alt={text} className={`w-4  h-4 ${iconClassName}`} />
