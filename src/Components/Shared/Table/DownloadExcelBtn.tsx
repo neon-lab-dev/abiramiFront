@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import * as XLSX from 'xlsx';
 import { ICONS } from '../../../assets';
