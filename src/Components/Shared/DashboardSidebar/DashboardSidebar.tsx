@@ -56,7 +56,7 @@ const DashboardSidebar = () => {
           <div className={`flex justify-center items-center gap-4`}>
             <img
               src={ICONS.logo}
-              alt="logo"
+              alt="abirami Enterprises logo"
               className="w-auto"
             />
             <p
@@ -69,8 +69,8 @@ const DashboardSidebar = () => {
           </div>
           <img
             onClick={() => setCollapse(!collapse)}
-            src={ICONS.CollapseIcon}
-            alt="collapseIcon"
+            src={ICONS.CollapsIcon}
+            alt="CollapseIcon"
             className={`cursor-pointer ${collapse ? "rotate-180" : "rotate-0"}`}
           />
         </div>
@@ -105,11 +105,7 @@ const DashboardSidebar = () => {
         }`}
       >
         <div className={`flex justify-center items-center gap-4`}>
-          <img
-            src={ICONS.Admin}
-            alt="admin"
-            className="w-auto"
-          />
+          <img src={ICONS.Admin} alt="Admin" className="w-auto" />
           <p
             className={`text-white ${
               collapse ? "hidden" : "block"
@@ -121,7 +117,7 @@ const DashboardSidebar = () => {
         <img
           onClick={() => setCollapse(!collapse)}
           src={ICONS.RightArrowIcon}
-          alt="collapseIcon"
+          alt="CollapseIcon"
           className={`cursor-pointer `}
         />
       </div>
