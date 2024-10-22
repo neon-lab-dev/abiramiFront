@@ -56,6 +56,8 @@ export default {
           65: "#EFEFEF",
           70: "rgba(0, 0, 0, 0.05)",
           80: "#E2E8F0",
+          85:"#1c1c1c99",
+          90:"#76B59E"
         },
         sucess: {
           10: "#F2FFFA",
