@@ -12,11 +12,7 @@ export const router = createBrowserRouter([
       {
           path: "",
           element: <Dashboard/>
-      },
-      {
-        path: "/chilent",
-        element: <ErrorPage/>
-    },
+      }
     ]
   },
 ]);
