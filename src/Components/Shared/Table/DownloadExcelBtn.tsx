@@ -1,5 +1,6 @@
 import React from 'react';
 import * as XLSX from 'xlsx';
+import { ICONS } from '../../../assets';
 
 interface DownloadButtonProps {
   data: Array<Record<string, any>>;
@@ -15,10 +16,11 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ data }) => {
 
   return (
     <button
-      className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50 "
+      className=" px-4 flex items-center gap-2 py-2 bg-primary-10 text-white rounded-xl disabled:opacity-50 "
       disabled={false}
       onClick={downloadExcel}
     >
+      <img src={ICONS.download} alt=""/>
       Download Excel
     </button>
   );

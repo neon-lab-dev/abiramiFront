@@ -41,7 +41,6 @@ import SupplierIcon1 from "../assets/icons/SupplierIcon1.svg";
 import SupplierIcon2 from "../assets/icons/SupplierIcon2.svg";
 import SupplierIcon3 from "../assets/icons/SupplierIcon3.svg";
 
-
 // Import images here (if any)
 // import bell from "../assets/icons/Bell.svg"
 
@@ -80,7 +79,6 @@ export const ICONS = {
     SupplierIcon2,
     SupplierIcon3,
 }
-
 
 export const IMAGES = {
   // bell,

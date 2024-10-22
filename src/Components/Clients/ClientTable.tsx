@@ -34,7 +34,7 @@ const ClientTable: React.FC = () => {
       created_date:new Date(2024, 2, 10),
       status: "Active",
       i1: true,
-      i2: true,
+      i2: false,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"]
     },
@@ -47,7 +47,7 @@ const ClientTable: React.FC = () => {
         created_date:new Date(2024, 2, 10),        status: "Active",
         i1: true,
         i2: true,
-        i3: true,
+        i3: false,
         iconsOrder: ["i1", "i2", "i3"]
       },
       {

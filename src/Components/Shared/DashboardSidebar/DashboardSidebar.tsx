@@ -8,6 +8,7 @@ interface NavItem {
   path: string;
 }
 
+
 const DashboardSidebar = () => {
   const [collapse, setCollapse] = useState(false);
   const [activeItem, setActiveItem] = useState<number | null>(null);
