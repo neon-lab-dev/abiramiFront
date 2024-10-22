@@ -15,7 +15,37 @@ export default {
         },
 
         secondary: {
+          10: '#F0F6FF',
+          20: '#FFFBF0',
+          25 : "#fff5dc",
+          30: '#FFFBF0',
+          35: '#FFF5F2',
+          40: '#F5F5FF',
+          45: '#F9FFF2',
+          50: '#F2FFFA',
+          55: '#F2FAFF',
+          60: '#F7F9FB',
+          65: '#0063FF',
+          70: '#FFC327',
+          75: '#FF8F6B',
+          80: '#F5F5FF',
+          85: '#605BFF',
+          90: '#8BC149',
+          95: '#F9FFF2',
+          100: '#A1E3CB',
+          105: '#F2FFFA',
+          110: '#A8C5DA',
+          115: '#A5C1D6',
+          120: '#FFEBEB',
+          125: '#921B1D'
+        },
+        black : "#000",
+  
+        // Add the font colors here
+        neutral: {
+          5 : '#1C1C1C',
           10: "#F0F6FF",
+          15: '#4186F30F',
           20: "#FFFBF0",
           30: "#FFFBF0",
           40: "#F5F5FF",
@@ -26,28 +56,14 @@ export default {
           65: "#EFEFEF",
           70: "rgba(0, 0, 0, 0.05)",
           80: "#E2E8F0",
+          85:"#1c1c1c99",
+          90:"#76B59E"
         },
         sucess: {
           10: "#F2FFFA",
         },
         blue: {
           10: "#EBF3FF",
-        },
-
-        // Add the font colors here
-        neutral: {
-          10: "#1C1C1C",
-          15: "rgba(28, 28, 28, 0.6)",
-          20: "#76B59E",
-          25: "#4186F3",
-          30: "",
-          35: "",
-          40: "",
-          45: "",
-          55: "",
-          60: "",
-          70: "",
-          80: "",
         },
       },
       boxShadow: {

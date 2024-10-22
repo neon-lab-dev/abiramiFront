@@ -229,7 +229,7 @@ interface Purchase {
       enablePagination={false}
       rowsPerPage={5}
       icons={icons}
-      bg_i1="bg-secondary-65"
+      bg_i1="bg-neutral-65"
       bg_i2="bg-primary-40"
       bg_i3="bg-blue-10"
       
