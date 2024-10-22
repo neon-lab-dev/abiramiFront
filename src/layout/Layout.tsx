@@ -13,7 +13,7 @@ const Layout = () => {
         <DashboardHeader />
         <Outlet />
         {/* <ClientListPage/> */}
-        <PurchaseListPage/>
+        {/* <PurchaseListPage/> */}
       </div>
     </div>
   );

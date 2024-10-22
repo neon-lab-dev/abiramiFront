@@ -36,13 +36,12 @@ const CreateSupplier = () => {
   return (
     <>
       <div className="max-h-[calc(100vh-90px)] overflow-y-auto scroll-none">
-        <form onSubmit={handleSubmit} className="">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-[22px]">
           {/* Supplier Information */}
-          <div className="">
-            <h2 className="text-xl font-semibold ml-5">Supplier Information</h2>
-          </div>
+          <div className="flex flex-col gap-[22px]">
+            <h2 className="text-xl font-semibold">Supplier Information</h2>
 
-          <div className="w-full p-5 border-b-2 border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="w-full border-b-2 pb-[22px] border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
             <InputField
               label="Company Name"
               required={true}
@@ -75,12 +74,13 @@ const CreateSupplier = () => {
             />
           </div>
 
-          {/* Contact Information */}
-          <div className="mt-5">
-            <h2 className="text-xl font-semibold ml-5">Contact Information</h2>
           </div>
 
-          <div className="w-full p-5 border-b-2 border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Contact Information */}
+          <div  className="flex flex-col gap-[22px]">
+            <h2 className="text-xl font-semibold">Contact Information</h2>
+        
+          <div className="w-full border-b-2 pb-[22px] border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
             <InputField
               label="Mobile Number"
               inputBg=""
@@ -112,12 +112,12 @@ const CreateSupplier = () => {
             />
           </div>
 
-          {/* Address Information */}
-          <div className="mt-5">
-            <h2 className="text-xl font-semibold ml-5">Address Information</h2>
           </div>
 
-          <div className="w-full p-5 border-b-2 border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Address Information */}
+          <div  className="flex flex-col gap-[22px]">
+            <h2 className="text-xl font-semibold">Address Information</h2>
+          <div className="w-full border-b-2 pb-[22px] border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
             <InputField
               label="Address line 1"
               inputBg=""
@@ -159,7 +159,7 @@ const CreateSupplier = () => {
             />
 
             <InputField
-              label="pinCode"
+              label="Pincode"
               inputBg=""
               type="text"
               placeholder="Enter pinCode"
@@ -189,11 +189,13 @@ const CreateSupplier = () => {
             />
           </div>
 
+          </div>
+
           {/* Status */}
-          <div className="mt-5">
-            <h2 className="text-xl font-semibold mb-4">Status</h2>
+          <div className="flex flex-col gap-[22px]">
+            <h2 className="text-xl font-semibold">Status</h2>
             <div className="flex items-center gap-5">
-              <label className="flex items-center">
+              <label className="flex items-center gap-4">
                 <input
                   type="radio"
                   name="status"
@@ -201,9 +203,9 @@ const CreateSupplier = () => {
                   checked={formData.status === "active"}
                   onChange={handleChange}
                 />
-                <span className="ml-2">Active</span>
+                <span>Active</span>
               </label>
-              <label className="flex items-center">
+              <label className="flex items-center gap-4">
                 <input
                   type="radio"
                   name="status"
@@ -211,13 +213,13 @@ const CreateSupplier = () => {
                   checked={formData.status === "inactive"}
                   onChange={handleChange}
                 />
-                <span className="ml-2">Inactive</span>
+                <span>Inactive</span>
               </label>
             </div>
           </div>
 
           {/* Buttons */}
-          <div className="col-span-3 flex justify-end gap-4 my-6">
+          <div className="col-span-3 flex justify-end gap-4 my-8">
             <Button
               text="Clear Form"
               type="reset"
