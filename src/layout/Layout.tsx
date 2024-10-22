@@ -8,11 +8,10 @@ const Layout = () => {
   return (
     <div className="flex gap-7 w-full h-full   ">
       <DashboardSidebar />
-      <div className="flex-1">
+      <div className="w-full px-4 pr-0 md:px-0 md:pr-7">
         <DashboardHeader />
         <Outlet />
         <ClientListPage/>
-
       </div>
     </div>
   );
