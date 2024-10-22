@@ -11,6 +11,20 @@ import totalPurchase from "../assets/icons/totalPurchase.svg";
 import InputField from "../assets/icons/inputField.svg";
 import button from "../assets/icons/button.svg";
 
+// side bar icon is here
+import logo from "../assets/icons/logo.svg";
+import CollapseIcon from "../assets/icons/collapse.svg";
+import DashboardIcon from "../assets/icons/dashboardNav.svg";
+import ClientsIcon from "../assets/icons/clientsNav.svg";
+import SuppliersIcon from "../assets/icons/suppliesNav.svg";
+
+import InvoicesIcon from "../assets/icons/invoicesNav.svg";
+import InventoryIcon from "../assets/icons/inventoryNav.svg";
+import PurchasesIcon from "../assets/icons/purchasesNav.svg";
+import SettingsIcon from "../assets/icons/settingsNav.svg";
+import RightArrowIcon from "../assets/icons/rightArrow.svg";
+import Admin from "../assets/icons/admin.svg";
+
 
 
 
@@ -29,7 +43,18 @@ export const ICONS = {
     purchaseMonth,
     totalPurchase,
     InputField,
-    button
+    button,
+    logo,
+    CollapseIcon,
+    DashboardIcon,
+    ClientsIcon,
+    SuppliersIcon,
+    InvoicesIcon,
+    InventoryIcon,
+    PurchasesIcon,
+    SettingsIcon,
+    RightArrowIcon,
+    Admin,
 }
 
 
