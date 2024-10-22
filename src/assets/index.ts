@@ -36,7 +36,6 @@ import SettingsIcon from "../assets/icons/settingsnav.svg";
 import RightArrowIcon from "../assets/icons/rightArrow.svg";
 import Admin from "../assets/icons/admin.svg";
 
-
 // Import images here (if any)
 // import bell from "../assets/icons/Bell.svg"
 
@@ -72,7 +71,6 @@ export const ICONS = {
     RightArrowIcon,
     Admin
 }
-
 
 export const IMAGES = {
   // bell,

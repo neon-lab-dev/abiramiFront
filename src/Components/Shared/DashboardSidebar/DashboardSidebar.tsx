@@ -6,6 +6,7 @@ interface NavItem {
   text: string;
 }
 
+
 const DashboardSidebar = () => {
   const [collapse, setCollapse] = useState(false);
 
