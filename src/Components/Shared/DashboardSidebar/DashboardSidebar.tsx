@@ -69,7 +69,7 @@ const DashboardSidebar = () => {
           </div>
           <img
             onClick={() => setCollapse(!collapse)}
-            src={ICONS.CollapsIcon}
+            src={ICONS.CollapseIcon}
             alt="CollapseIcon"
             className={`cursor-pointer ${collapse ? "rotate-180" : "rotate-0"}`}
           />
