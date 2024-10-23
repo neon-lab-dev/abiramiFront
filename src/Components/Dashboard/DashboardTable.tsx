@@ -1,16 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
 
 // Define a type for the row data
 interface Dashboard {
   invoice_id: string;
-  invoice_status: "Paid"|"Painding"|"Draft";
+  invoice_status: "PAID" | "PENDING" | "DRAFT";
   client: string;
-  invoice_type: "Cheque Invoice"|"Quote Invoice"|"Tax invoice";
+  invoice_type: "Cheque Invoice" | "Quote Invoice" | "Tax invoice";
   total_amount: number;
-  tax:number;
-  created_date: Date; 
+  tax: number;
+  created_date: Date;
   i1: boolean;
   i2: boolean;
   i3: boolean;
@@ -18,9 +18,14 @@ interface Dashboard {
 }
 
 const DashboardTable: React.FC = () => {
-    const formatCurrency = (value: number) => {
-        return `₹ ${value.toLocaleString()}`;
-      };
+  const [dropdownOpen1, setDropdownOpen1] = useState(false);
+  const [dropdownOpen2, setDropdownOpen2] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [typeFilter, setTypeFilter] = useState<string>("");
+
+  const formatCurrency = (value: number) => {
+    return `₹ ${value.toLocaleString()}`;
+  };
 
   const icons = {
     i1: ICONS.blueTick,
@@ -31,22 +36,9 @@ const DashboardTable: React.FC = () => {
   const data: Dashboard[] = [
     {
       invoice_id: "kjsdgnbj",
-      invoice_status: "Paid",
+      invoice_status: "PAID",
       client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Cheque Invoice"  ,
-      total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
-      tax:985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "Painding",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Cheque Invoice"  ,
+      invoice_type: "Cheque Invoice",
       total_amount: 985735689,
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
@@ -57,9 +49,9 @@ const DashboardTable: React.FC = () => {
     },
     {
       invoice_id: "kjsdgnbj",
-      invoice_status: "Paid",
+      invoice_status: "PENDING",
       client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Quote Invoice"  ,
+      invoice_type: "Cheque Invoice",
       total_amount: 985735689,
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
@@ -70,22 +62,9 @@ const DashboardTable: React.FC = () => {
     },
     {
       invoice_id: "kjsdgnbj",
-      invoice_status: "Paid",
+      invoice_status: "PAID",
       client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Cheque Invoice"  ,
-      total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
-      tax:985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "Painding",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Tax invoice"  ,
+      invoice_type: "Quote Invoice",
       total_amount: 985735689,
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
@@ -96,9 +75,9 @@ const DashboardTable: React.FC = () => {
     },
     {
       invoice_id: "kjsdgnbj",
-      invoice_status:"Painding",
+      invoice_status: "PAID",
       client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Tax invoice"  ,
+      invoice_type: "Cheque Invoice",
       total_amount: 985735689,
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
@@ -109,12 +88,12 @@ const DashboardTable: React.FC = () => {
     },
     {
       invoice_id: "kjsdgnbj",
-      invoice_status:"Painding",
+      invoice_status: "PENDING",
       client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Quote Invoice"  ,
+      invoice_type: "Tax invoice",
       total_amount: 985735689,
       created_date: new Date(2024, 2, 10),
-      tax:985735689,
+      tax: 985735689,
       i1: true,
       i2: true,
       i3: true,
@@ -122,12 +101,12 @@ const DashboardTable: React.FC = () => {
     },
     {
       invoice_id: "kjsdgnbj",
-      invoice_status:"Painding",
+      invoice_status: "PENDING",
       client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Tax invoice"  ,
+      invoice_type: "Tax invoice",
       total_amount: 985735689,
       created_date: new Date(2024, 2, 10),
-      tax:985735689,
+      tax: 985735689,
       i1: true,
       i2: true,
       i3: true,
@@ -135,12 +114,12 @@ const DashboardTable: React.FC = () => {
     },
     {
       invoice_id: "kjsdgnbj",
-      invoice_status:"Draft",
+      invoice_status: "PENDING",
       client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Tax invoice"  ,
+      invoice_type: "Quote Invoice",
       total_amount: 985735689,
       created_date: new Date(2024, 2, 10),
-      tax:985735689,
+      tax: 985735689,
       i1: true,
       i2: true,
       i3: true,
@@ -148,12 +127,38 @@ const DashboardTable: React.FC = () => {
     },
     {
       invoice_id: "kjsdgnbj",
-      invoice_status:"Draft",
+      invoice_status: "PENDING",
       client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Quote Invoice"  ,
+      invoice_type: "Tax invoice",
       total_amount: 985735689,
       created_date: new Date(2024, 2, 10),
-      tax:985735689,
+      tax: 985735689,
+      i1: true,
+      i2: true,
+      i3: true,
+      iconsOrder: ["i1", "i2", "i3"],
+    },
+    {
+      invoice_id: "kjsdgnbj",
+      invoice_status: "DRAFT",
+      client: "ljadbvilhb4jh345kj4n",
+      invoice_type: "Tax invoice",
+      total_amount: 985735689,
+      created_date: new Date(2024, 2, 10),
+      tax: 985735689,
+      i1: true,
+      i2: true,
+      i3: true,
+      iconsOrder: ["i1", "i2", "i3"],
+    },
+    {
+      invoice_id: "kjsdgnbj",
+      invoice_status: "DRAFT",
+      client: "ljadbvilhb4jh345kj4n",
+      invoice_type: "Quote Invoice",
+      total_amount: 985735689,
+      created_date: new Date(2024, 2, 10),
+      tax: 985735689,
       i1: true,
       i2: true,
       i3: true,
@@ -162,12 +167,12 @@ const DashboardTable: React.FC = () => {
 
     {
       invoice_id: "kjsdgnbj",
-      invoice_status:"Draft",
+      invoice_status: "DRAFT",
       client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Quote Invoice"  ,
+      invoice_type: "Quote Invoice",
       total_amount: 985735689,
       created_date: new Date(2024, 2, 10),
-      tax:985735689,
+      tax: 985735689,
       i1: true,
       i2: true,
       i3: true,
@@ -175,12 +180,12 @@ const DashboardTable: React.FC = () => {
     },
     {
       invoice_id: "kjsdgnbj",
-      invoice_status:"Draft",
+      invoice_status: "DRAFT",
       client: "ljadbvilhb4jh345kj4n",
-      invoice_type:"Quote Invoice"  ,
+      invoice_type: "Quote Invoice",
       total_amount: 985735689,
       created_date: new Date(2024, 2, 10),
-      tax:985735689,
+      tax: 985735689,
       i1: true,
       i2: true,
       i3: true,
@@ -192,46 +197,154 @@ const DashboardTable: React.FC = () => {
     {
       header: "Invoice Id",
       accessor: "invoice_id",
-      cellClassName: " text-neutral-25 ",
-      width:"130px",
+      cellClassName: " text-blue-20 ",
+      width: "130px",
     },
     {
-      header: "Status",
+      header: (
+        <div className="relative">
+          <button className="" onClick={() => setDropdownOpen1(!dropdownOpen1)}>
+            <div className="flex items-center justify-between w-[112px] font-normal text-[14px] leading-[20px] text-neutral-85">
+              <p>Status </p>
+              <img src={ICONS.downArrow} className="mr-2 w-5 h-5" />
+            </div>
+          </button>
+          {dropdownOpen1 && (
+            <div className="absolute bg-white mt-1 z-50 rounded-[6px] shadow-dropdown">
+              <button
+                onClick={() => {
+                  setStatusFilter("PAID");
+                  setDropdownOpen1(false);
+                }}
+                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                  statusFilter === "PAID"
+                    ? "text-white bg-blue-500"
+                    : "text-neutral-100"
+                }`}
+              >
+                PAID
+              </button>
+              <button
+                onClick={() => {
+                  setStatusFilter("PENDING");
+                  setDropdownOpen1(false);
+                }}
+                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                  statusFilter === "PENDING"
+                    ? "text-white bg-blue-500"
+                    : "text-neutral-100"
+                }`}
+              >
+                PENDING
+              </button>
+              <button
+                onClick={() => {
+                  setStatusFilter("DRAFT");
+                  setDropdownOpen1(false);
+                }}
+                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                  statusFilter === "DRAFT"
+                    ? "text-white bg-blue-500"
+                    : "text-neutral-100"
+                }`}
+              >
+                DRAFT
+              </button>
+            </div>
+          )}
+        </div>
+      ),
       accessor: "invoice_status",
       cellRenderer: (row: Dashboard) => {
         let statusClass = "";
-  
+
         // Conditional coloring based on invoice_status
-        if (row.invoice_status === "Paid") {
-          statusClass = "text-green-500";  // Green for Paid
-        } else if (row.invoice_status === "Painding") {
-          statusClass = "text-yellow-500"; // Yellow for Painding (Pending)
-        } else if (row.invoice_status === "Draft") {
-          statusClass = "text-gray-500";   // Gray for Draft
+        if (row.invoice_status === "PAID") {
+          statusClass =
+            "text-neutral-90 bg-neutral-50 h-[28px] py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Green for PAID
+        } else if (row.invoice_status === "PENDING") {
+          statusClass =
+            "text-yellow-500 bg-secondary-35 h-[28px]  py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Yellow for PENDING (PENDING)
+        } else if (row.invoice_status === "DRAFT") {
+          statusClass = "text-gray-500  "; // Gray for DRAFT
         }
-  
+
         return <span className={statusClass}>{row.invoice_status}</span>;
       },
-      icon1:ICONS.downArrow,
-      width:"112px",
+      width: "112px",
     },
+
     {
       header: "Client",
       accessor: "client",
       cellClassName: "text-black",
     },
     {
-      header: "Invoice Type",
+      header: (
+        <div className="relative">
+          <button className="" onClick={() => setDropdownOpen2(!dropdownOpen2)}>
+            <div className="flex items-center justify-between w-[176px] font-normal text-[14px] leading-[20px] text-neutral-85">
+              <p>Invoice Type</p>
+              <img src={ICONS.downArrow} className="mr-2 w-5 h-5" />
+            </div>
+          </button>
+          {dropdownOpen2 && (
+            <div className="absolute bg-white mt-1 z-50 rounded-[6px] shadow-dropdown">
+              <button
+                onClick={() => {
+                  setTypeFilter("Cheque Invoice");
+                  setDropdownOpen2(false);
+                }}
+                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                  typeFilter === "Cheque Invoice"
+                    ? "text-white bg-blue-500"
+                    : "text-neutral-100"
+                }`}
+              >
+                Cheque Invoice
+              </button>
+              <button
+                onClick={() => {
+                  setTypeFilter("Quote Invoice");
+                  setDropdownOpen2(false);
+                }}
+                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                  typeFilter === "Quote Invoice"
+                    ? "text-white bg-blue-500"
+                    : "text-neutral-100"
+                }`}
+              >
+                Quote Invoice
+              </button>
+              <button
+                onClick={() => {
+                  setTypeFilter("Tax invoice");
+                  setDropdownOpen2(false);
+                }}
+                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                  typeFilter === "Tax invoice"
+                    ? "text-white bg-blue-500"
+                    : "text-neutral-100"
+                }`}
+              >
+                Tax invoice
+              </button>
+            </div>
+          )}
+        </div>
+      ),
+
       accessor: "invoice_type",
       cellClassName: "text-black",
-      icon1:ICONS.downArrow
     },
     {
       header: "Total Amount",
       accessor: "total_amount",
       cellRenderer: (row: Dashboard) => {
         console.log(row.total_amount); // For debugging
-        return <span className="text-black">{formatCurrency(row.total_amount)}</span>;
+        return (
+          <span className="text-black">{formatCurrency(row.total_amount)}</span>
+        );
       },
       cellClassName: "text-black",
     },
@@ -257,11 +370,16 @@ const DashboardTable: React.FC = () => {
         }),
     },
   ];
+  const filteredData = data.filter(
+    (invoice) =>
+      (statusFilter === "" || invoice.invoice_status === statusFilter) &&
+      (typeFilter === "" || invoice.invoice_type === typeFilter)
+  );
 
   return (
     <div>
       <Table
-        data={data}
+        data={filteredData}
         columns={columns}
         tableName="Recent Invoice"
         showViewAll={true}
