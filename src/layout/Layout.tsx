@@ -7,7 +7,7 @@ import PurchaseListPage from "../pages/Purchase/ListPage";
 const Layout = () => {
   return (
 
-    <div className="flex h-screen  gap-7 w-full">
+    <div className="flex h-screen gap-7 w-full">
       {/* Sidebar taking fixed width, allowing the rest of the screen to adjust */}
       <DashboardSidebar />
       
@@ -17,7 +17,7 @@ const Layout = () => {
         <DashboardHeader  />
         
         {/* Content section should scroll if there's overflow */}
-        <div className="flex-1 overflow-auto px-4 md:px-6 lg:px-8">
+        <div className="flex-1 overflow-auto">
           <Outlet />
         </div>
 
