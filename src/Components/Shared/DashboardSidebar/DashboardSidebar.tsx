@@ -28,10 +28,22 @@ const DashboardSidebar = () => {
   ];
 
   return (
-    <div
+    <>
+      {/* Overlay */}
+      {!collapse && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-60 z-0 md:hidden"
+          onClick={() => setCollapse(false)}
+        ></div>
+      )}
+
+      {/* Sidebar */}
+      <div
       className={`${
         collapse ? "w-[80px]" : "min-w-[218px]"
-      } transition-all duration-300 ease-in-out px-4 py-7 border-r h-screen cursor-pointer flex flex-col justify-between items-center bg-primary-10 sticky top-0 left-0`}
+
+      } transition-all duration-300 ease-in-out px-4 py-7 border-r h-screen cursor-pointer flex flex-col justify-between items-center bg-primary-10  z-50 sticky top-0 left-0`}
+
     >
       <div className="flex flex-col ">
         {/* Logo Section */}
@@ -148,10 +160,11 @@ const DashboardSidebar = () => {
           src={ICONS.RightArrowIcon}
           alt="collapsee Icon"
           className="cursor-pointer"
-        />
-      </div>
-    </div>
-  );
-};
+          />
+          </div>
+        </div>
+      </>
+    );
+  };
 
 export default DashboardSidebar;

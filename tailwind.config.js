@@ -57,10 +57,12 @@ export default {
           70: "rgba(0, 0, 0, 0.05)",
           80: "#E2E8F0",
           85:"#1c1c1c99",
-          90:"#76B59E"
+          90:"#76B59E",
+          95:"#1C1C1C66"
         },
         sucess: {
           10: "#F2FFFA",
+          20:"#F4FFE5"
         },
         blue: {
           10: "#EBF3FF",
@@ -71,5 +73,19 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.scrollbar-hide': {
+          '-ms-overflow-style': 'none', /* IE and Edge */
+          'scrollbar-width': 'none', /* Firefox */
+        },
+        '.scrollbar-hide::-webkit-scrollbar': {
+          'display': 'none', /* Chrome, Safari, and Opera */
+        },
+      };
+
+      addUtilities(newUtilities, ['responsive']);
+    },
+  ],
 };
