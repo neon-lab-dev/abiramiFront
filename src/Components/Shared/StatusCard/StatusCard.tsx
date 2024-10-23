@@ -2,6 +2,7 @@ type TStatusCardProps = {
     cardBg: string;
     iconBg: string;
     title: string;
+    cardWidth?: string;
     value: string | number;
     icon: string | undefined;
   };
@@ -10,11 +11,12 @@ type TStatusCardProps = {
     cardBg,
     iconBg,
     title,
+    cardWidth,
     value,
     icon,
   }) => {
     return (
-      <div className={`p-6 rounded-2xl w-[265px] font-Inter flex items-center justify-between ${cardBg}`}>
+      <div className={`p-6 rounded-2xl w-[265px] font-Inter flex items-center justify-between ${cardBg} ${cardWidth} `}>
         <div className={`size-[52px] rounded-full bg-opacity-10 flex justify-center items-center ${iconBg}`}>
           <img src={icon} alt="" className="size-6" />
         </div>

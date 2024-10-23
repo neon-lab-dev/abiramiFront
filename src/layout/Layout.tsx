@@ -11,7 +11,7 @@ const Layout = () => {
       <div className="flex-1">
         <DashboardHeader />
         <Outlet />
-        <ClientListPage/>
+        {/* <ClientListPage/> */}
 
       </div>
     </div>
