@@ -93,14 +93,14 @@ const Table: React.FC<TableProps> = ({
   return "w-[55px]";
   }
   return (
-    <div className={` w-screen lg:w-[1360px] my-5`}>
+    <div className={`w-full my-5`}>
       <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 mr-6 shadow-tableShadow">
       <div className="w-[95%] md:w-[97%] lg:w-[100%] flex justify-between items-center h-10">
         <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
           {tableName}
         </div>
         {showViewAll && (
-          <button className="flex items-center px-2 py-1 md:px-3 md:py-2 font-normal text-base leading-6 bg-secondary-70 transition-all rounded-xl">
+          <button className="flex items-center px-2 py-1 md:px-3 md:py-2 font-normal text-base leading-6 bg-neutral-70 transition-all rounded-xl">
             View all
             <img src={ICONS.downArrow} alt="" className="ml-2 w-5 h-5" />
           </button>
@@ -109,7 +109,7 @@ const Table: React.FC<TableProps> = ({
 
       {/* Wrapper to enable horizontal scrolling */}
       <div
-          className={`overflow-x-auto ${!enablePagination ? "overflow-y-auto" : ""}`}
+          className={` overflow-x-auto scrollbar-hide ${!enablePagination ? "overflow-y-auto " : ""} `}
           style={{ maxHeight: tableHeight }}
         >
         <table className="min-w-full text-left border-separate border-spacing-y-1">
