@@ -93,8 +93,8 @@ const Table: React.FC<TableProps> = ({
   return "w-[55px]";
   }
   return (
-    <div className={` w-screen lg:w-[1360px] my-5`}>
-      <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 mr-6 shadow-tableShadow">
+    <div className={` w-full my-5`}>
+      <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 shadow-tableShadow">
       <div className="w-[95%] md:w-[97%] lg:w-[100%] flex justify-between items-center h-10">
         <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
           {tableName}
