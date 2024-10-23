@@ -29,7 +29,7 @@ const Button: React.FC<ButtonProps> = ({
         <img src={imgSrc} alt={text} className={`w-4  h-4 ${iconClassName}`} />
       )}
       {icon && <span className={iconClassName}>{icon}</span>}
-      <span>{text}</span>
+      <span >{text}</span>
     </button>
   );
 };
