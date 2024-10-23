@@ -218,8 +218,8 @@ const DashboardTable: React.FC = () => {
                 }}
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   statusFilter === "PAID"
-                    ? "text-white bg-blue-500"
-                    : "text-neutral-100"
+                    ? "text-white bg-blue-20"
+                    : "text-[#637381]"
                 }`}
               >
                 PAID
@@ -231,8 +231,8 @@ const DashboardTable: React.FC = () => {
                 }}
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   statusFilter === "PENDING"
-                    ? "text-white bg-blue-500"
-                    : "text-neutral-100"
+                    ? "text-white bg-blue-20"
+                    : "text-[#637381]"
                 }`}
               >
                 PENDING
@@ -244,8 +244,8 @@ const DashboardTable: React.FC = () => {
                 }}
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   statusFilter === "DRAFT"
-                    ? "text-white bg-blue-500"
-                    : "text-neutral-100"
+                    ? "text-white bg-blue-20"
+                    : "text-[#637381]"
                 }`}
               >
                 DRAFT
@@ -298,7 +298,7 @@ const DashboardTable: React.FC = () => {
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   typeFilter === "Cheque Invoice"
                     ? "text-white bg-blue-500"
-                    : "text-neutral-100"
+                    : "text-[#637381]"
                 }`}
               >
                 Cheque Invoice
@@ -311,7 +311,7 @@ const DashboardTable: React.FC = () => {
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   typeFilter === "Quote Invoice"
                     ? "text-white bg-blue-500"
-                    : "text-neutral-100"
+                    : "text-[#637381]"
                 }`}
               >
                 Quote Invoice
@@ -324,7 +324,7 @@ const DashboardTable: React.FC = () => {
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   typeFilter === "Tax invoice"
                     ? "text-white bg-blue-500"
-                    : "text-neutral-100"
+                    :"text-[#637381]"
                 }`}
               >
                 Tax invoice
