@@ -21,7 +21,11 @@ import blueTick from "../assets/icons/blueTick.svg"
 import deleteRed from "../assets/icons/deleteRed.svg"
 import search from "../assets/icons/search.svg"
 import graybar from "../assets/icons/graybar.svg"
+
 import greenCross from "../assets/icons/greenCross.svg"
+
+import download from "../assets/icons/download.svg"
+
 
 
 // side bar icon is here
@@ -79,7 +83,11 @@ export const ICONS = {
     SupplierIcon1,
     SupplierIcon2,
     SupplierIcon3,
+
     greenCross,
+
+    download,
+
 }
 
 export const IMAGES = {
