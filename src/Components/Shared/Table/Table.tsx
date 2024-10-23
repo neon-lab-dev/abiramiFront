@@ -93,8 +93,9 @@ const Table: React.FC<TableProps> = ({
   return "w-[55px]";
   }
   return (
-    <div className={` w-full my-5`}>
-      <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 shadow-tableShadow">
+
+    <div className={` max:w-[1536px] w-full overflow-x-scroll custom-scrollbar my-5`}>
+      <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 mr-6 shadow-tableShadow">
       <div className="w-[95%] md:w-[97%] lg:w-[100%] flex justify-between items-center h-10">
         <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
           {tableName}
@@ -154,11 +155,11 @@ const Table: React.FC<TableProps> = ({
                 {columns.map((col, colIndex) => (
                   <td
                     key={colIndex}
-                    className={`p-4 rounded-lg ${
+                    className={`p-4 rounded-lg text-[14px] ${
                       typeof col.cellClassName === "function"
                         ? col.cellClassName(row)
                         : col.cellClassName || ""
-                    }`}
+                    }${colIndex === 0 ? "text-[#4186F3]" : ""} `}
                     style={{ width: col.width }}
                   >
                      {col.cellRenderer

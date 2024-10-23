@@ -19,6 +19,7 @@ const Layout = () => {
         <div className="flex-1 overflow-auto px-4 md:px-6 lg:px-8">
           <Outlet />
         </div>
+
       </div>
     </div>
   );
