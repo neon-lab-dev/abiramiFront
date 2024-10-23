@@ -25,7 +25,7 @@ export const router = createBrowserRouter([
         element: <CreateSupplier />,
       },
       {
-        path: "/client",
+        path: "/clients",
         element: <Client/>
       }
     ]

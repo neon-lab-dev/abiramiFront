@@ -19,7 +19,7 @@ const DashboardSidebar = () => {
 
   const navItems: NavItem[] = [
     { icon: ICONS.DashboardIcon, text: "Dashboard", path: "/" },
-    { icon: ICONS.ClientsIcon, text: "Clients", path: "/Clients" },
+    { icon: ICONS.ClientsIcon, text: "Clients", path: "/clients" },
     { icon: ICONS.SuppliersIcon, text: "Suppliers", path: "/Suppliers" },
     { icon: ICONS.InvoicesIcon, text: "Invoices", path: "/Invoices" },
     { icon: ICONS.InventoryIcon, text: "Inventory", path: "/Inventory" },
