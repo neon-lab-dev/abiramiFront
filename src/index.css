@@ -3,3 +3,19 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+* {
+    transition: 0.5s;
+  }
+  .active {
+    background: #730b0d !important;
+  }
+  .scroll-none::-webkit-scrollbar {
+    display: none;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    background-color: #d1d5db; /* scrollbar color */
+    border-radius: 4px;
+    height: 6px;
+    /* border: 1px solid #d1d5db;  */
+  }

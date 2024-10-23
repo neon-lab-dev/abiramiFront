@@ -11,8 +11,7 @@ const ListPage = () => {
         <Button
           text="Create Client"
           imgSrc={ICONS.clientOutline}   
-          bgColor="bg-secondary-120"
-          buttonTextClass="text-secondary-125 text-[14px] font-normal "
+          color='bg-secondary-120 text-[14px] text-secondary-125'
           iconClassName="h-[24px] w-[24px]"
         />
 
