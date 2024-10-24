@@ -2,7 +2,7 @@ import { ICONS } from "../../assets";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 const Dashboard = () => {
   return (
-    <div className="w-full  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <StatusCard
         cardBg="bg-secondary-10"
         iconBg="bg-secondary-65"

@@ -7,12 +7,11 @@ export default function SuppliersCards() {
     <div className="w-full ">
       <div className="w-full px-4 py-2 mb-2 flex justify-between items-center">
         <h3 className="font-bold">Supplier list page</h3>
-        <Button
-          text="Create Supplier"
-          imgSrc={ICONS.button}
-          color="bg-secondary-120 text-primary-20"
-          iconClassName="text-white"
-        />
+          <Button
+            text="Create Supplier"
+            imgSrc={ICONS.button}
+            color="bg-secondary-120 text-primary-20"
+          />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <StatusCard

@@ -1,8 +1,8 @@
 import DashboardSidebar from "../Components/Shared/DashboardSidebar/DashboardSidebar";
 import DashboardHeader from "../Components/Shared/DashboardHeader/DashboardHeader";
 import { Outlet } from "react-router-dom";
-import ClientListPage from "../pages/Clients/ListPage"
-import PurchaseListPage from "../pages/Purchase/ListPage"
+// import ClientListPage from "../pages/Clients/ListPage"
+// import PurchaseListPage from "../pages/Purchase/ListPage"
 
 const Layout = () => {
  
@@ -13,7 +13,7 @@ const Layout = () => {
         <DashboardHeader />
         <Outlet />
         {/* <ClientListPage/> */}
-        <PurchaseListPage/>
+        {/* <PurchaseListPage/> */}
       </div>
     </div>
   );

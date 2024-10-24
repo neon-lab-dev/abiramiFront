@@ -35,6 +35,9 @@ import PurchasesIcon from "../assets/icons/purchasesnav.svg";
 import SettingsIcon from "../assets/icons/settingsnav.svg";
 import RightArrowIcon from "../assets/icons/rightArrow.svg";
 import Admin from "../assets/icons/admin.svg";
+import ThreeLineIcon from "../assets/icons/ThreeLineIcon.svg";
+import CrossIcon from "../assets/icons/CrossIcon.svg";
+import CreateSupplierIcon from "../assets/icons/CreateSupplierIcon.svg";
 
 //SupplierIcons
 import SupplierIcon1 from "../assets/icons/SupplierIcon1.svg";
@@ -78,6 +81,9 @@ export const ICONS = {
     SupplierIcon1,
     SupplierIcon2,
     SupplierIcon3,
+    ThreeLineIcon,
+    CrossIcon,
+    CreateSupplierIcon
 }
 
 export const IMAGES = {

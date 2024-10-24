@@ -12,15 +12,15 @@ export const router = createBrowserRouter([
     // errorElement : <ErrorPage/>,
     children : [
       {
-          path: "",
-          element: <Dashboard/>
+        path: "",
+        element: <Dashboard/>
       },
       {
-        path: "/Suppliers",
+        path: "Suppliers",
         element: <Suppliers />,
       },
       {
-        path: "/Suppliers/CreateSupplier",
+        path: "Suppliers/CreateSupplier",
         element: <CreateSupplier />,
       },
     ]
