@@ -4,11 +4,12 @@ import { Outlet } from "react-router-dom";
 import ClientListPage from "../pages/Clients/ListPage";
 import PurchaseListPage from "../pages/Purchase/ListPage";
 import InvoiceTable from "../Components/Invoices/InvoiceTable";
+import InvoiceListPageTable from "../Components/Invoices/InvoiceListPageTable";
 
 const Layout = () => {
   return (
 
-    <div className="flex h-screen gap-7 w-full">
+    <div className="flex h-screen gap-7 w-full mb-2">
       {/* Sidebar taking fixed width, allowing the rest of the screen to adjust */}
       <DashboardSidebar />
       
@@ -20,7 +21,6 @@ const Layout = () => {
         {/* Content section should scroll if there's overflow */}
         <div className="flex-1 overflow-auto">
           <Outlet />
-          <InvoiceTable/>
         </div>
 
       </div>
