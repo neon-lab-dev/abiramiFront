@@ -1,10 +1,17 @@
 import PurchaseTable from "../../Components/Purchase/PurchaseTable"
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard"
 import Button from "../../Components/Shared/Button/Button"
+import { useNavigate } from 'react-router-dom';
 import { ICONS } from "../../assets"
 
 
 const ListPage = () => {
+
+  const navigate = useNavigate();
+
+  const handleNavigateToCreatePurchase = () => {
+    navigate("/Purchase/CreatePurchase");
+  };
   return (<div>
     <div className='flex justify-between mb-[22px] '>
       <span className='font-Inter  text-sm font-semibold ml-2 '>Purchase list page</span>
@@ -13,6 +20,7 @@ const ListPage = () => {
         imgSrc={ICONS.clientOutline}   
         color='bg-secondary-120 text-[14px] text-secondary-125'
         iconClassName="h-[24px] w-[24px]"
+        onClick={handleNavigateToCreatePurchase}
       />
 
     </div>

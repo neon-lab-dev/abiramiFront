@@ -6,6 +6,7 @@ import Layout from "../layout/Layout";
 import Suppliers from "../pages/Suppliers/Suppliers";
 import CreateSupplier from "../pages/CreateSupplier/CreateSupplier";
 import Purchase from "../pages/Purchase/ListPage"
+import CreatePurchase from "../pages/Purchase/CreatePurchase";
 
 export const router = createBrowserRouter([  
   {
@@ -32,7 +33,11 @@ export const router = createBrowserRouter([
       {
         path: "/purchase",
         element: <Purchase/>
-      }
+      },
+      {
+        path: "/purchase/CreatePurchase",
+        element: <CreatePurchase />,
+      },
     ]
   },
 ]);
