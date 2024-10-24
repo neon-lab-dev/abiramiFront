@@ -60,7 +60,8 @@ export default {
           80: "#E2E8F0",
           85:"#1c1c1c99",
           90:"#76B59E",
-          95:"#1C1C1C66"
+          95:"#1C1C1C66",
+          100:"#637381"
         },
         sucess: {
           10: "#F2FFFA",
@@ -68,10 +69,12 @@ export default {
         },
         blue: {
           10: "#EBF3FF",
+          20:"#4186F3"
         },
       },
       boxShadow: {
         tableShadow: "0px 1px 0px 0px rgba(0, 0, 0, 0.1)",
+        dropdown: '0px 1px 3px 0px rgba(166, 175, 195, 0.4)',
       },
     },
   },

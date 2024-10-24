@@ -7,6 +7,8 @@ import Suppliers from "../pages/Suppliers/Suppliers";
 import CreateSupplier from "../pages/CreateSupplier/CreateSupplier";
 import Invoice from '../pages/Invoices/ListPage';
 import InvoiceDetail from '../pages/Invoices/DetailPage'
+import Purchase from "../pages/Purchase/ListPage"
+import CreatePurchase from "../pages/Purchase/CreatePurchase";
 
 export const router = createBrowserRouter([  
   {
@@ -37,7 +39,15 @@ export const router = createBrowserRouter([
       {
         path: "/invoices/detailpage",
         element : <InvoiceDetail/>
-      }
+      },
+      {
+        path: "/purchase",
+        element: <Purchase/>
+      },
+      {
+        path: "/purchase/CreatePurchase",
+        element: <CreatePurchase />,
+      },
     ]
   },
 ]);

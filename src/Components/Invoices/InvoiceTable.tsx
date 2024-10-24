@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
+import DownloadButton from "../Shared/Table/DownloadExcelBtn";
+import Button from "../Shared/Button/Button";
 
 // Define a type for the row data
-interface Dashboard {
+interface Invoice {
   invoice_id: string;
   invoice_status: "PAID" | "PENDING" | "DRAFT";
   client: string;
@@ -17,7 +19,7 @@ interface Dashboard {
   iconsOrder: string[];
 }
 
-const DashboardTable: React.FC = () => {
+const InvoiceTable: React.FC = () => {
   const [dropdownOpen1, setDropdownOpen1] = useState(false);
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("");
@@ -33,7 +35,7 @@ const DashboardTable: React.FC = () => {
     i3: ICONS.deleteRed,
   };
 
-  const data: Dashboard[] = [
+  const data: Invoice[] = [
     {
       invoice_id: "kjsdgnbj",
       invoice_status: "PAID",
@@ -43,7 +45,7 @@ const DashboardTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: true,
+      i2: false,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -56,7 +58,7 @@ const DashboardTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: true,
+      i2: false,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -95,7 +97,7 @@ const DashboardTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: true,
+      i2: false,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -108,7 +110,7 @@ const DashboardTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: true,
+      i2: false,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -121,7 +123,7 @@ const DashboardTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: true,
+      i2: false,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -134,7 +136,7 @@ const DashboardTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: true,
+      i2: false,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -147,7 +149,7 @@ const DashboardTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: true,
+      i2: false,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -160,7 +162,7 @@ const DashboardTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: true,
+      i2: false,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -174,7 +176,7 @@ const DashboardTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: true,
+      i2: false,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -187,7 +189,7 @@ const DashboardTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: true,
+      i2: false,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -218,10 +220,8 @@ const DashboardTable: React.FC = () => {
                 }}
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   statusFilter === "PAID"
-
                     ? "text-white bg-blue-20"
-                    : "text-neutral-100"
-
+                    : "text-[#637381]"
                 }`}
               >
                 PAID
@@ -233,10 +233,8 @@ const DashboardTable: React.FC = () => {
                 }}
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   statusFilter === "PENDING"
-
                     ? "text-white bg-blue-20"
-                    : "text-neutral-100"
-
+                    : "text-[#637381]"
                 }`}
               >
                 PENDING
@@ -248,10 +246,8 @@ const DashboardTable: React.FC = () => {
                 }}
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   statusFilter === "DRAFT"
-
                     ? "text-white bg-blue-20"
-                    : "text-neutral-100"
-
+                    : "text-[#637381]"
                 }`}
               >
                 DRAFT
@@ -261,7 +257,7 @@ const DashboardTable: React.FC = () => {
         </div>
       ),
       accessor: "invoice_status",
-      cellRenderer: (row: Dashboard) => {
+      cellRenderer: (row: Invoice) => {
         let statusClass = "";
 
         // Conditional coloring based on invoice_status
@@ -272,9 +268,7 @@ const DashboardTable: React.FC = () => {
           statusClass =
             "text-yellow-500 bg-secondary-35 h-[28px]  py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Yellow for PENDING (PENDING)
         } else if (row.invoice_status === "DRAFT") {
-
-          statusClass = "text-gray-500  font-sans text-[12px] font-normal leading-[20px] text-left"; // Gray for DRAFT
-
+          statusClass = "text-gray-500  "; // Gray for DRAFT
         }
 
         return <span className={statusClass}>{row.invoice_status}</span>;
@@ -286,6 +280,7 @@ const DashboardTable: React.FC = () => {
       header: "Client",
       accessor: "client",
       cellClassName: "text-black",
+      icon1:ICONS.search
     },
     {
       header: (
@@ -306,9 +301,7 @@ const DashboardTable: React.FC = () => {
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   typeFilter === "Cheque Invoice"
                     ? "text-white bg-blue-500"
-
-
-                    : "text-neutral-100"
+                    : "text-[#637381]"
                 }`}
               >
                 Cheque Invoice
@@ -321,11 +314,7 @@ const DashboardTable: React.FC = () => {
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   typeFilter === "Quote Invoice"
                     ? "text-white bg-blue-500"
-
-
-                    : "text-neutral-100"
-
-
+                    : "text-[#637381]"
                 }`}
               >
                 Quote Invoice
@@ -338,11 +327,7 @@ const DashboardTable: React.FC = () => {
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   typeFilter === "Tax invoice"
                     ? "text-white bg-blue-500"
-
-
-                    : "text-neutral-100"
-
-
+                    :"text-[#637381]"
                 }`}
               >
                 Tax invoice
@@ -358,7 +343,7 @@ const DashboardTable: React.FC = () => {
     {
       header: "Total Amount",
       accessor: "total_amount",
-      cellRenderer: (row: Dashboard) => {
+      cellRenderer: (row: Invoice) => {
         console.log(row.total_amount); // For debugging
         return (
           <span className="text-black">{formatCurrency(row.total_amount)}</span>
@@ -369,7 +354,7 @@ const DashboardTable: React.FC = () => {
     {
       header: "Tax",
       accessor: "tax",
-      cellRenderer: (row: Dashboard) => {
+      cellRenderer: (row: Invoice) => {
         console.log(row.tax); // For debugging
         return <span className="text-black">{formatCurrency(row.tax)}</span>;
       },
@@ -400,7 +385,7 @@ const DashboardTable: React.FC = () => {
         data={filteredData}
         columns={columns}
         tableName="Recent Invoice"
-        showViewAll={true}
+        showViewAll={false}
         enablePagination={false}
         rowsPerPage={5}
         icons={icons}
@@ -408,8 +393,34 @@ const DashboardTable: React.FC = () => {
         bg_i2="bg-sucess-20"
         bg_i3="bg-primary-40"
       />
+      <div className=" flex justify-between">
+      <div className="flex justify-between md:gap-4 gap-3">
+      <Button
+        text="Remove Filter"
+        imgSrc={ICONS.clientOutline}   
+        color='border-neutral-80 border-2 bg-white text-[14px] text-black'
+        iconClassName="h-[16px] w-[16px]"
+        textClass="hidden"
+      />
+      <Button
+        text="Filter"
+        imgSrc={ICONS.filterGray}   
+        color='border-neutral-80 border-2 bg-white text-[14px] text-black'
+        iconClassName="h-[16px] w-[16px]"
+        textClass="hidden"
+      />
+      <Button
+        text="Remove Filter"
+        imgSrc={ICONS.removeFilterGray}   
+        color='border-neutral-80 border-2 bg-white text-[14px] text-black'
+        iconClassName="h-[16px] w-[16px]"
+        textClass="hidden"
+      />
+      </div>
+    <DownloadButton data={data}/>
+    </div>
     </div>
   );
 };
 
-export default DashboardTable;
+export default InvoiceTable;
