@@ -3,6 +3,7 @@ import DashboardHeader from "../Components/Shared/DashboardHeader/DashboardHeade
 import { Outlet } from "react-router-dom";
 import ClientListPage from "../pages/Clients/ListPage";
 import PurchaseListPage from "../pages/Purchase/ListPage";
+import InvoiceTable from "../Components/Invoices/InvoiceTable";
 
 const Layout = () => {
   return (
@@ -19,6 +20,7 @@ const Layout = () => {
         {/* Content section should scroll if there's overflow */}
         <div className="flex-1 overflow-auto">
           <Outlet />
+          <InvoiceTable/>
         </div>
 
       </div>
