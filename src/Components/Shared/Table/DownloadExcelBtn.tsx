@@ -17,11 +17,11 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ data }) => {
 
   return (
     <button
-      className=" px-4 flex items-center gap-2 py-2 bg-primary-10 text-white rounded-xl disabled:opacity-50 "
+      className=" px-4 flex items-center gap-2 py-2 text-sm bg-primary-10 text-white rounded-xl disabled:opacity-50 "
       disabled={false}
       onClick={downloadExcel}
     >
-      <img src={ICONS.download} alt=""/>
+      <img src={ICONS.download} alt="" className='w-6 h-6'/>
       Download Excel
     </button>
   );

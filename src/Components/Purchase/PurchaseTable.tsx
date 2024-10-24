@@ -2,6 +2,7 @@ import React from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
 import DownloadButton from "../Shared/Table/DownloadExcelBtn";
+import Button from "../Shared/Button/Button";
 
 interface Purchase {
     company_name: string;
@@ -180,6 +181,7 @@ interface Purchase {
           header: "Company",
           accessor: "company_name",
           cellClassName: " text-neutral-25 ",
+          icon1: ICONS.search,
         },
         {
           header: "Invoice Number",
@@ -225,7 +227,7 @@ interface Purchase {
       data={data}
       columns={columns}
       tableName="Recent Purchase"
-      showViewAll={true}
+      showViewAll={false}
       enablePagination={false}
       rowsPerPage={5}
       icons={icons}
@@ -234,7 +236,30 @@ interface Purchase {
       bg_i3="bg-blue-10"
       
     />
-    <div className=" flex justify-end">
+    <div className=" flex justify-between">
+      <div className="flex justify-between md:gap-4 gap-3">
+      <Button
+        text="Remove Filter"
+        imgSrc={ICONS.clientOutline}   
+        color='border-neutral-80 border-2 bg-white text-[14px] text-primary-10'
+        iconClassName="h-[16px] w-[16px]"
+        textClass="hidden"
+      />
+      <Button
+        text="Filter"
+        imgSrc={ICONS.filter}   
+        color='border-neutral-80 border-2 bg-white text-[14px] text-primary-10'
+        iconClassName="h-[16px] w-[16px]"
+        textClass="hidden"
+      />
+      <Button
+        text="Remove Filter"
+        imgSrc={ICONS.removeFilter}   
+        color='border-neutral-80 border-2 bg-white text-[14px] text-primary-10'
+        iconClassName="h-[16px] w-[16px]"
+        textClass="hidden"
+      />
+      </div>
     <DownloadButton data={data}/>
     </div>
     

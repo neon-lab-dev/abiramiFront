@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
+import DownloadButton from "../Shared/Table/DownloadExcelBtn";
+import Button from "../Shared/Button/Button";
 
 // Define a type for the row data
 interface Invoice {
@@ -278,6 +280,7 @@ const InvoiceTable: React.FC = () => {
       header: "Client",
       accessor: "client",
       cellClassName: "text-black",
+      icon1:ICONS.search
     },
     {
       header: (
@@ -382,7 +385,7 @@ const InvoiceTable: React.FC = () => {
         data={filteredData}
         columns={columns}
         tableName="Recent Invoice"
-        showViewAll={true}
+        showViewAll={false}
         enablePagination={false}
         rowsPerPage={5}
         icons={icons}
@@ -390,6 +393,32 @@ const InvoiceTable: React.FC = () => {
         bg_i2="bg-sucess-20"
         bg_i3="bg-primary-40"
       />
+      <div className=" flex justify-between">
+      <div className="flex justify-between md:gap-4 gap-3">
+      <Button
+        text="Remove Filter"
+        imgSrc={ICONS.clientOutline}   
+        color='border-neutral-80 border-2 bg-white text-[14px] text-black'
+        iconClassName="h-[16px] w-[16px]"
+        textClass="hidden"
+      />
+      <Button
+        text="Filter"
+        imgSrc={ICONS.filterGray}   
+        color='border-neutral-80 border-2 bg-white text-[14px] text-black'
+        iconClassName="h-[16px] w-[16px]"
+        textClass="hidden"
+      />
+      <Button
+        text="Remove Filter"
+        imgSrc={ICONS.removeFilterGray}   
+        color='border-neutral-80 border-2 bg-white text-[14px] text-black'
+        iconClassName="h-[16px] w-[16px]"
+        textClass="hidden"
+      />
+      </div>
+    <DownloadButton data={data}/>
+    </div>
     </div>
   );
 };
