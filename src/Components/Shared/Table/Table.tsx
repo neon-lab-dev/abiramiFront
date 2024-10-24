@@ -186,7 +186,9 @@ const Table: React.FC<TableProps> = ({
                     {row.iconsOrder.map((icon:string) => {
                       if (icon === "i1" && row.i1) {
                         return (
+
                           <div className={`${i1CustomClass(row.i1, row.i2, row.i3)} max-w-[46px] mr-${(row.i1 && row.i2)&& !row.i3 ? "2" : "0"}`}>
+
                           <button
                             key="i1"
                             onClick={() => handleEdit(row)}
@@ -206,6 +208,7 @@ const Table: React.FC<TableProps> = ({
                      
                       if (icon === "i2" && row.i2) {
                         return (
+
                           <div className={`flex items-center gap-${(row.i1 && row.i2 )&&! row.i3 ? "4" : "2"} ml-${(row.i1 && row.i2 )&&! row.i3  ? "4" : "2"}`}>
                             <img src={ICONS.graybar} alt="|" className="h-3 w-[2px]" />
                             <button
@@ -215,6 +218,7 @@ const Table: React.FC<TableProps> = ({
                             >
                               <img src={icons.i2} alt="i2" className="h-3 w-3" />
                             </button>
+
                           </div>
                         );
                       }
