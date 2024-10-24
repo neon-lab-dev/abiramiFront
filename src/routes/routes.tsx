@@ -5,6 +5,8 @@ import Client from '../pages/Clients/ListPage';
 import Layout from "../layout/Layout";
 import Suppliers from "../pages/Suppliers/Suppliers";
 import CreateSupplier from "../pages/CreateSupplier/CreateSupplier";
+import Invoice from '../pages/Invoices/ListPage';
+import InvoiceDetail from '../pages/Invoices/DetailPage'
 
 export const router = createBrowserRouter([  
   {
@@ -27,6 +29,14 @@ export const router = createBrowserRouter([
       {
         path: "/clients",
         element: <Client/>
+      },
+      {
+        path: "/invoices",
+        element : <Invoice/>
+      },
+      {
+        path: "/invoices/detailpage",
+        element : <InvoiceDetail/>
       }
     ]
   },

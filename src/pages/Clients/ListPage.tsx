@@ -6,7 +6,7 @@ import StatusCard from '../../Components/Shared/StatusCard/StatusCard'
 const ListPage = () => {
   return (
     <div>
-      <div className='flex justify-between mt-[22px] mb-[22px] '>
+      <div className='flex justify-between  mb-[22px] '>
         <span className='font-Inter  text-sm font-semibold ml-2 '>Clients list</span>
         <Button
           text="Create Client"

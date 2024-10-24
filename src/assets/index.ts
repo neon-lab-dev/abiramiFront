@@ -50,6 +50,15 @@ import clienticon from "../assets/icons/clientIcon.svg"
 import clienticon2 from "../assets/icons/clienticon2.svg"
 import clienticon3 from "../assets/icons/clienticon3.svg"
 import clientOutline from "../assets/icons/clientOutline.svg"
+import invoicedropdown from "../assets/icons/invoiceDropdown.svg"
+import invoices2 from "../assets/icons/invoices2.svg"
+import invoices3 from "../assets/icons/invoices3.svg"
+import invoicesvector from "../assets/icons/incvoicesvector.svg"
+import invoicescreateicon from "../assets/icons/invoicescreateicon.svg"
+import invoiceslocation from "../assets/icons/invoicesLocation.svg"
+import invoicescreditcard from "../assets/icons/invoicesCreditcard.svg"
+import invoicesmobile from "../assets/icons/invoicesMobile.svg"
+import invoicesattherate from "../assets/icons/invoicesAtTheRate.svg"
 
 // Import images here (if any)
 // import bell from "../assets/icons/Bell.svg"
@@ -74,11 +83,19 @@ export const ICONS = {
     deleteRed,
     search,
     graybar,
-
-  clienticon,
-  clienticon2,
-  clienticon3,
-  clientOutline,
+    clienticon,
+    clienticon2,
+    clienticon3,
+    clientOutline,
+    invoicedropdown,
+    invoices2,
+    invoices3,
+    invoicescreateicon,
+    invoicesvector,
+    invoiceslocation,
+    invoicescreditcard,
+    invoicesmobile,
+    invoicesattherate,
     logo,
     CollapseIcon,
     DashboardIcon,
