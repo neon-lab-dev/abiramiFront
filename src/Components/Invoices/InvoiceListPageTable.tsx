@@ -19,7 +19,7 @@ interface Invoice {
   iconsOrder: string[];
 }
 
-const InvoiceTable: React.FC = () => {
+const InvoiceListPageTable: React.FC = () => {
   const [dropdownOpen1, setDropdownOpen1] = useState(false);
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("");
@@ -31,7 +31,7 @@ const InvoiceTable: React.FC = () => {
 
   const icons = {
     i1: ICONS.blueTick,
-    i2: ICONS.greenCross,
+    i2: ICONS.editBlack,
     i3: ICONS.deleteRed,
   };
 
@@ -45,7 +45,7 @@ const InvoiceTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: false,
+      i2: true,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -58,7 +58,7 @@ const InvoiceTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: false,
+      i2: true,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -97,7 +97,7 @@ const InvoiceTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: false,
+      i2: true,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -110,7 +110,7 @@ const InvoiceTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: false,
+      i2: true,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -123,7 +123,7 @@ const InvoiceTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: false,
+      i2: true,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -136,7 +136,7 @@ const InvoiceTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: false,
+      i2: true,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -149,7 +149,7 @@ const InvoiceTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: false,
+      i2: true,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -162,7 +162,7 @@ const InvoiceTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: false,
+      i2: true,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -176,7 +176,7 @@ const InvoiceTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: false,
+      i2: true,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -189,7 +189,7 @@ const InvoiceTable: React.FC = () => {
       created_date: new Date(2024, 2, 10),
       tax: 985735689,
       i1: true,
-      i2: false,
+      i2: true,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"],
     },
@@ -390,7 +390,7 @@ const InvoiceTable: React.FC = () => {
         rowsPerPage={5}
         icons={icons}
         bg_i1="bg-blue-10"
-        bg_i2="bg-sucess-20"
+        bg_i2="bg-neutral-65"
         bg_i3="bg-primary-40"
       />
       <div className=" flex justify-between">
@@ -411,7 +411,7 @@ const InvoiceTable: React.FC = () => {
       />
       <Button
         text="Remove Filter"
-        imgSrc={ICONS.removeFilterGray}   
+        imgSrc={ICONS.removeFilterGray}  
         color='border-neutral-80 border-2 bg-white text-[14px] text-black'
         iconClassName="h-[16px] w-[16px]"
         textClass="hidden"
@@ -423,4 +423,4 @@ const InvoiceTable: React.FC = () => {
   );
 };
 
-export default InvoiceTable;
+export default InvoiceListPageTable;

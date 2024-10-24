@@ -219,7 +219,7 @@ const DashboardTable: React.FC = () => {
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   statusFilter === "PAID"
 
-                    ? "text-white bg-blue-500"
+                    ? "text-white bg-blue-20"
                     : "text-neutral-100"
 
                 }`}
@@ -234,7 +234,7 @@ const DashboardTable: React.FC = () => {
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   statusFilter === "PENDING"
 
-                    ? "text-white bg-blue-500"
+                    ? "text-white bg-blue-20"
                     : "text-neutral-100"
 
                 }`}
@@ -249,7 +249,7 @@ const DashboardTable: React.FC = () => {
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
                   statusFilter === "DRAFT"
 
-                    ? "text-white bg-blue-500"
+                    ? "text-white bg-blue-20"
                     : "text-neutral-100"
 
                 }`}
@@ -307,6 +307,7 @@ const DashboardTable: React.FC = () => {
                   typeFilter === "Cheque Invoice"
                     ? "text-white bg-blue-500"
 
+
                     : "text-neutral-100"
 
               >
@@ -321,7 +322,9 @@ const DashboardTable: React.FC = () => {
                   typeFilter === "Quote Invoice"
                     ? "text-white bg-blue-500"
 
+
                     : "text-neutral-100"
+
 
                 }`}
               >
@@ -336,7 +339,9 @@ const DashboardTable: React.FC = () => {
                   typeFilter === "Tax invoice"
                     ? "text-white bg-blue-500"
 
+
                     : "text-neutral-100"
+
 
                 }`}
               >

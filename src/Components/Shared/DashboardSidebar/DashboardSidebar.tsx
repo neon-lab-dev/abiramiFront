@@ -100,7 +100,7 @@ const DashboardSidebar = () => {
                   }`}
                 />
               </NavLink>
-
+              
               {/* Dropdown for Suppliers */}
               {item.text === "Suppliers" && activeItem === idx && (
                 <div
@@ -122,6 +122,27 @@ const DashboardSidebar = () => {
                   </Link>
                 </div>
               )}
+              {/* Dropdown for Purchase */}
+              {item.text === "Purchase" && activeItem === idx && (
+                  <div
+                    className={`w-full flex rounded-b-lg flex-col bg-primary-20 ${
+                      collapse
+                        ? "absolute z-50 w-[200px] rounded-md overflow-hidden"
+                        : ""
+                    }`}
+                  >
+                    <Link to="/Purchase/CreatePurchase">
+                      <button className="p-3 border-0 text-white w-full">
+                        Create Purchase
+                      </button>
+                    </Link>
+                    <Link to="/Purchase/ManagePurchase">
+                      <button className="p-3 border-0 text-white w-full">
+                        Manage Purchase
+                      </button>
+                    </Link>
+                  </div>
+                )}
             </div>
           ))}
         </div>
