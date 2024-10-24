@@ -309,7 +309,7 @@ const DashboardTable: React.FC = () => {
 
 
                     : "text-neutral-100"
-
+                }`}
               >
                 Cheque Invoice
               </button>

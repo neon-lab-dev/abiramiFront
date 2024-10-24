@@ -13,13 +13,13 @@ const Layout = () => {
       {/* Sidebar taking fixed width, allowing the rest of the screen to adjust */}
       <DashboardSidebar />
       
-      {/* Main content area */}
-      <div className="flex-1 flex flex-col overflow-hidden mb-2 w-full px-4 pr-0 md:px-0 md:pr-7">
+      {/* Main content area */}{/* Content section should scroll if there's overflow in y */}
+      <div className="flex-1 flex flex-col overflow-y-scroll overflow-hidden w-full px-4 pr-0 md:px-0 md:pr-7">
         {/* Header stays at the top */}
         <DashboardHeader  />
         
-        {/* Content section should scroll if there's overflow */}
-        <div className="flex-1 overflow-auto">
+        
+        <div className="flex-1 ">
           <Outlet />
         </div>
 

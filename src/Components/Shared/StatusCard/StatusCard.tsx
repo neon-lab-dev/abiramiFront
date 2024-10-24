@@ -11,7 +11,7 @@ const StatusCard: React.FC<TStatusCardProps> = ({
   cardBg,
   iconBg,
   title,
-    cardWidth,
+  cardWidth,
   value,
   icon,
 }) => {
