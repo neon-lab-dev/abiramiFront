@@ -44,7 +44,7 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
         collapse ? "w-[80px]" : "min-w-[218px]" // Conditionally set width for collapseed sidebar
       } transition-all duration-300 ease-in-out px-4 absolute md:static ${
         callNav ? "left-0" : "-left-[100%]" // Handle visibility on mobile by toggling left position
-      } py-7 border-r z-50 h-screen cursor-pointer flex flex-col justify-between items-center bg-primary-10`}
+      } py-7 border-r z-50 h-screen overflow-y-auto cursor-pointer flex flex-col justify-between items-center bg-primary-10`}
     >
       {/* Toggle sidebar visibility for mobile */}
       <span
@@ -64,11 +64,7 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
         >
           {/* Logo and text */}
           <div className="flex justify-center items-center gap-4">
-            <img
-              src={ICONS.logo}
-              alt="logo"
-              className="w-auto"
-            />
+            <img src={ICONS.logo} alt="logo" className="w-auto" />
             <p
               className={`text-white ${
                 collapse ? "hidden" : "block"
@@ -122,7 +118,8 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
                   className={`ml-3 mt-1 ${
                     collapse ? "hidden" : "block rotate-transition"
                   } ${
-                    item.text === "Suppliers" && activeItem === idx
+                    (item.text === "Suppliers" && activeItem === idx) ||
+                    (item.text === "Purchase" && activeItem === idx)
                       ? "rotate-90" // Rotate arrow for active dropdown
                       : "rotate-0" // Default rotation for non-active items
                   }`}
@@ -147,7 +144,9 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
                         className="w-auto"
                       />
                       <p
-                        className={`text-white ${collapse ? "hidden" : "block"}`}
+                        className={`text-white ${
+                          collapse ? "hidden" : "block"
+                        }`}
                       >
                         Create Supplier
                       </p>
@@ -157,25 +156,47 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
               )}
               {/* Dropdown for Purchase */}
               {item.text === "Purchase" && activeItem === idx && (
-                  <div
-                    className={`w-full flex rounded-b-lg flex-col bg-primary-20 ${
-                      collapse
-                        ? "absolute z-50 w-[200px] rounded-md overflow-hidden"
-                        : ""
-                    }`}
-                  >
-                    <Link to="/Purchase/CreatePurchase">
-                      <button className="p-3 border-0 text-white w-full">
+                <div
+                  className={`w-full flex rounded-b-lg flex-col bg-primary-20 ${
+                    collapse
+                      ? "absolute z-50 w-[200px] rounded-md overflow-hidden"
+                      : ""
+                  }`}
+                >
+                  <Link to="/Purchase/CreatePurchase">
+                    <div className="flex p-3 justify-start items-center gap-4">
+                      <img
+                        src={ICONS.CreatePurchaseIcon}
+                        alt={`${item.text} icon`}
+                        className="w-auto"
+                      />
+                      <p
+                        className={`text-white ${
+                          collapse ? "hidden" : "block"
+                        }`}
+                      >
                         Create Purchase
-                      </button>
-                    </Link>
-                    <Link to="/Purchase/ManagePurchase">
-                      <button className="p-3 border-0 text-white w-full">
+                      </p>
+                    </div>
+                  </Link>
+                  <Link to="/Purchase/ManagePurchase">
+                    <div className="flex p-3 justify-start items-center gap-4">
+                      <img
+                        src={ICONS.ManagePurchaseIcon}
+                        alt={`${item.text} icon`}
+                        className="w-auto"
+                      />
+                      <p
+                        className={`text-white ${
+                          collapse ? "hidden" : "block"
+                        }`}
+                      >
                         Manage Purchase
-                      </button>
-                    </Link>
-                  </div>
-                )}
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              )}
             </div>
           ))}
         </div>
