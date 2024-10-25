@@ -7,6 +7,7 @@ type ButtonProps = {
   color?: string;
   type?: "submit" | "reset" | "button" | undefined;
   iconClassName?: string;
+  textClass?: string;
   onClick?: () => void;
 };
 
@@ -17,19 +18,21 @@ const Button: React.FC<ButtonProps> = ({
   color,
   type,
   iconClassName,
+  textClass,
   onClick,
 }) => {
   return (
     <button
       type={type}
       onClick={onClick}
-      className={`px-5 py-2 rounded-lg font-medium flex justify-center items-center gap-2 ${color}`}
+      className={`${textClass=="hidden" ? "px-3": "px-5 "} py-2 rounded-xl font-medium flex justify-center items-center gap-2 ${color}`}
     >
       {imgSrc && (
-        <img src={imgSrc} alt={text} className={`w-4  h-4 ${iconClassName}`} />
+        <img src={imgSrc} alt={text} className={`w-4 h-4 ${iconClassName}`} />
       )}
       {icon && <span className={iconClassName}>{icon}</span>}
-      <span>{text}</span>
+      {/* Conditionally hide the text on screens smaller than 'md' */}
+      <span className={`${textClass=="hidden" ? "hidden lg:inline": "lg:inline"}`}>{text}</span>
     </button>
   );
 };

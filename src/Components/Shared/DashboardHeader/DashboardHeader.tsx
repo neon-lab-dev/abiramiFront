@@ -62,8 +62,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             className="border-0 hidden md:block outline-0 md:w-[150px] lg:w-[350px] bg-transparent text-secondary-110 placeholder:text-secondary-110"
           />
         </div>
-        {/* Notification bell icon */}
-        <img src={ICONS.bell} alt="Notification Bell" />
+        <img src={ICONS.bell} alt="bell-icon" className="cursor-pointer" />
       </div>
     </div>
   );

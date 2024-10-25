@@ -30,7 +30,7 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
   // Define the navigation items for the sidebar
   const navItems: NavItem[] = [
     { icon: ICONS.DashboardIcon, text: "Dashboard", path: "/" },
-    { icon: ICONS.ClientsIcon, text: "Clients", path: "/Clients" },
+    { icon: ICONS.ClientsIcon, text: "Clients", path: "/clients" },
     { icon: ICONS.SuppliersIcon, text: "Suppliers", path: "/Suppliers" },
     { icon: ICONS.InvoicesIcon, text: "Invoices", path: "/Invoices" },
     { icon: ICONS.InventoryIcon, text: "Inventory", path: "/Inventory" },
@@ -155,6 +155,27 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
                   </Link>
                 </div>
               )}
+              {/* Dropdown for Purchase */}
+              {item.text === "Purchase" && activeItem === idx && (
+                  <div
+                    className={`w-full flex rounded-b-lg flex-col bg-primary-20 ${
+                      collapse
+                        ? "absolute z-50 w-[200px] rounded-md overflow-hidden"
+                        : ""
+                    }`}
+                  >
+                    <Link to="/Purchase/CreatePurchase">
+                      <button className="p-3 border-0 text-white w-full">
+                        Create Purchase
+                      </button>
+                    </Link>
+                    <Link to="/Purchase/ManagePurchase">
+                      <button className="p-3 border-0 text-white w-full">
+                        Manage Purchase
+                      </button>
+                    </Link>
+                  </div>
+                )}
             </div>
           ))}
         </div>

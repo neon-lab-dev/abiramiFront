@@ -37,7 +37,9 @@ export default {
           110: '#A8C5DA',
           115: '#A5C1D6',
           120: '#FFEBEB',
-          125: '#921B1D'
+          125: '#921B1D',
+          130: '#FFD8CC',
+          135: '#E2E2E2'
         },
         black : "#000",
   
@@ -57,19 +59,38 @@ export default {
           70: "rgba(0, 0, 0, 0.05)",
           80: "#E2E8F0",
           85:"#1c1c1c99",
-          90:"#76B59E"
+          90:"#76B59E",
+          95:"#1C1C1C66",
+          100:"#637381"
         },
         sucess: {
           10: "#F2FFFA",
+          20:"#F4FFE5"
         },
         blue: {
           10: "#EBF3FF",
+          20:"#4186F3"
         },
       },
       boxShadow: {
         tableShadow: "0px 1px 0px 0px rgba(0, 0, 0, 0.1)",
+        dropdown: '0px 1px 3px 0px rgba(166, 175, 195, 0.4)',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.scrollbar-hide': {
+          '-ms-overflow-style': 'none', /* IE and Edge */
+          'scrollbar-width': 'none', /* Firefox */
+        },
+        '.scrollbar-hide::-webkit-scrollbar': {
+          'display': 'none', /* Chrome, Safari, and Opera */
+        },
+      };
+
+      addUtilities(newUtilities, ['responsive']);
+    },
+  ],
 };

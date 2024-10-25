@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ICONS } from "../../../assets";
 
 interface Column {
-  header: string;
+  header: string | JSX.Element;
   accessor: string;
   width?: string;
   cellClassName?: string | ((row: any) => string);
@@ -83,7 +83,7 @@ const Table: React.FC<TableProps> = ({
     if(i1 && i2)
       return;
     if  (i1 && i3) 
-  return "w-[70px] justify-between";
+  return "w-[54px] justify-between";
   }
   const i1CustomClass=(i1: boolean, i2: boolean, i3: boolean)=>{
     if (i1 && i2 && i3)
@@ -94,14 +94,15 @@ const Table: React.FC<TableProps> = ({
   return "w-[55px]";
   }
   return (
-    <div className={` w-screen lg:w-[1360px] my-5`}>
+
+    <div className={` max:w-[1536px] w-full overflow-x-scroll custom-scrollbar my-5`}>
       <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 mr-6 shadow-tableShadow">
       <div className="w-[95%] md:w-[97%] lg:w-[100%] flex justify-between items-center h-10">
         <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
           {tableName}
         </div>
         {showViewAll && (
-          <button className="flex items-center px-2 py-1 md:px-3 md:py-2 font-normal text-base leading-6 bg-secondary-70 transition-all rounded-xl">
+          <button className="flex items-center px-2 py-1 md:px-3 md:py-2 font-normal text-base leading-6 bg-neutral-70 transition-all rounded-xl">
             View all
             <img src={ICONS.downArrow} alt="" className="ml-2 w-5 h-5" />
           </button>
@@ -110,7 +111,7 @@ const Table: React.FC<TableProps> = ({
 
       {/* Wrapper to enable horizontal scrolling */}
       <div
-          className={`overflow-x-auto ${!enablePagination ? "overflow-y-auto" : ""}`}
+          className={` overflow-x-auto scrollbar-hide ${!enablePagination ? "overflow-y-auto " : ""} `}
           style={{ maxHeight: tableHeight }}
         >
         <table className="min-w-full text-left border-separate border-spacing-y-1">
@@ -155,11 +156,11 @@ const Table: React.FC<TableProps> = ({
                 {columns.map((col, colIndex) => (
                   <td
                     key={colIndex}
-                    className={`p-4 rounded-lg ${
+                    className={`p-4 rounded-lg text-[14px] ${
                       typeof col.cellClassName === "function"
                         ? col.cellClassName(row)
                         : col.cellClassName || ""
-                    }`}
+                    }${colIndex === 0 ? "text-[#4186F3]" : ""} `}
                     style={{ width: col.width }}
                   >
                      {col.cellRenderer
@@ -182,11 +183,13 @@ const Table: React.FC<TableProps> = ({
                   </td>
                 ))}
                 <td>
-                  <div className="flex px-4 space-x-4 ">
+                  <div className="flex px-4 space-x-2 ">
                     {row.iconsOrder.map((icon:string) => {
                       if (icon === "i1" && row.i1) {
                         return (
-                          <div className={`${i1CustomClass(row.i1, row.i2, row.i3)}`}>
+
+                          <div className={`${i1CustomClass(row.i1, row.i2, row.i3)} max-w-[46px] mr-${(row.i1 && row.i2)&& !row.i3 ? "2" : "0"}`}>
+
                           <button
                             key="i1"
                             onClick={() => handleEdit(row)}
@@ -206,26 +209,23 @@ const Table: React.FC<TableProps> = ({
                      
                       if (icon === "i2" && row.i2) {
                         return (
-                          <div className="flex items-center gap-4 ml-4">
-                          <img src={ICONS.graybar} alt="|" className="h-3 w-[2px]"/>
-                          <button
-                            key="i2"
-                            onClick={() => handleApprove(row)}
-                            className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i2}   `}
-                          >
-                            <img
-                              src={icons.i2}
-                              alt="i2"
-                              className="h-3 w-3"
-                            />
-                          </button>
+
+                          <div className={`flex items-center gap-${(row.i1 && row.i2 )&&! row.i3 ? "4" : "2"} ml-${(row.i1 && row.i2 )&&! row.i3  ? "4" : "2"}`}>
+                            <img src={ICONS.graybar} alt="|" className="h-3 w-[2px]" />
+                            <button
+                              key="i2"
+                              onClick={() => handleApprove(row)}
+                              className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i2}`}
+                            >
+                              <img src={icons.i2} alt="i2" className="h-3 w-3" />
+                            </button>
+
                           </div>
                         );
                       }
-                      
                       if (icon === "i3" && row.i3) {
                         return (
-                          <div className={`flex items-center gap-4 ml-4 w- ${i3CustomClass(row.i1, row.i2, row.i3)}`}>
+                          <div className={`flex items-center gap-2 ml-0 ${i3CustomClass(row.i1, row.i2, row.i3)}`}>
                           <img src={ICONS.graybar} alt="|" className="h-3 w-[2px]"/>
                           <button
                             key="i3"
