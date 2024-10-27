@@ -45,7 +45,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
         {/* Show sidebar toggle icon on small screens */}
         <span
-          className="block md:hidden"
+          className="block cursor-pointer md:hidden"
           onClick={() => HandleSidebar(!callNav)}
         >
           <img src={ICONS.ThreeLineIcon} alt="Menu Icon" />
