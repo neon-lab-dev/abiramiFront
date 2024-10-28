@@ -19,7 +19,7 @@ const Layout = () => {
         <DashboardHeader  />
         
         
-        <div className="flex-1 ">
+        <div className="flex-1 pb-2 ">
           <Outlet />
         </div>
 

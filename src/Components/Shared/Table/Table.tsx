@@ -8,7 +8,9 @@ interface Column {
   cellClassName?: string | ((row: any) => string);
   cellRenderer?: (row: any) => JSX.Element;
   icon1?: string;
-  icon2?:string;
+  icon2?: string;
+  onIcon1Click?: () => void;
+  onIcon2Click?: () => void;
 }
 
 interface TableProps {
@@ -19,19 +21,24 @@ interface TableProps {
   enablePagination?: boolean;
   rowsPerPage?: number;
   tableHeight?: string;
+  tableWidth?:string
   icons: {
     i1: string;
     i2: string;
     i3: string;
   };
-  bg_i1 : string;
-  bg_i2 : string;
-  bg_i3 : string;
+  bg_i1: string;
+  bg_i2: string;
+  bg_i3: string;
 }
 
 const formatDate = (date: Date) => {
   if (!(date instanceof Date)) return date; // Return as is if not a date
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 };
 
 const Table: React.FC<TableProps> = ({
@@ -41,10 +48,11 @@ const Table: React.FC<TableProps> = ({
   showViewAll,
   enablePagination = false,
   rowsPerPage = 5,
+  tableWidth="full",
   icons,
-  tableHeight="400px",
-  bg_i1 = "bg-blue-500", 
-  bg_i2 = "bg-green-500", 
+  tableHeight = "400px",
+  bg_i1 = "bg-blue-500",
+  bg_i2 = "bg-green-500",
   bg_i3 = "bg-red-500",
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,193 +76,225 @@ const Table: React.FC<TableProps> = ({
   const handleEdit = (row: Record<string, any>) => {
     console.log("Edit clicked for:", row);
   };
-  
+
   const handleApprove = (row: Record<string, any>) => {
     console.log("Approve clicked for:", row);
   };
-  
+
   const handleDelete = (row: Record<string, any>) => {
     console.log("Delete clicked for:", row);
   };
-  const i3CustomClass=(i1: boolean, i2: boolean, i3: boolean)=>{
-    if (i1 && i2 && i3)
-      return;
-    if(i1 && i2)
-      return;
-    if  (i1 && i3) 
-  return "w-[54px] justify-between";
-  }
-  const i1CustomClass=(i1: boolean, i2: boolean, i3: boolean)=>{
-    if (i1 && i2 && i3)
-      return;
-    if(i1 && i2)
-      return ;
-    if  (i1 && i3) 
-  return "w-[55px]";
-  }
+  const i3CustomClass = (i1: boolean, i2: boolean, i3: boolean) => {
+    if (i1 && i2 && i3) return;
+    if (i1 && i2) return;
+    if (i1 && i3) return "w-[54px] justify-between";
+  };
+  const i1CustomClass = (i1: boolean, i2: boolean, i3: boolean) => {
+    if (i1 && i2 && i3) return;
+    if (i1 && i2) return;
+    if (i1 && i3) return "w-[55px]";
+  };
   return (
-
-    <div className={` max:w-[1536px] w-full overflow-x-scroll custom-scrollbar my-5`}>
+    <div
+      className={` w-full overflow-x-scroll custom-scrollbar my-5 scrollbar-hide`}
+    >
       <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 mr-6 shadow-tableShadow">
-      <div className="w-[95%] md:w-[97%] lg:w-[100%] flex justify-between items-center h-10">
-        <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
-          {tableName}
+        <div className="w-[95%] md:w-[97%] lg:w-[100%] flex justify-between items-center h-10">
+          <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
+            {tableName}
+          </div>
+          {showViewAll && (
+            <button className="flex items-center px-2 py-1 md:px-3 md:py-2 font-normal text-base leading-6 bg-neutral-70 transition-all rounded-xl">
+              View all
+              <img src={ICONS.downArrow} alt="" className="ml-2 w-5 h-5" />
+            </button>
+          )}
         </div>
-        {showViewAll && (
-          <button className="flex items-center px-2 py-1 md:px-3 md:py-2 font-normal text-base leading-6 bg-neutral-70 transition-all rounded-xl">
-            View all
-            <img src={ICONS.downArrow} alt="" className="ml-2 w-5 h-5" />
-          </button>
-        )}
-      </div>
 
-      {/* Wrapper to enable horizontal scrolling */}
-      <div
-          className={` overflow-x-auto scrollbar-hide ${!enablePagination ? "overflow-y-auto " : ""} `}
-          style={{ maxHeight: tableHeight }}
+        {/* Wrapper to enable horizontal scrolling */}
+        <div
+          className={` overflow-x-auto scrollbar-hide  ${
+            !enablePagination ? "overflow-y-auto " : ""
+          } `}
+          style={{ maxHeight: tableHeight ,minWidth:tableWidth}}
         >
-        <table className="min-w-full text-left border-separate border-spacing-y-1">
-          <thead className="sticky top-0 bg-secondary-60 min-h-10">
-            <tr>
-              {columns.map((col, index) => (
-                <th
-                  key={index}
-                  className="px-4 py-3 font-normal text-[14px] leading-[20px] text-neutral-85"
-                  style={{ width: col.width }}
-                >
-                  <div className="flex items-center justify-between font-normal text-[14px] leading-[20px] text-neutral-85">
-                    {col.header}
-                    {col.icon1 && (
-                      <img
-                        src={col.icon1}
-                        alt={`${col.header} icon`}
-                        className="mr-2 w-5 h-5"
-                      />
-                    )}
-                    {col.icon2 && (
-                      <img
-                        src={col.icon2}
-                        alt={`${col.header} icon`}
-                        className="mr-2 w-5 h-5"
-                      />
-                    )}
-                  </div>
-                </th>
-              ))}
-              <th className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-secondary-60 ">
-            {currentData.map((row, rowIndex) => (
-              <tr
-                key={rowIndex}
-                className="rounded-lg border-secondary-60 border  bg-white transition-all min-h-10"
-              >
-                {columns.map((col, colIndex) => (
-                  <td
-                    key={colIndex}
-                    className={`p-4 rounded-lg text-[14px] ${
-                      typeof col.cellClassName === "function"
-                        ? col.cellClassName(row)
-                        : col.cellClassName || ""
-                    }${colIndex === 0 ? "text-[#4186F3]" : ""} `}
+          <table className="min-w-full text-left border-separate border-spacing-y-1">
+            <thead className="sticky top-0 bg-secondary-60 min-h-10">
+              <tr className="">
+                {columns.map((col, index) => (
+                  <th
+                    key={index}
+                    className="pl-3 py-3 font-normal text-[14px] leading-[20px] text-neutral-85 whitespace-nowrap  text-ellipsis"
                     style={{ width: col.width }}
                   >
-                     {col.cellRenderer
-                        ? col.cellRenderer(row) // Use custom cellRenderer if defined
-                        : col.accessor === "status" ? (
-                      <span
-                        className={`${
-                          row.status === "Active"
-                            ? " text-neutral-90 bg-sucess-10"
-                            : "text-red-600 bg-red-100"
-                        } px-2 py-1 rounded-xl`}
-                      >
-                        {row[col.accessor]}
-                      </span>
-                    ) :(
-                      (typeof row[col.accessor] === 'object' && row[col.accessor] instanceof Date) 
-                      ? formatDate(row[col.accessor]):
-                      row[col.accessor]
-                    )}
-                  </td>
+                 <div className="flex items-center justify-between font-normal text-[14px] leading-[20px] text-neutral-85 whitespace-nowrap">
+  {col.header}
+  <div className={`flex ${col.icon1 && col.icon2 ? 'flex-col items-center w-auto' : ''}`}>
+    {[col.icon1, col.icon2]
+      .filter(Boolean)
+      .map((icon, index) => (
+        <button
+          key={index}
+          onClick={() => {
+            if (index === 0 && col.onIcon1Click) {
+              col.onIcon1Click(); // Call onIcon1Click if it's defined
+            } else if (index === 1 && col.onIcon2Click) {
+              col.onIcon2Click(); // Call onIcon2Click if it's defined
+            }
+          }}
+          className="mt-1 p-0 flex items-center justify-center" // Optional padding adjustments
+        >
+          <img
+            src={icon}
+            alt={`${col.header} icon`}
+            className={`mt-1 ${col.icon1 && col.icon2 ? 'h-[6px] w-3' : 'h-5 w-5'}`}
+          />
+        </button>
+      ))}
+  </div>
+</div>
+
+
+
+                  </th>
                 ))}
-                <td>
-                  <div className="flex px-4 space-x-2 ">
-                    {row.iconsOrder.map((icon:string) => {
-                      if (icon === "i1" && row.i1) {
-                        return (
-
-                          <div className={`${i1CustomClass(row.i1, row.i2, row.i3)} max-w-[46px] mr-${(row.i1 && row.i2)&& !row.i3 ? "2" : "0"}`}>
-
-                          <button
-                            key="i1"
-                            onClick={() => handleEdit(row)}
-                            
-                            className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
-                          >
-                            <img
-                              src={icons.i1}
-                              alt="Edit"
-                              className="h-3 w-3"
-                            />
-                          </button>
-                          </div>
-                        );
-                      }
-                      
-                     
-                      if (icon === "i2" && row.i2) {
-                        return (
-
-                          <div className={`flex items-center gap-${(row.i1 && row.i2 )&&! row.i3 ? "4" : "2"} ml-${(row.i1 && row.i2 )&&! row.i3  ? "4" : "2"}`}>
-                            <img src={ICONS.graybar} alt="|" className="h-3 w-[2px]" />
-                            <button
-                              key="i2"
-                              onClick={() => handleApprove(row)}
-                              className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i2}`}
-                            >
-                              <img src={icons.i2} alt="i2" className="h-3 w-3" />
-                            </button>
-
-                          </div>
-                        );
-                      }
-                      if (icon === "i3" && row.i3) {
-                        return (
-                          <div className={`flex items-center gap-2 ml-0 ${i3CustomClass(row.i1, row.i2, row.i3)}`}>
-                          <img src={ICONS.graybar} alt="|" className="h-3 w-[2px]"/>
-                          <button
-                            key="i3"
-                            onClick={() => handleDelete(row)}
-                            className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i3}  `}
-                          >
-                            <img
-                              src={icons.i3}
-                              alt="i3"
-                              className="h-3 w-3"
-                            />
-                          </button>
-                          </div>
-                        );
-                      }
-
-                      return null;
-                    })}
-                  </div>
-                </td>
+                <th className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85">
+                  Action
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="bg-secondary-60 ">
+              {currentData.map((row, rowIndex) => (
+                <tr
+                  key={rowIndex}
+                  className="rounded-lg border-secondary-60 border  bg-white transition-all min-h-10 "
+                >
+                  {columns.map((col, colIndex) => (
+                    <td
+                      key={colIndex}
+                      className={`pr-4 pl-3 py-4 rounded-lg text-[14px] ${
+                        typeof col.cellClassName === "function"
+                          ? col.cellClassName(row)
+                          : col.cellClassName || ""
+                      }${colIndex === 0 ? "text-[#4186F3]" : ""} `}
+                      style={{ width: col.width }}
+                    >
+                      {col.cellRenderer ? (
+                        col.cellRenderer(row) // Use custom cellRenderer if defined
+                      ) : col.accessor === "status" ? (
+                        <span
+                          className={`${
+                            row.status === "Active"
+                              ? " text-neutral-90 bg-sucess-10"
+                              : "text-red-600 bg-red-100"
+                          } px-2 py-1 rounded-xl`}
+                        >
+                          {row[col.accessor]}
+                        </span>
+                      ) : typeof row[col.accessor] === "object" &&
+                        row[col.accessor] instanceof Date ? (
+                        formatDate(row[col.accessor])
+                      ) : (
+                        row[col.accessor]
+                      )}
+                    </td>
+                  ))}
+                  <td>
+                    <div className="flex px-4 space-x-2 ">
+                      {row.iconsOrder.map((icon: string) => {
+                        if (icon === "i1" && row.i1) {
+                          return (
+                            <div
+                              className={`${i1CustomClass(
+                                row.i1,
+                                row.i2,
+                                row.i3
+                              )} max-w-[46px] mr-${
+                                row.i1 && row.i2 && !row.i3 ? "2" : "0"
+                              }`}
+                            >
+                              <button
+                                key="i1"
+                                onClick={() => handleEdit(row)}
+                                className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
+                              >
+                                <img
+                                  src={icons.i1}
+                                  alt="Edit"
+                                  className="h-3 w-3"
+                                />
+                              </button>
+                            </div>
+                          );
+                        }
 
-      
-    </div>
-   {/* Pagination Controls */}
-   {enablePagination && (
+                        if (icon === "i2" && row.i2) {
+                          return (
+                            <div
+                              className={`flex items-center gap-${
+                                row.i1 && row.i2 && !row.i3 ? "4" : "2"
+                              } ml-${row.i1 && row.i2 && !row.i3 ? "4" : "2"}`}
+                            >
+                              <img
+                                src={ICONS.graybar}
+                                alt="|"
+                                className="h-3 w-[2px]"
+                              />
+                              <button
+                                key="i2"
+                                onClick={() => handleApprove(row)}
+                                className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i2}`}
+                              >
+                                <img
+                                  src={icons.i2}
+                                  alt="i2"
+                                  className="h-3 w-3"
+                                />
+                              </button>
+                            </div>
+                          );
+                        }
+                        if (icon === "i3" && row.i3) {
+                          return (
+                            <div
+                              className={`flex items-center gap-2 ml-0 ${i3CustomClass(
+                                row.i1,
+                                row.i2,
+                                row.i3
+                              )}`}
+                            >
+                              <img
+                                src={ICONS.graybar}
+                                alt="|"
+                                className="h-3 w-[2px]"
+                              />
+                              <button
+                                key="i3"
+                                onClick={() => handleDelete(row)}
+                                className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i3}  `}
+                              >
+                                <img
+                                  src={icons.i3}
+                                  alt="i3"
+                                  className="h-3 w-3"
+                                />
+                              </button>
+                            </div>
+                          );
+                        }
+
+                        return null;
+                      })}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {/* Pagination Controls */}
+      {enablePagination && (
         <div
           className={`flex justify-center ${
             currentPage < totalPages ? "" : ""
@@ -301,9 +341,8 @@ const Table: React.FC<TableProps> = ({
             <img src={ICONS.rightArrowBlack} alt="" className="ml-2 w-5 h-5" />
           </button>
         </div>
-      )} 
+      )}
     </div>
-    
   );
 };
 

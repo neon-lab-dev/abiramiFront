@@ -60,6 +60,10 @@ import invoiceslocation from "../assets/icons/invoicesLocation.svg"
 import invoicescreditcard from "../assets/icons/invoicesCreditcard.svg"
 import invoicesmobile from "../assets/icons/invoicesMobile.svg"
 import invoicesattherate from "../assets/icons/invoicesAtTheRate.svg"
+import upArrow  from "../assets/icons/upArrow.svg";
+import downArrow2 from "../assets/icons/downArrow2.svg"
+import calanderGray from "../assets/icons/calanderGray.svg"
+import calander from "../assets/icons/calander.svg"
 
 // Import images here (if any)
 // import bell from "../assets/icons/Bell.svg"
@@ -111,15 +115,16 @@ export const ICONS = {
   SupplierIcon1,
   SupplierIcon2,
   SupplierIcon3,
-
   greenCross,
-
   download,
   removeFilter,
   filter,
   removeFilterGray,
   filterGray,
-  
+  upArrow,
+  downArrow2,
+  calanderGray,
+  calander
 };
 
 export const IMAGES = {

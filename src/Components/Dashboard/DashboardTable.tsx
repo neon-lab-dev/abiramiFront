@@ -210,43 +210,43 @@ const DashboardTable: React.FC = () => {
             </div>
           </button>
           {dropdownOpen1 && (
-            <div className="absolute bg-white mt-1 z-50 rounded-[6px] shadow-dropdown">
+            <div className="absolute bg-white mt-1 z-100 rounded-[6px] shadow-dropdown">
               <button
                 onClick={() => {
                   setStatusFilter("PAID");
                   setDropdownOpen1(false);
                 }}
-                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "PAID"
 
-                    ? "text-white bg-blue-20"
+                    ? "text-white bg-customBlue-20"
                     : "text-neutral-100"
 
                 }`}
               >
-                PAID
+                Paid
               </button>
               <button
                 onClick={() => {
                   setStatusFilter("PENDING");
                   setDropdownOpen1(false);
                 }}
-                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                className={`block w-full text-left p-2  hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "PENDING"
 
-                    ? "text-white bg-blue-20"
+                    ? "text-white bg-customBlue-20"
                     : "text-neutral-100"
 
                 }`}
               >
-                PENDING
+                Pending
               </button>
               <button
                 onClick={() => {
                   setStatusFilter("DRAFT");
                   setDropdownOpen1(false);
                 }}
-                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "DRAFT"
 
                     ? "text-white bg-blue-20"
@@ -254,7 +254,7 @@ const DashboardTable: React.FC = () => {
 
                 }`}
               >
-                DRAFT
+                Draft
               </button>
             </div>
           )}
@@ -281,11 +281,13 @@ const DashboardTable: React.FC = () => {
       },
       width: "112px",
     },
+   
 
     {
       header: "Client",
       accessor: "client",
       cellClassName: "text-black",
+      width:"200px"
     },
     {
       header: (
@@ -354,17 +356,18 @@ const DashboardTable: React.FC = () => {
 
       accessor: "invoice_type",
       cellClassName: "text-black",
+      width:"141px"
     },
     {
       header: "Total Amount",
       accessor: "total_amount",
       cellRenderer: (row: Dashboard) => {
-        console.log(row.total_amount); // For debugging
         return (
           <span className="text-black">{formatCurrency(row.total_amount)}</span>
         );
       },
-      cellClassName: "text-black",
+      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      width:"141px"
     },
     {
       header: "Tax",
@@ -373,19 +376,22 @@ const DashboardTable: React.FC = () => {
         console.log(row.tax); // For debugging
         return <span className="text-black">{formatCurrency(row.tax)}</span>;
       },
-      cellClassName: "text-black",
+      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      width:"111px"
     },
 
     {
       header: "Created Date",
       accessor: "created_date",
-      cellClassName: "text-black",
+      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
       format: (value: Date) =>
         value.toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
           year: "numeric",
         }),
+      icon1:ICONS.downArrow,
+      width:"141px"
     },
   ];
   const filteredData = data.filter(
@@ -404,7 +410,7 @@ const DashboardTable: React.FC = () => {
         enablePagination={false}
         rowsPerPage={5}
         icons={icons}
-        bg_i1="bg-blue-10"
+        bg_i1="bg-customBlue-10"
         bg_i2="bg-sucess-20"
         bg_i3="bg-primary-40"
       />

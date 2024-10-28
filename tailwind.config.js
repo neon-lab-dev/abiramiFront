@@ -39,7 +39,8 @@ export default {
           120: '#FFEBEB',
           125: '#921B1D',
           130: '#FFD8CC',
-          135: '#E2E2E2'
+          135: '#E2E2E2',
+          140:"#FFF8F7"
         },
         black : "#000",
   
@@ -67,7 +68,7 @@ export default {
           10: "#F2FFFA",
           20:"#F4FFE5"
         },
-        blue: {
+        customBlue: {
           10: "#EBF3FF",
           20:"#4186F3"
         },

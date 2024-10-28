@@ -9,6 +9,7 @@ import Invoice from '../pages/Invoices/ListPage';
 import InvoiceDetail from '../pages/Invoices/DetailPage'
 import Purchase from "../pages/Purchase/ListPage"
 import CreatePurchase from "../pages/Purchase/CreatePurchase";
+import Inventory from "../pages/Inventory/ListPage"
 
 export const router = createBrowserRouter([  
   {
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
       {
         path: "/purchase/CreatePurchase",
         element: <CreatePurchase />,
+      },
+      {
+        path: "/inventory",
+        element: <Inventory />,
       },
     ]
   },
