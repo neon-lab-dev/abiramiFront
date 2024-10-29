@@ -3,6 +3,7 @@ import StatusCard from "../../Components/Shared/StatusCard/StatusCard"
 import Button from "../../Components/Shared/Button/Button"
 import { useNavigate } from 'react-router-dom';
 import { ICONS } from "../../assets"
+import InventoryListPageTable from "../../Components/Inventory/InventoryTable";
 
 
 const ListPage = () => {
@@ -14,9 +15,9 @@ const ListPage = () => {
   };
   return (<div>
     <div className='flex justify-between mb-[22px] '>
-      <span className='font-Inter  text-sm font-semibold ml-2 '>Purchase list page</span>
+      <span className='font-Inter  text-sm font-semibold ml-2 '>Inventory list page</span>
       <Button
-        text="Create Purchase"
+        text="Create Inventory"
         imgSrc={ICONS.clientOutline}   
         color='bg-secondary-120 text-[14px] text-secondary-125'
         iconClassName="h-[24px] w-[24px]"
@@ -42,15 +43,15 @@ const ListPage = () => {
         icon={ICONS.clienticon2}
       />
       <StatusCard
-        cardBg="bg-secondary-40"
-        iconBg="bg-secondary-85"
+        cardBg="bg-secondary-140"
+        iconBg="bg-primary-30"
         title="Inactive Clients"
         value="5"
         cardWidth='w-[416px]'
         icon={ICONS.clienticon3}
       />
     </div>
-    <PurchaseTable/>
+    <InventoryListPageTable/>
   </div>
 )
 }

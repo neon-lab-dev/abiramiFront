@@ -47,6 +47,7 @@ export default {
           155: '#F2F2F2',
           160: '#FAFAFA',
           165: '#EFFAE1'
+          140:"#FFF8F7"
         },
         black : "#000",
   
@@ -74,7 +75,7 @@ export default {
           10: "#F2FFFA",
           20:"#F4FFE5"
         },
-        blue: {
+        customBlue: {
           10: "#EBF3FF",
           20:"#4186F3"
         },

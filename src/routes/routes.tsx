@@ -12,6 +12,7 @@ import Purchase from "../pages/Purchase/ListPage"
 import CreatePurchase from "../pages/Purchase/CreatePurchase";
 import ClientDetail from "../pages/Clients/DetailPage";
 import CreateClients from "../pages/Clients/CreateClients";
+import Inventory from "../pages/Inventory/ListPage"
 
 export const router = createBrowserRouter([  
   {
@@ -20,15 +21,15 @@ export const router = createBrowserRouter([
     errorElement : <ErrorPage/>,
     children : [
       {
-          path: "",
-          element: <Dashboard/>
+        path: "",
+        element: <Dashboard/>
       },
       {
-        path: "/Suppliers",
+        path: "suppliers",
         element: <Suppliers />,
       },
       {
-        path: "/Suppliers/CreateSupplier",
+        path: "suppliers/createsupplier",
         element: <CreateSupplier />,
       },
       {
@@ -60,8 +61,12 @@ export const router = createBrowserRouter([
         element: <Purchase/>
       },
       {
-        path: "/purchase/CreatePurchase",
+        path: "/purchase/createpurchase",
         element: <CreatePurchase />,
+      },
+      {
+        path: "/inventory",
+        element: <Inventory />,
       },
     ]
   },

@@ -31,11 +31,16 @@ import CollapseIcon from "../assets/icons/collaps.svg";
 import DashboardIcon from "../assets/icons/dashboardnav.svg";
 import ClientsIcon from "../assets/icons/clientsnav.svg";
 import SuppliersIcon from "../assets/icons/suppliesnav.svg";
+import ThreeLineIcon from "../assets/icons/ThreeLineIcon.svg";
 import InvoicesIcon from "../assets/icons/invoicesnav.svg";
 import InventoryIcon from "../assets/icons/inventorynav.svg";
 import PurchasesIcon from "../assets/icons/purchasesnav.svg";
+import CreatePurchaseIcon from "../assets/icons/CreatePurchaseIcon.svg";
+import ManagePurchaseIcon from "../assets/icons/ManagePurchaseIcon.svg";
 import SettingsIcon from "../assets/icons/settingsnav.svg";
 import RightArrowIcon from "../assets/icons/rightArrow.svg";
+import CrossIcon from "../assets/icons/CrossIcon.svg";
+import CreateSupplierIcon from "../assets/icons/CreateSupplierIcon.svg";
 import Admin from "../assets/icons/admin.svg";
 
 //SupplierIcons
@@ -65,6 +70,10 @@ import invoicesattherate from "../assets/icons/invoicesAtTheRate.svg"
 import invoiceplus from "../assets/icons/InvoicePlus.svg"
 import invoicesearch from "../assets/icons/InvoiceSearch.svg"
 import close from '../assets/icons/close.svg'
+import upArrow  from "../assets/icons/upArrow.svg";
+import downArrow2 from "../assets/icons/downArrow2.svg"
+import calanderGray from "../assets/icons/calanderGray.svg"
+import calander from "../assets/icons/calander.svg"
 
 // Import images here (if any)
 // import bell from "../assets/icons/Bell.svg"
@@ -115,21 +124,27 @@ export const ICONS = {
   InvoicesIcon,
   InventoryIcon,
   PurchasesIcon,
+  CreatePurchaseIcon,
+  ManagePurchaseIcon,
+  ThreeLineIcon,
   SettingsIcon,
+  CrossIcon,
+  CreateSupplierIcon,
   RightArrowIcon,
   Admin,
   SupplierIcon1,
   SupplierIcon2,
   SupplierIcon3,
-
   greenCross,
-
   download,
   removeFilter,
   filter,
   removeFilterGray,
   filterGray,
-  
+  upArrow,
+  downArrow2,
+  calanderGray,
+  calander
 };
 
 export const IMAGES = {
