@@ -232,22 +232,6 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
                       </p>
                     </div>
                   </Link>
-                  <Link to="/purchase/managepurchase">
-                    <div className="flex p-3 justify-start items-center gap-4">
-                      <img
-                        src={ICONS.ManagePurchaseIcon}
-                        alt={`${item.text} icon`}
-                        className="w-auto"
-                      />
-                      <p
-                        className={`text-white ${
-                          collapse ? "hidden" : "block"
-                        }`}
-                      >
-                        Manage Purchase
-                      </p>
-                    </div>
-                  </Link>
                 </div>
               )}
             </div>

@@ -46,8 +46,8 @@ export default {
           150: '#4186F3',
           155: '#F2F2F2',
           160: '#FAFAFA',
-          165: '#EFFAE1'
-          140:"#FFF8F7"
+          165: '#EFFAE1',
+          170:"#FFF8F7"
         },
         black : "#000",
   

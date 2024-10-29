@@ -1,4 +1,3 @@
-import PurchaseTable from "../../Components/Purchase/PurchaseTable"
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard"
 import Button from "../../Components/Shared/Button/Button"
 import { useNavigate } from 'react-router-dom';
@@ -43,7 +42,7 @@ const ListPage = () => {
         icon={ICONS.clienticon2}
       />
       <StatusCard
-        cardBg="bg-secondary-140"
+        cardBg="bg-secondary-170"
         iconBg="bg-primary-30"
         title="Inactive Clients"
         value="5"

@@ -62,13 +62,13 @@ const ListPage = () => {
                         aria-labelledby="options-menu"
                         >
                         <div className="py-1">
-                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-20 hover:text-white" role="menuitem">
+                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-20" role="menuitem">
                             Cheque Invoice
                             </a>
-                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-20 hover:text-white" role="menuitem">
+                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-20" role="menuitem">
                             Tax invoice
                             </a>
-                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-20 hover:text-white" role="menuitem">
+                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-20" role="menuitem">
                             Quote Invoice
                             </a>
                         </div>
