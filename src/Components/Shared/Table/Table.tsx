@@ -30,7 +30,8 @@ interface TableProps {
 }
 
 const formatDate = (date: Date) => {
-  if (!(date instanceof Date)) return date; // Return as is if not a date
+  if (!(date instanceof Date)) 
+  return date; // Return as is if not a date
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 };
 

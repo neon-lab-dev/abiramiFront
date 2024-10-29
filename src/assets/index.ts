@@ -31,11 +31,16 @@ import CollapseIcon from "../assets/icons/collaps.svg";
 import DashboardIcon from "../assets/icons/dashboardnav.svg";
 import ClientsIcon from "../assets/icons/clientsnav.svg";
 import SuppliersIcon from "../assets/icons/suppliesnav.svg";
+import ThreeLineIcon from "../assets/icons/ThreeLineIcon.svg";
 import InvoicesIcon from "../assets/icons/invoicesnav.svg";
 import InventoryIcon from "../assets/icons/inventorynav.svg";
 import PurchasesIcon from "../assets/icons/purchasesnav.svg";
+import CreatePurchaseIcon from "../assets/icons/CreatePurchaseIcon.svg";
+import ManagePurchaseIcon from "../assets/icons/ManagePurchaseIcon.svg";
 import SettingsIcon from "../assets/icons/settingsnav.svg";
 import RightArrowIcon from "../assets/icons/rightArrow.svg";
+import CrossIcon from "../assets/icons/CrossIcon.svg";
+import CreateSupplierIcon from "../assets/icons/CreateSupplierIcon.svg";
 import Admin from "../assets/icons/admin.svg";
 
 //SupplierIcons
@@ -105,7 +110,12 @@ export const ICONS = {
   InvoicesIcon,
   InventoryIcon,
   PurchasesIcon,
+  CreatePurchaseIcon,
+  ManagePurchaseIcon,
+  ThreeLineIcon,
   SettingsIcon,
+  CrossIcon,
+  CreateSupplierIcon,
   RightArrowIcon,
   Admin,
   SupplierIcon1,
