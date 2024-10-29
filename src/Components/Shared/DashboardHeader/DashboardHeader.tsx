@@ -16,14 +16,14 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   const pathSegments = location.pathname.split("/").filter(Boolean);
 
   return (
-    <div className="bg-white mb-6 py-5 px-7 border-b flex justify-between items-center">
+    <div className="bg-white mb-6 py-5 px-0 md:px-7 border-b flex justify-between items-center">
       <div className="text-gray-600 font-normal">
         {/* Conditional rendering based on screen size */}
         <span className="hidden font-semibold lg:block">
           Dashboard{" "}
           {/* Display each word with slashes, 10px space, and color logic */}
           {pathSegments.length > 0 && (
-            <span className="inline-flex  items-center whitespace-nowrap">
+            <span className="inline-flex capitalize items-center whitespace-nowrap">
               {pathSegments.map((segment, index) => (
                 <span key={index} className="inline-flex items-center">
                   <span

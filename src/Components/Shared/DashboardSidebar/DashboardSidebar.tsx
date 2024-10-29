@@ -31,11 +31,16 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
   const navItems: NavItem[] = [
     { icon: ICONS.DashboardIcon, text: "Dashboard", path: "/" },
     { icon: ICONS.ClientsIcon, text: "Clients", path: "/clients" },
-    { icon: ICONS.SuppliersIcon, text: "Suppliers", path: "/Suppliers" },
-    { icon: ICONS.InvoicesIcon, text: "Invoices", path: "/Invoices" },
-    { icon: ICONS.InventoryIcon, text: "Inventory", path: "/Inventory" },
-    { icon: ICONS.PurchasesIcon, text: "Purchase", path: "/Purchase" },
-    { icon: ICONS.SettingsIcon, text: "Settings", path: "/Settings" },
+    // { icon: ICONS.SuppliersIcon, text: "Suppliers", path: "/Suppliers" },
+    // { icon: ICONS.InvoicesIcon, text: "Invoices", path: "/Invoices" },
+    // { icon: ICONS.InventoryIcon, text: "Inventory", path: "/Inventory" },
+    // { icon: ICONS.PurchasesIcon, text: "Purchase", path: "/Purchase" },
+    // { icon: ICONS.SettingsIcon, text: "Settings", path: "/Settings" },
+    { icon: ICONS.SuppliersIcon, text: "Suppliers", path: "/suppliers" },
+    { icon: ICONS.InvoicesIcon, text: "Invoices", path: "/invoices" },
+    { icon: ICONS.InventoryIcon, text: "Inventory", path: "/inventory" },
+    { icon: ICONS.PurchasesIcon, text: "Purchase", path: "/purchase" },
+    { icon: ICONS.SettingsIcon, text: "Settings", path: "/settings" },
   ];
 
   return (
@@ -88,10 +93,14 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
           {navItems.map((item, idx) => (
             <div
               key={idx}
-              onClick={() => toggleItem(idx)} // Toggle active item for dropdown functionality
+              // onClick={() => toggleItem(idx)} // Toggle active item for dropdown functionality
+              onClick={() => {
+                toggleItem(idx), HandleSidebar(!callNav);
+              }}
               className={`w-full relative rounded-lg hover:bg-primary-20`} // Apply hover effect for items
             >
               <NavLink
+                // onClick={() => HandleSidebar(!callNav)}
                 to={item.path} // Set the path for navigation
                 className={`p-3 w-full gap-3 flex ${
                   item.text === "Suppliers" && activeItem === idx
@@ -129,6 +138,7 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
               {/* Dropdown for Suppliers section */}
               {item.text === "Suppliers" && activeItem === idx && (
                 <div
+                  onClick={() => HandleSidebar(!callNav)}
                   className={`w-full flex rounded-b-lg flex-col bg-primary-20 ${
                     collapse
                       ? "absolute z-50 w-[200px] rounded-md overflow-hidden" // For collapsed view, display dropdown as floating
@@ -136,7 +146,7 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
                   }`}
                 >
                   {/* Dropdown options */}
-                  <Link to="/Suppliers/CreateSupplier">
+                  <Link to="/suppliers/createsupplier">
                     <div className="flex p-3 justify-start items-center gap-4">
                       <img
                         src={ICONS.CreateSupplierIcon}
@@ -157,13 +167,14 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
               {/* Dropdown for Purchase */}
               {item.text === "Purchase" && activeItem === idx && (
                 <div
+                  onClick={() => HandleSidebar(!callNav)}
                   className={`w-full flex rounded-b-lg flex-col bg-primary-20 ${
                     collapse
                       ? "absolute z-50 w-[200px] rounded-md overflow-hidden"
                       : ""
                   }`}
                 >
-                  <Link to="/Purchase/CreatePurchase">
+                  <Link to="/purchase/createpurchase">
                     <div className="flex p-3 justify-start items-center gap-4">
                       <img
                         src={ICONS.CreatePurchaseIcon}
@@ -179,7 +190,7 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
                       </p>
                     </div>
                   </Link>
-                  <Link to="/Purchase/ManagePurchase">
+                  <Link to="/purchase/managepurchase">
                     <div className="flex p-3 justify-start items-center gap-4">
                       <img
                         src={ICONS.ManagePurchaseIcon}
@@ -231,4 +242,3 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
 };
 
 export default DashboardSidebar;
-

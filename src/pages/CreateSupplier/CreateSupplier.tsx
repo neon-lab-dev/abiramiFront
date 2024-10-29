@@ -38,10 +38,10 @@ const CreateSupplier = () => {
       <form onSubmit={handleSubmit} className="">
         {/* Supplier Information */}
         <div className="">
-          <h2 className="text-xl font-semibold ml-5">Supplier Information</h2>
+          <h2 className="text-xl font-semibold">Supplier Information</h2>
         </div>
 
-        <div className="w-full p-5 border-b-2 border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="w-full py-5 border-b-2 border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <InputField
             label="Company Name"
             required={true}
@@ -76,10 +76,10 @@ const CreateSupplier = () => {
 
         {/* Contact Information */}
         <div className="mt-5">
-          <h2 className="text-xl font-semibold ml-5">Contact Information</h2>
+          <h2 className="text-xl font-semibold">Contact Information</h2>
         </div>
 
-        <div className="w-full p-5 border-b-2 border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="w-full py-5 border-b-2 border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <InputField
             label="Mobile Number"
             inputBg=""
@@ -113,10 +113,10 @@ const CreateSupplier = () => {
 
         {/* Address Information */}
         <div className="mt-5">
-          <h2 className="text-xl font-semibold ml-5">Address Information</h2>
+          <h2 className="text-xl font-semibold">Address Information</h2>
         </div>
 
-        <div className="w-full p-5 border-b-2 border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="w-full py-5 border-b-2 border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <InputField
             label="Address line 1"
             inputBg=""
@@ -189,7 +189,7 @@ const CreateSupplier = () => {
         </div>
 
         {/* Status */}
-        <div className="m-5">
+        <div className="my-5">
           <h2 className="text-xl font-semibold mb-4">Status</h2>
           <div className="flex items-center gap-5">
             <label className="flex items-center">
@@ -216,7 +216,7 @@ const CreateSupplier = () => {
         </div>
 
         {/* Buttons */}
-        <div className="col-span-3 flex justify-end gap-4 mr-5 my-6">
+        <div className="col-span-3 flex justify-end gap-4  my-6">
           <Button
             text="Clear Form"
             type="reset"

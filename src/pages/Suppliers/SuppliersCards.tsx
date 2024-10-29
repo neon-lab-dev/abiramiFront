@@ -6,7 +6,7 @@ import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 export default function SuppliersCards() {
   return (
     <div className="w-full ">
-      <div className="w-full px-4 py-2 mb-2 flex justify-between items-center">
+      <div className="w-full py-2 mb-2 flex justify-between items-center">
         <h3 className="font-bold">Supplier list page</h3>
         <Link to={"/Suppliers/CreateSupplier"}>
           <Button
