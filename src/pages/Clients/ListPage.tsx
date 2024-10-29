@@ -1,9 +1,15 @@
+import {  useNavigate } from 'react-router-dom'
 import { ICONS } from '../../assets'
 import ClientTable from '../../Components/Clients/ClientTable'
 import Button from '../../Components/Shared/Button/Button'
 import StatusCard from '../../Components/Shared/StatusCard/StatusCard'
 
 const ListPage = () => {
+  const navigate = useNavigate();
+
+  const handlenavigatetocreatesupplier = () => {
+    navigate("/clients/CreateClients");
+  };
   return (
     <div>
       <div className='flex justify-between  mb-[22px] '>
@@ -13,6 +19,7 @@ const ListPage = () => {
           imgSrc={ICONS.clientOutline}   
           color='bg-secondary-120 text-[14px] text-secondary-125'
           iconClassName="h-[24px] w-[24px]"
+          onClick={handlenavigatetocreatesupplier}
         />
 
       </div>
