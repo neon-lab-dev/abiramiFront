@@ -12,6 +12,7 @@ export default {
           20: "#730B0D",
           30: "#D94535",
           40: "#FFEDEB",
+          50: '#5C9A11'
         },
 
         secondary: {
@@ -39,7 +40,13 @@ export default {
           120: '#FFEBEB',
           125: '#921B1D',
           130: '#FFD8CC',
-          135: '#E2E2E2'
+          135: '#E2E2E2',
+          140: '#E0E2E7',
+          145: '#E2E8F0',
+          150: '#4186F3',
+          155: '#F2F2F2',
+          160: '#FAFAFA',
+          165: '#EFFAE1'
         },
         black : "#000",
   

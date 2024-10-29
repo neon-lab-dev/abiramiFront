@@ -6,9 +6,12 @@ import Layout from "../layout/Layout";
 import Suppliers from "../pages/Suppliers/Suppliers";
 import CreateSupplier from "../pages/CreateSupplier/CreateSupplier";
 import Invoice from '../pages/Invoices/ListPage';
-import InvoiceDetail from '../pages/Invoices/DetailPage'
+import InvoiceDetail from '../pages/Invoices/DetailPage';
+import CreateInvoice from "../pages/Invoices/CreateInvoice";
 import Purchase from "../pages/Purchase/ListPage"
 import CreatePurchase from "../pages/Purchase/CreatePurchase";
+import ClientDetail from "../pages/Clients/DetailPage";
+import CreateClients from "../pages/Clients/CreateClients";
 
 export const router = createBrowserRouter([  
   {
@@ -33,12 +36,24 @@ export const router = createBrowserRouter([
         element: <Client/>
       },
       {
+        path: "/clients/DetailPage",
+        element: <ClientDetail/>
+      },
+      {
+        path: "/clients/CreateClients",
+        element: <CreateClients/>
+      },
+      {
         path: "/invoices",
         element : <Invoice/>
       },
       {
         path: "/invoices/detailpage",
         element : <InvoiceDetail/>
+      },
+      {
+        path: "/invoices/CreateInvoices",
+        element : <CreateInvoice/>
       },
       {
         path: "/purchase",

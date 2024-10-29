@@ -122,6 +122,48 @@ const DashboardSidebar = () => {
                   </Link>
                 </div>
               )}
+              {/* Dropdown for Clients */}
+              {item.text === "Clients" && activeItem === idx && (
+                <div
+                  className={`w-full flex rounded-b-lg flex-col bg-primary-20 ${
+                    collapse
+                      ? "absolute z-50 w-[200px] rounded-md overflow-hidden"
+                      : ""
+                  }`}
+                >
+                  <Link to="/clients/Detailpage">
+                    <button className="p-3 border-0 text-white w-full">
+                      Client Detail
+                    </button>
+                  </Link>
+                  <Link to="/clients/CreateClients">
+                    <button className="p-3 border-0 text-white w-full">
+                      Create Client
+                    </button>
+                  </Link>
+                </div>
+              )}
+              {/* Dropdown for Invoices */}
+              {item.text === "Invoices" && activeItem === idx && (
+                <div
+                  className={`w-full flex rounded-b-lg flex-col bg-primary-20 ${
+                    collapse
+                      ? "absolute z-50 w-[200px] rounded-md overflow-hidden"
+                      : ""
+                  }`}
+                >
+                  <Link to="/Invoices/Detailpage">
+                    <button className="p-3 border-0 text-white w-full">
+                      Invoice Detail
+                    </button>
+                  </Link>
+                  <Link to="/Invoices/CreateInvoices">
+                    <button className="p-3 border-0 text-white w-full">
+                      Create Invoice
+                    </button>
+                  </Link>
+                </div>
+              )}
               {/* Dropdown for Purchase */}
               {item.text === "Purchase" && activeItem === idx && (
                   <div
