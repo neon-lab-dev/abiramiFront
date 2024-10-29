@@ -191,7 +191,7 @@ const SuppliersTable: React.FC = () => {
     {
       header: "Mobile No.",
       accessor: "mobile_no",
-      cellClassName: "text-black",
+      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
       icon1: ICONS.search,
     },
     {
@@ -202,7 +202,7 @@ const SuppliersTable: React.FC = () => {
     {
       header: "Created Date",
       accessor: "created_date",
-      cellClassName: "text-black",
+      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
       format: (value: Date) => value.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
     },
@@ -223,7 +223,7 @@ const SuppliersTable: React.FC = () => {
         rowsPerPage={5}
         icons={icons}
         bg_i1 = "bg-secondary-65"
-        bg_i2 = "bg-blue-10"
+        bg_i2 = "bg-customBlue-10"
         bg_i3 = "bg-primary-40"
        
       />

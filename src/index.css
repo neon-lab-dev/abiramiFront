@@ -13,9 +13,4 @@
   .scroll-none::-webkit-scrollbar {
     display: none;
   }
-  .custom-scrollbar::-webkit-scrollbar {
-    background-color: #d1d5db; /* scrollbar color */
-    border-radius: 4px;
-    height: 6px;
-    /* border: 1px solid #d1d5db;  */
-  }
+  

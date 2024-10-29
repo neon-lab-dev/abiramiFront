@@ -28,6 +28,10 @@ const InvoiceTable: React.FC = () => {
   const formatCurrency = (value: number) => {
     return `₹ ${value.toLocaleString()}`;
   };
+  const removeFilter=()=>{
+    setStatusFilter("");
+    setTypeFilter("")
+  }
 
   const icons = {
     i1: ICONS.blueTick,
@@ -212,45 +216,51 @@ const InvoiceTable: React.FC = () => {
             </div>
           </button>
           {dropdownOpen1 && (
-            <div className="absolute bg-white mt-1 z-50 rounded-[6px] shadow-dropdown">
+            <div className="absolute bg-white mt-1 z-100 rounded-[6px] shadow-dropdown">
               <button
                 onClick={() => {
                   setStatusFilter("PAID");
                   setDropdownOpen1(false);
                 }}
-                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "PAID"
-                    ? "text-white bg-blue-20"
-                    : "text-[#637381]"
+
+                    ? "text-white bg-customBlue-20"
+                    : "text-neutral-100"
+
                 }`}
               >
-                PAID
+                Paid
               </button>
               <button
                 onClick={() => {
                   setStatusFilter("PENDING");
                   setDropdownOpen1(false);
                 }}
-                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                className={`block w-full text-left p-2  hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "PENDING"
-                    ? "text-white bg-blue-20"
-                    : "text-[#637381]"
+
+                    ? "text-white bg-customBlue-20"
+                    : "text-neutral-100"
+
                 }`}
               >
-                PENDING
+                Pending
               </button>
               <button
                 onClick={() => {
                   setStatusFilter("DRAFT");
                   setDropdownOpen1(false);
                 }}
-                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "DRAFT"
+
                     ? "text-white bg-blue-20"
-                    : "text-[#637381]"
+                    : "text-neutral-100"
+
                 }`}
               >
-                DRAFT
+                Draft
               </button>
             </div>
           )}
@@ -268,7 +278,9 @@ const InvoiceTable: React.FC = () => {
           statusClass =
             "text-yellow-500 bg-secondary-35 h-[28px]  py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Yellow for PENDING (PENDING)
         } else if (row.invoice_status === "DRAFT") {
-          statusClass = "text-gray-500  "; // Gray for DRAFT
+
+          statusClass = "text-gray-500  font-sans text-[12px] font-normal leading-[20px] text-left"; // Gray for DRAFT
+
         }
 
         return <span className={statusClass}>{row.invoice_status}</span>;
@@ -280,7 +292,8 @@ const InvoiceTable: React.FC = () => {
       header: "Client",
       accessor: "client",
       cellClassName: "text-black",
-      icon1:ICONS.search
+      icon1:ICONS.search,
+      width:"200px"
     },
     {
       header: (
@@ -298,10 +311,12 @@ const InvoiceTable: React.FC = () => {
                   setTypeFilter("Cheque Invoice");
                   setDropdownOpen2(false);
                 }}
-                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                className={`block w-full text-left p-2  hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   typeFilter === "Cheque Invoice"
-                    ? "text-white bg-blue-500"
-                    : "text-[#637381]"
+                    ? "text-white bg-customBlue-20"
+
+
+                    : "text-neutral-100"
                 }`}
               >
                 Cheque Invoice
@@ -311,10 +326,14 @@ const InvoiceTable: React.FC = () => {
                   setTypeFilter("Quote Invoice");
                   setDropdownOpen2(false);
                 }}
-                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   typeFilter === "Quote Invoice"
-                    ? "text-white bg-blue-500"
-                    : "text-[#637381]"
+                    ? "text-white bg-customBlue-20"
+
+
+                    : "text-neutral-100"
+
+
                 }`}
               >
                 Quote Invoice
@@ -324,10 +343,14 @@ const InvoiceTable: React.FC = () => {
                   setTypeFilter("Tax invoice");
                   setDropdownOpen2(false);
                 }}
-                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   typeFilter === "Tax invoice"
-                    ? "text-white bg-blue-500"
-                    :"text-[#637381]"
+                    ? "text-white bg-customBlue-20"
+
+
+                    : "text-neutral-100"
+
+
                 }`}
               >
                 Tax invoice
@@ -339,6 +362,7 @@ const InvoiceTable: React.FC = () => {
 
       accessor: "invoice_type",
       cellClassName: "text-black",
+      width:"175px"
     },
     {
       header: "Total Amount",
@@ -349,7 +373,8 @@ const InvoiceTable: React.FC = () => {
           <span className="text-black">{formatCurrency(row.total_amount)}</span>
         );
       },
-      cellClassName: "text-black",
+      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      width:"175px"
     },
     {
       header: "Tax",
@@ -358,19 +383,23 @@ const InvoiceTable: React.FC = () => {
         console.log(row.tax); // For debugging
         return <span className="text-black">{formatCurrency(row.tax)}</span>;
       },
-      cellClassName: "text-black",
+      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      width:"111px"
     },
 
     {
       header: "Created Date",
       accessor: "created_date",
-      cellClassName: "text-black",
+      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
       format: (value: Date) =>
         value.toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
           year: "numeric",
         }),
+        icon2:ICONS.downArrow2,
+      icon1:ICONS.upArrow,
+      width:"175px"
     },
   ];
   const filteredData = data.filter(
@@ -389,18 +418,18 @@ const InvoiceTable: React.FC = () => {
         enablePagination={false}
         rowsPerPage={5}
         icons={icons}
-        bg_i1="bg-blue-10"
+        bg_i1="bg-customBlue-10"
         bg_i2="bg-sucess-20"
         bg_i3="bg-primary-40"
       />
       <div className=" flex justify-between">
       <div className="flex justify-between md:gap-4 gap-3">
       <Button
-        text="Remove Filter"
-        imgSrc={ICONS.clientOutline}   
-        color='border-neutral-80 border-2 bg-white text-[14px] text-black'
-        iconClassName="h-[16px] w-[16px]"
-        textClass="hidden"
+        text="Start Date - End Date"
+        imgSrc={ICONS.calanderGray}   
+        color='border-neutral-80 border-2 bg-white text-[14px] text-black w-[290px]'
+        iconClassName="h-[16px] w-[16px] order-2"
+        textClass="hidden order-1"
       />
       <Button
         text="Filter"
@@ -415,6 +444,7 @@ const InvoiceTable: React.FC = () => {
         color='border-neutral-80 border-2 bg-white text-[14px] text-black'
         iconClassName="h-[16px] w-[16px]"
         textClass="hidden"
+        onClick={removeFilter}
       />
       </div>
     <DownloadButton data={data}/>

@@ -19,6 +19,10 @@ const Layout = () => {
       {/* Content section should scroll if there's overflow in y */}
       <div className="flex-1 flex flex-col overflow-y-scroll overflow-hidden w-full px-4 pr-4 md:px-0 md:!pr-7">
         {/* Header stays at the top */}
+        <DashboardHeader  />
+        
+        
+        <div className="flex-1 pb-2 ">
         <DashboardHeader HandleSidebar={HandleSidebar} callNav={callNav} />
 
         <div className="flex-1 ">
