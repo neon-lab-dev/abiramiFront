@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { ICONS } from "../../assets";
 import Button from "../../Components/Shared/Button/Button";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
@@ -5,14 +6,15 @@ import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 export default function SuppliersCards() {
   return (
     <div className="w-full ">
-      <div className="w-full px-4 py-2 mb-2 flex justify-between items-center">
+      <div className="w-full py-2 mb-2 flex justify-between items-center">
         <h3 className="font-bold">Supplier list page</h3>
-        <Button
-          text="Create Supplier"
-          imgSrc={ICONS.button}
-          color="bg-secondary-120 text-primary-20"
-          iconClassName="text-white"
-        />
+        <Link to={"/Suppliers/CreateSupplier"}>
+          <Button
+            text="Create Supplier"
+            imgSrc={ICONS.button}
+            color="bg-secondary-120 text-primary-20"
+          />
+        </Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <StatusCard

@@ -39,6 +39,7 @@ const formatDate = (date: Date) => {
     day: "numeric",
     year: "numeric",
   });
+
 };
 
 const Table: React.FC<TableProps> = ({

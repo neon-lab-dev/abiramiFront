@@ -18,15 +18,15 @@ export const router = createBrowserRouter([
     errorElement : <ErrorPage/>,
     children : [
       {
-          path: "",
-          element: <Dashboard/>
+        path: "",
+        element: <Dashboard/>
       },
       {
-        path: "/Suppliers",
+        path: "suppliers",
         element: <Suppliers />,
       },
       {
-        path: "/Suppliers/CreateSupplier",
+        path: "suppliers/createsupplier",
         element: <CreateSupplier />,
       },
       {
@@ -46,7 +46,7 @@ export const router = createBrowserRouter([
         element: <Purchase/>
       },
       {
-        path: "/purchase/CreatePurchase",
+        path: "/purchase/createpurchase",
         element: <CreatePurchase />,
       },
       {
