@@ -125,7 +125,7 @@ const Table: React.FC<TableProps> = ({
                   <th
                     key={index}
                     className="pl-3 py-3 font-normal text-[14px] leading-[20px] text-neutral-85 whitespace-nowrap  text-ellipsis"
-                    style={{ width: col.width }}
+                    style={{ minWidth: col.width }}
                   >
                  <div className="flex items-center justify-between font-normal text-[14px] leading-[20px] text-neutral-85 whitespace-nowrap">
   {col.header}
