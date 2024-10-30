@@ -48,32 +48,36 @@ import SupplierIcon1 from "../assets/icons/SupplierIcon1.svg";
 import SupplierIcon2 from "../assets/icons/SupplierIcon2.svg";
 import SupplierIcon3 from "../assets/icons/SupplierIcon3.svg";
 
-import clientdeleteicon from '../assets/icons/clientdeleteicon.svg'
-import clientediticon from '../assets/icons/clientediticon.svg'
+import clientdeleteicon from "../assets/icons/clientdeleteicon.svg";
+import clientediticon from "../assets/icons/clientediticon.svg";
 import clienticon from "../assets/icons/clientIcon.svg";
 import clienticon2 from "../assets/icons/clienticon2.svg";
 import clienticon3 from "../assets/icons/clienticon3.svg";
 import clientOutline from "../assets/icons/clientOutline.svg";
 import removeFilter from "../assets/icons/removeFilter.svg";
-import filter from "../assets/icons/filter.svg"
+import filter from "../assets/icons/filter.svg";
 import removeFilterGray from "../assets/icons/removeFilterGray.svg";
-import filterGray from "../assets/icons/filterGray.svg"
-import invoicedropdown from "../assets/icons/invoiceDropdown.svg"
-import invoices2 from "../assets/icons/invoices2.svg"
-import invoices3 from "../assets/icons/invoices3.svg"
-import invoicesvector from "../assets/icons/incvoicesvector.svg"
-import invoicescreateicon from "../assets/icons/invoicescreateicon.svg"
-import invoiceslocation from "../assets/icons/invoicesLocation.svg"
-import invoicescreditcard from "../assets/icons/invoicesCreditcard.svg"
-import invoicesmobile from "../assets/icons/invoicesMobile.svg"
-import invoicesattherate from "../assets/icons/invoicesAtTheRate.svg"
-import invoiceplus from "../assets/icons/InvoicePlus.svg"
-import invoicesearch from "../assets/icons/InvoiceSearch.svg"
-import close from '../assets/icons/close.svg'
-import upArrow  from "../assets/icons/upArrow.svg";
-import downArrow2 from "../assets/icons/downArrow2.svg"
-import calanderGray from "../assets/icons/calanderGray.svg"
-import calander from "../assets/icons/calander.svg"
+import filterGray from "../assets/icons/filterGray.svg";
+import invoicedropdown from "../assets/icons/invoiceDropdown.svg";
+import invoices2 from "../assets/icons/invoices2.svg";
+import invoices3 from "../assets/icons/invoices3.svg";
+import invoicesvector from "../assets/icons/incvoicesvector.svg";
+import invoicescreateicon from "../assets/icons/invoicescreateicon.svg";
+import invoiceslocation from "../assets/icons/invoicesLocation.svg";
+import invoicescreditcard from "../assets/icons/invoicesCreditcard.svg";
+import invoicesmobile from "../assets/icons/invoicesMobile.svg";
+import invoicesattherate from "../assets/icons/invoicesAtTheRate.svg";
+import invoiceplus from "../assets/icons/InvoicePlus.svg";
+import invoicesearch from "../assets/icons/InvoiceSearch.svg";
+import close from "../assets/icons/close.svg";
+import upArrow from "../assets/icons/upArrow.svg";
+import downArrow2 from "../assets/icons/downArrow2.svg";
+import calanderGray from "../assets/icons/calanderGray.svg";
+import calander from "../assets/icons/calander.svg";
+import ClientDetailsIcon from "../assets/icons/ClientDetailsIcon.svg";
+import CreateClientIcon from "../assets/icons/CreateClientIcon.svg";
+import InvoicesDetails from "../assets/icons/InvoicesDetails.svg";
+import CreateInvoice from "../assets/icons/CreateInvoice.svg";
 
 // Import images here (if any)
 // import bell from "../assets/icons/Bell.svg"
@@ -144,7 +148,11 @@ export const ICONS = {
   upArrow,
   downArrow2,
   calanderGray,
-  calander
+  calander,
+  ClientDetailsIcon,
+  CreateClientIcon,
+  InvoicesDetails,
+  CreateInvoice,
 };
 
 export const IMAGES = {
