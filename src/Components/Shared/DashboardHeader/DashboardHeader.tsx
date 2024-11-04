@@ -17,9 +17,9 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
   return (
     <div className="bg-white mb-6 py-5 px-0 md:px-7 border-b flex justify-between items-center">
-      <div className="text-gray-600 font-normal">
+      <div className="text-[#1c1c1c66]  font-normal">
         {/* Conditional rendering based on screen size */}
-        <span className="hidden font-semibold lg:block">
+        <span className="hidden font-semibold text-[14px] lg:block">
           Dashboard{" "}
           {/* Display each word with slashes, 10px space, and color logic */}
           {pathSegments.length > 0 && (
