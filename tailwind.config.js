@@ -47,7 +47,8 @@ export default {
           155: '#F2F2F2',
           160: '#FAFAFA',
           165: '#EFFAE1',
-          170:"#FFF8F7"
+          170:"#FFF8F7",
+          175:"#0000001A"
         },
         black : "#000",
   
@@ -90,12 +91,27 @@ export default {
     function ({ addUtilities }) {
       const newUtilities = {
         '.scrollbar-hide': {
-          '-ms-overflow-style': 'none', /* IE and Edge */
-          'scrollbar-width': 'none', /* Firefox */
+          '-ms-overflow-style': 'none', 
+          'scrollbar-width': 'none', 
         },
         '.scrollbar-hide::-webkit-scrollbar': {
-          'display': 'none', /* Chrome, Safari, and Opera */
+          'display': 'none', 
         },
+       '.scrollbar-y-visible': {
+      overflowX: 'scroll',  // Hide the X-axis scrollbar
+      overflowY: 'scroll',  // Enable scrolling only on the Y-axis
+    },
+    '.scrollbar-y-visible::-webkit-scrollbar': {
+      width: '6px',   // Width for Y-axis scrollbar only
+      height: '0px',  // Set height to 0 to prevent X-axis scrollbar
+    },
+    '.scrollbar-y-visible::-webkit-scrollbar-thumb': {
+      backgroundColor: '#9A9A9A',
+      borderRadius: '6px',
+    },
+    '.scrollbar-y-visible::-webkit-scrollbar-track': {
+      backgroundColor: 'transparent',
+    },
       };
 
       addUtilities(newUtilities, ['responsive']);

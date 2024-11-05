@@ -114,7 +114,7 @@ const Table: React.FC<TableProps> = ({
 
         {/* Wrapper to enable horizontal scrolling */}
         <div
-          className={` overflow-x-auto scrollbar-hide  ${
+          className={` overflow-x-auto ${!enablePagination? "scrollbar-y-visible":"scrollbar-hide"}  ${
             !enablePagination ? "overflow-y-auto " : ""
           } `}
           style={{ maxHeight: tableHeight ,minWidth:tableWidth}}

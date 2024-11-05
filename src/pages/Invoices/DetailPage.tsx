@@ -181,9 +181,9 @@ const DetailPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>    
 
-      <div className='flex gap-4 justify-end py-[22px]'>
+      <div className='flex gap-4 justify-end py-[22px] md:static sticky bottom-0 bg-white z-10 '>
         <div className="relative inline-block text-left">
           <div className=''>
               <button id="dropdownButton" type="button" className="flex gap-2 justify-center items-center py-2 pr-4 border border-secondary-145 rounded-xl  text-[16px] font-normal leading-6">

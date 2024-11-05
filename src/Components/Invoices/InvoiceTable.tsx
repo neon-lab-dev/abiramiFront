@@ -427,9 +427,9 @@ const InvoiceTable: React.FC = () => {
       <Button
         text="Start Date - End Date"
         imgSrc={ICONS.calanderGray}   
-        color='border-neutral-80 border-2 bg-white text-[14px] text-black w-[290px]'
+        color='border-neutral-80 border-2 bg-white text-[14px] text-black md:w-[290]'
         iconClassName="h-[16px] w-[16px] order-2"
-        textClass="hidden order-1"
+        textClass="hidden"
       />
       <Button
         text="Filter"
