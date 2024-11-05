@@ -2,8 +2,14 @@ import React from 'react'
 import Button from '../../Components/Shared/Button/Button'
 import { ICONS } from '../../assets'
 import InvoiceTable from '../../Components/Invoices/InvoiceTable'
+import { useNavigate } from 'react-router-dom'
 
 const DetailPage = () => {
+  const navigate = useNavigate();
+
+  const handlenavigatetocreateinvoices = () => {
+    navigate("/Invoices/CreateInvoices");
+  }
   return (
     <div>
       <div className='flex justify-between mb-[22px] '>
@@ -14,13 +20,14 @@ const DetailPage = () => {
           imgSrc={ICONS.invoicescreateicon}   
           color='bg-secondary-120 text-[14px] text-secondary-125'
           iconClassName="h-[24px] w-[24px]"
+          onClick={handlenavigatetocreateinvoices}
           />
           <img src={ICONS.invoicesvector} alt="" className=' absolute top-[9.79px] left-[40px] size-1.5' />
         </div>
       </div>
 
       <div className='flex gap-7 max-md:flex-col '>
-        <div className = 'bg-secondary-60 opacity-75 w-[416px] p-6 flex flex-col rounded-2xl'>
+        <div className = 'bg-secondary-60 opacity-75 w-[416px] p-6 flex flex-col rounded-2xl max-md:w-full'>
           <span className='font-sans text-xs font-normal leading-4 '>From</span>
           <span className='font-sans text-lg font-[600] leading-9 my-2 '>Abirami Enterpirses</span>
           <div className='flex gap-3 mb-2 '>
@@ -47,7 +54,7 @@ const DetailPage = () => {
             <span className='font-sans text-xs font-normal leading-[15px] '>+91 99986 98765, 04321 987651</span>
           </div>
         </div>
-        <div className = 'bg-secondary-60 opacity-75 w-[416px] p-6 flex flex-col rounded-2xl'>
+        <div className = 'bg-secondary-60 opacity-75 w-[416px] p-6 flex flex-col rounded-2xl max-md:w-full'>
           <span className='font-sans text-xs font-normal leading-4 '>To</span>
           <span className='font-sans text-lg font-[600] leading-9 my-2 '>AJK Pumps</span>
           <div className='flex gap-3 mb-2 '>
@@ -74,7 +81,7 @@ const DetailPage = () => {
             <span className='font-sans text-xs font-normal leading-[15px] '>+91 99986 98765, 04321 987651</span>
           </div>
         </div>
-        <div className = 'bg-secondary-60 opacity-75 w-[416px] p-6 flex flex-col rounded-2xl'>
+        <div className = 'bg-secondary-60 opacity-75 w-[416px] p-6 flex flex-col rounded-2xl max-md:w-full'>
           <span className='font-sans text-xs font-normal leading-4 '>Billing Details</span>
           <div className='flex gap-3 items-center mt-[31px]'>
             <span className='w-[118px] px-1 font-sans text-xs font-normal leading-[15px]'>Invoice ID</span>

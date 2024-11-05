@@ -69,6 +69,7 @@ import invoicesmobile from "../assets/icons/invoicesMobile.svg"
 import invoicesattherate from "../assets/icons/invoicesAtTheRate.svg"
 import invoiceplus from "../assets/icons/InvoicePlus.svg"
 import invoicesearch from "../assets/icons/InvoiceSearch.svg"
+import invoicedelete from '../assets/icons/invoicedelete.svg'
 import close from '../assets/icons/close.svg'
 import upArrow  from "../assets/icons/upArrow.svg";
 import downArrow2 from "../assets/icons/downArrow2.svg"
@@ -116,6 +117,7 @@ export const ICONS = {
   invoicesattherate,
   invoiceplus,
   invoicesearch,
+  invoicedelete,
   logo,
   CollapseIcon,
   DashboardIcon,
