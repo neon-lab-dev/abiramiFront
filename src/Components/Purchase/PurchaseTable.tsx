@@ -267,12 +267,19 @@ interface Purchase {
     />
     <div className=" flex justify-between">
       <div className="flex justify-between md:gap-4 gap-3">
-      <Button
+      {/* <Button
         text="Start Date - End Date"
         imgSrc={ICONS.calander}   
-        color='border-neutral-80 border-2 bg-white text-[14px] text-primary-10 w-[290px]'
+        color='border-neutral-80 border-2 bg-white text-[14px] text-primary-10 md:w-[290px]'
         iconClassName="h-[16px] w-[16px] order-2"
         textClass="hidden order-1"
+      /> */}
+        <Button
+        text="Start Date - End Date"
+        imgSrc={ICONS.calander}   
+        color='border-neutral-80 border-2 bg-white text-[14px] text-primary-10 md:w-[290]'
+        iconClassName="h-[16px] w-[16px] order-2"
+        textClass="hidden"
       />
       <Button
         text="Filter"

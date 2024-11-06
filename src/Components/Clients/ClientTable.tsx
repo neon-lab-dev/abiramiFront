@@ -34,7 +34,7 @@ const ClientTable: React.FC = () => {
       created_date:new Date(2024, 2, 10),
       status: "Active",
       i1: true,
-      i2: false,
+      i2: true,
       i3: true,
       iconsOrder: ["i1", "i2", "i3"]
     },
@@ -47,7 +47,7 @@ const ClientTable: React.FC = () => {
         created_date:new Date(2024, 2, 10),        status: "Active",
         i1: true,
         i2: true,
-        i3: false,
+        i3: true,
         iconsOrder: ["i1", "i2", "i3"]
       },
       {
@@ -250,7 +250,7 @@ const ClientTable: React.FC = () => {
         rowsPerPage={5}
         icons={icons}
         bg_i1 = "bg-customBlue-10"
-        bg_i2 = "bg-secondary-65"
+        bg_i2 = "bg-secondary-175"
         bg_i3 = "bg-primary-40"
        
       />

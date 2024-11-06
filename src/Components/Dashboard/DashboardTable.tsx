@@ -32,6 +32,7 @@ const DashboardTable: React.FC = () => {
     i2: ICONS.greenCross,
     i3: ICONS.deleteRed,
   };
+  
 
   const data: Dashboard[] = [
     {
@@ -40,7 +41,7 @@ const DashboardTable: React.FC = () => {
       client: "ljadbvilhb4jh345kj4n",
       invoice_type: "Cheque Invoice",
       total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
+      created_date: new Date(2024, 4, 10),
       tax: 985735689,
       i1: true,
       i2: true,
@@ -53,7 +54,7 @@ const DashboardTable: React.FC = () => {
       client: "ljadbvilhb4jh345kj4n",
       invoice_type: "Cheque Invoice",
       total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
+      created_date: new Date(2024, 3, 10),
       tax: 985735689,
       i1: true,
       i2: true,
@@ -66,7 +67,7 @@ const DashboardTable: React.FC = () => {
       client: "ljadbvilhb4jh345kj4n",
       invoice_type: "Quote Invoice",
       total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
+      created_date: new Date(2024, 1, 10),
       tax: 985735689,
       i1: true,
       i2: true,
@@ -79,7 +80,7 @@ const DashboardTable: React.FC = () => {
       client: "ljadbvilhb4jh345kj4n",
       invoice_type: "Cheque Invoice",
       total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
+      created_date: new Date(2024, 8, 10),
       tax: 985735689,
       i1: true,
       i2: true,
@@ -105,7 +106,7 @@ const DashboardTable: React.FC = () => {
       client: "ljadbvilhb4jh345kj4n",
       invoice_type: "Tax invoice",
       total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
+      created_date: new Date(2024, 6, 10),
       tax: 985735689,
       i1: true,
       i2: true,
@@ -118,7 +119,7 @@ const DashboardTable: React.FC = () => {
       client: "ljadbvilhb4jh345kj4n",
       invoice_type: "Quote Invoice",
       total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
+      created_date: new Date(2024, 4, 10),
       tax: 985735689,
       i1: true,
       i2: true,
@@ -131,7 +132,7 @@ const DashboardTable: React.FC = () => {
       client: "ljadbvilhb4jh345kj4n",
       invoice_type: "Tax invoice",
       total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
+      created_date: new Date(2024, 3, 10),
       tax: 985735689,
       i1: true,
       i2: true,
@@ -144,7 +145,7 @@ const DashboardTable: React.FC = () => {
       client: "ljadbvilhb4jh345kj4n",
       invoice_type: "Tax invoice",
       total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
+      created_date: new Date(2024, 9, 10),
       tax: 985735689,
       i1: true,
       i2: true,
@@ -192,7 +193,23 @@ const DashboardTable: React.FC = () => {
       iconsOrder: ["i1", "i2", "i3"],
     },
   ];
-
+  const [sortedData, setSortedData] = useState(data);
+  const handleSort = (data: Dashboard[], order: "asc" | "desc"): void  => {
+    const sorted = [...sortedData].sort((a, b) => {
+      const dateA = new Date(a.created_date);
+      const dateB = new Date(b.created_date);
+      
+      if (order === "asc") {
+        return dateA.getTime() - dateB.getTime(); // Convert dates to timestamps
+      } else if (order === "desc") {
+        return dateB.getTime() - dateA.getTime(); // Convert dates to timestamps
+      }
+      return 0;
+    });
+      
+  setSortedData(sorted);
+};
+   
   const columns = [
     {
       header: "Invoice Id",
@@ -373,7 +390,7 @@ const DashboardTable: React.FC = () => {
       header: "Tax",
       accessor: "tax",
       cellRenderer: (row: Dashboard) => {
-        console.log(row.tax); // For debugging
+        // console.log(row.tax); 
         return <span className="text-black">{formatCurrency(row.tax)}</span>;
       },
       cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
@@ -391,6 +408,7 @@ const DashboardTable: React.FC = () => {
           year: "numeric",
         }),
       icon1:ICONS.downArrow,
+      onIcon1Click: () => handleSort(data, "asc"), 
       width:"141px"
     },
   ];

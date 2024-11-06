@@ -32,9 +32,10 @@ const ListPage = () => {
       };
     }, []);
   return (
-    <div>
-        <div className='flex justify-between mb-[22px] '>
-            <span className='font-Inter  text-sm font-semibold ml-2 '>Invoice list page</span>
+    <div className="w-full" >
+    
+    <div className="w-full py-2 mb-2 flex justify-between items-center">
+        <h3 className="font-bold px-2">Invoicelist page</h3>
             <Button
             text="Create Invoice"
             imgSrc={ICONS.clientOutline}   

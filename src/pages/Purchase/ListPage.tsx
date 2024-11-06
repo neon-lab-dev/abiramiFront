@@ -12,9 +12,10 @@ const ListPage = () => {
   const handleNavigateToCreatePurchase = () => {
     navigate("/Purchase/CreatePurchase");
   };
-  return (<div>
-    <div className='flex justify-between mb-[22px] '>
-      <span className='font-Inter  text-sm font-semibold ml-2 '>Purchase list page</span>
+  return (<div className="w-full" >
+    
+    <div className="w-full py-2 mb-2 flex justify-between items-center">
+        <h3 className="font-bold px-2">Purchase list page</h3>
       <Button
         text="Create Purchase"
         imgSrc={ICONS.clientOutline}   

@@ -100,7 +100,7 @@ const Table: React.FC<TableProps> = ({
       className={` w-full overflow-x-scroll custom-scrollbar my-5 scrollbar-hide`}
     >
       <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 mr-6 shadow-tableShadow">
-        <div className="w-[95%] md:w-[97%] lg:w-[100%] flex justify-between items-center h-10">
+        <div className="w-[100%] flex justify-between items-center h-10">
           <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
             {tableName}
           </div>
@@ -114,7 +114,7 @@ const Table: React.FC<TableProps> = ({
 
         {/* Wrapper to enable horizontal scrolling */}
         <div
-          className={` overflow-x-auto scrollbar-hide  ${
+          className={` overflow-x-auto ${!enablePagination? "scrollbar-y-visible":"scrollbar-hide"}  ${
             !enablePagination ? "overflow-y-auto " : ""
           } `}
           style={{ maxHeight: tableHeight ,minWidth:tableWidth}}
