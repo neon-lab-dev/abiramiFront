@@ -76,24 +76,6 @@ import upArrow  from "../assets/icons/upArrow.svg";
 import downArrow2 from "../assets/icons/downArrow2.svg"
 import calanderGray from "../assets/icons/calanderGray.svg"
 import calander from "../assets/icons/calander.svg"
-
-import filterGray from "../assets/icons/filterGray.svg";
-import invoicedropdown from "../assets/icons/invoiceDropdown.svg";
-import invoices2 from "../assets/icons/invoices2.svg";
-import invoices3 from "../assets/icons/invoices3.svg";
-import invoicesvector from "../assets/icons/incvoicesvector.svg";
-import invoicescreateicon from "../assets/icons/invoicescreateicon.svg";
-import invoiceslocation from "../assets/icons/invoicesLocation.svg";
-import invoicescreditcard from "../assets/icons/invoicesCreditcard.svg";
-import invoicesmobile from "../assets/icons/invoicesMobile.svg";
-import invoicesattherate from "../assets/icons/invoicesAtTheRate.svg";
-import invoiceplus from "../assets/icons/InvoicePlus.svg";
-import invoicesearch from "../assets/icons/InvoiceSearch.svg";
-import close from "../assets/icons/close.svg";
-import upArrow from "../assets/icons/upArrow.svg";
-import downArrow2 from "../assets/icons/downArrow2.svg";
-import calanderGray from "../assets/icons/calanderGray.svg";
-import calander from "../assets/icons/calander.svg";
 import ClientDetailsIcon from "../assets/icons/ClientDetailsIcon.svg";
 import CreateClientIcon from "../assets/icons/CreateClientIcon.svg";
 import InvoicesDetails from "../assets/icons/InvoicesDetails.svg";
