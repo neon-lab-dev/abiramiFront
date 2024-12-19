@@ -32,11 +32,11 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
       text: "Clients",
       path: "/clients",
       children: [
-        {
-          icon: ICONS.ClientDetailsIcon,
-          text: "Client Details",
-          path: "/clients/Detailpage",
-        },
+        // {
+        //   icon: ICONS.ClientDetailsIcon,
+        //   text: "Client Details",
+        //   path: "/clients/Detailpage",
+        // },
         {
           icon: ICONS.CreateClientIcon,
           text: "Create Client",

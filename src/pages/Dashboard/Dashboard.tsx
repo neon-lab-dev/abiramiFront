@@ -3,8 +3,11 @@ import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import DashboardTable from "../../Components/Dashboard/DashboardTable";
 import RevenueChart from "../../Components/Dashboard/RevenueChart";
 const Dashboard = () => {
+  const monthlySales = [10, 200, 300, 400, 500, 600, 700]; // Replace with actual sales data
+  const monthlyPurchases = [50, 150, 250, 350, 450, 550, 650]; // Replace with actual purchase data
+
   return (
-    <div >
+    <div>
       <div className="w-full  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <StatusCard
           cardBg="bg-secondary-10"
@@ -31,7 +34,7 @@ const Dashboard = () => {
         <StatusCard
           cardBg="bg-secondary-80"
           iconBg="bg-secondary-85"
-          title="Income Received"
+          title="Income Received this finencial year"
           value="89,27,265.00"
           icon={ICONS.incomeReceived}
         />
@@ -59,12 +62,12 @@ const Dashboard = () => {
         <StatusCard
           cardBg="bg-secondary-60"
           iconBg="bg-secondary-115"
-          title="Total purchase this Month"
+          title="Total purchase this finencial year"
           value="1,99,27,265.00"
           icon={ICONS.totalPurchase}
         />
       </div>
-      <RevenueChart/>
+      <RevenueChart salesData={monthlySales} purchaseData={monthlyPurchases} />
       <DashboardTable />
     </div>
   );
