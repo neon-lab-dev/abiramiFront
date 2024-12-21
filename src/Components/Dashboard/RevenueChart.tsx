@@ -9,6 +9,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  TooltipItem,
 } from "chart.js";
 
 ChartJS.register(
@@ -21,15 +22,22 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
+const options = {
   responsive: true,
-  maintainAspectRatio: false, // Ensure the chart occupies full height
+  maintainAspectRatio: false,
   plugins: {
     legend: {
       display: false,
     },
     title: {
       display: false,
+    },
+    tooltip: {
+      callbacks: {
+        label: (tooltipItem: TooltipItem<"line">) => {
+          return `${tooltipItem.dataset.label}: ${tooltipItem.raw} units`;
+        },
+      },
     },
   },
   scales: {
@@ -48,54 +56,51 @@ export const options = {
 
 const labels = ["January", "February", "March", "April", "May", "June", "July"];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: [0, 100, 40, 60, 500, 100, 90],
-      borderColor: "#A8C5DA",
-      borderDash: [5, 5],
-      borderWidth: 1,
-    },
-    {
-      label: "Dataset 2",
-      data: [10, 200, 1, 500, 50, 40, 50],
-      borderColor: "#000000",
-      borderWidth: 1,
-      borderDash: [],
-    },
-  ],
-};
+interface RevenueChartProps {
+  salesData: number[];
+  purchaseData: number[];
+}
 
-const RevenueChart = () => {
+const RevenueChart: React.FC<RevenueChartProps> = ({ salesData, purchaseData }) => {
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Purchase",
+        data: purchaseData,
+        borderColor: "#FF0000",
+        borderDash: [5, 5],
+        borderWidth: 1,
+      },
+      {
+        label: "Sale",
+        data: salesData,
+        borderColor: "#00FF00",
+        borderWidth: 1,
+      },
+    ],
+  };
+
   return (
     <div className="h-[330px] w-full my-5 bg-neutral-60 p-6 rounded-2xl mb-4">
       <div className="flex justify-start gap-4 items-center">
         <h1 className="font-inter text-sm font-semibold leading-5 text-left text-neutral-5">
-          {" "}
-          Sales v/s Purchase{" "}
+          Sales v/s Purchase
         </h1>
-        <span className="font-inter text-sm font-normal leading-5 text-left  border-r-[1px] text-neutral-95 border-r-neutral-95 pr-4">
-          2024
-        </span>
-
         <div className="flex justify-start gap-[5px] items-center">
-          <div className=" w-[6px] h-[6px] bg-black rounded-full"></div>
-          <span className="font-inter text-xs font-normal leading-5 text-left">Sale</span>
+          <div className="w-[6px] h-[6px] bg-[#00FF00] rounded-full"></div>
+          <span className="font-inter text-xs font-normal leading-5 text-left">
+            Sale
+          </span>
         </div>
         <div className="flex justify-start gap-[5px] items-center">
-        <div className=" w-[6px] h-[6px] bg-secondary-110 rounded-full"></div>
-        <span className="font-inter text-xs font-normal leading-5 text-left">
-          Purchase
-        </span>
+          <div className="w-[6px] h-[6px] bg-[#FF0000] rounded-full"></div>
+          <span className="font-inter text-xs font-normal leading-5 text-left">
+            Purchase
+          </span>
         </div>
       </div>
-      <Line
-        options={options}
-        data={data}
-        style={{ height: "100%", width: "100%" }}
-      />
+      <Line options={options} data={data} style={{ height: "100%", width: "100%" }} />
     </div>
   );
 };

@@ -27,12 +27,12 @@ const DetailPage = () => {
     status: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
   };
   const editToggleModel = () => {
     setEditModalOpen(!isEditModalOpen);
@@ -118,12 +118,12 @@ const DetailPage = () => {
 
       <div className='flex justify-between  my-[22px] '>
         <span className='font-Inter  text-sm font-semibold ml-2 '>Invoices</span>
-      </div>
-      <div className='flex gap-7 mb-[22px] w-full max-md:flex-col max-md:w-full '>
+      </div> 
+    <div className='flex gap-7 mb-[22px] w-full max-md:flex-col max-md:w-full '>
         <StatusCard
           cardBg="bg-secondary-10"
           iconBg="bg-secondary-65"
-          title="Total Clients"
+          title="Total Invoices"
           value="7265"
           cardWidth='w-[416px]'
           icon={ICONS.clienticon}
@@ -131,7 +131,7 @@ const DetailPage = () => {
         <StatusCard
           cardBg="bg-secondary-30"
           iconBg="bg-secondary-70"
-          title="Active Clients"
+          title="Paid Invoices"
           value="17265"
           cardWidth='w-[416px]'
           icon={ICONS.clienticon2}
@@ -139,7 +139,7 @@ const DetailPage = () => {
         <StatusCard
           cardBg="bg-secondary-40"
           iconBg="bg-secondary-85"
-          title="Inactive Clients"
+          title="Pending Invoices"
           value="5"
           cardWidth='w-[416px]'
           icon={ICONS.clienticon3}

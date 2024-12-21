@@ -20,12 +20,12 @@ const CreatePurchase = () => {
     status: "active",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -74,6 +74,7 @@ const CreatePurchase = () => {
             
             <InputField
               label="Total Purchase Amount"
+              required={true}
               inputBg=""
               type="text"
               placeholder="Enter total Purchase Amount"
@@ -83,7 +84,6 @@ const CreatePurchase = () => {
             />
             <InputField
               label="GST Number"
-              required={true}
               inputBg=""
               type="text"
               placeholder="Enter the GST number"

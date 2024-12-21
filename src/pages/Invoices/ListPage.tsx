@@ -38,7 +38,7 @@ const ListPage = () => {
         <h3 className="font-bold px-2">Invoicelist page</h3>
             <Button
             text="Create Invoice"
-            imgSrc={ICONS.clientOutline}   
+            imgSrc={ICONS.invoicescreateicon}   
             color='bg-secondary-120 text-[14px] text-secondary-125'
             iconClassName="h-[24px] w-[24px]"
             onClick={handlenavigatetocreateinvoices}

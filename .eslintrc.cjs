@@ -14,5 +14,6 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'no-console': 'off', // Example of disabling the no-console rule
   },
-}
+};
