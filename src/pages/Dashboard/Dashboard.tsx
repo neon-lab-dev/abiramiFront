@@ -62,7 +62,7 @@ const Dashboard = () => {
         <StatusCard
           cardBg="bg-secondary-60"
           iconBg="bg-secondary-115"
-          title="Total purchase this finencial year"
+          title="Total purchase this Finencial year"
           value="1,99,27,265.00"
           icon={ICONS.totalPurchase}
         />

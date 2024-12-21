@@ -1,6 +1,7 @@
 import React,{useState} from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
+import { useNavigate } from "react-router-dom"; 
 
 // Define a type for the row data
 interface Client {
@@ -18,6 +19,7 @@ interface Client {
 }
 
 const ClientTable: React.FC = () => {
+  const navigate = useNavigate();
   const icons = {
     i1: ICONS.blueTick,
     i2: ICONS.editBlack,
@@ -193,8 +195,8 @@ const ClientTable: React.FC = () => {
     {
       header: "Company Name",
       accessor: "company_name",
-      cellClassName: " text-neutral-25 ",
-      width:"196px"
+      cellClassName: "text-neutral-25 ",
+      width: "196px",
     },
     {
       header: "Contact Person",

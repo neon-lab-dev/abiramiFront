@@ -82,7 +82,14 @@ import InvoicesDetails from "../assets/icons/InvoicesDetails.svg";
 import CreateInvoice from "../assets/icons/CreateInvoice.svg";
 
 // Import images here (if any)
-// import bell from "../assets/icons/Bell.svg"
+import cross from "../assets/icons/cross.svg"
+
+// inventory
+import inventory from "../assets/icons/inventory.svg"
+import invoiceIcon from "../assets/icons/invoice.svg"
+import inventoryBlue from "../assets/icons/inventoryBlue.svg"
+import inventoryYellow from "../assets/icons/inventoryYellow.svg"
+import inventoryRed from "../assets/icons/inventoryRed.svg"
 
 export const ICONS = {
   bell,
@@ -156,6 +163,12 @@ export const ICONS = {
   CreateClientIcon,
   InvoicesDetails,
   CreateInvoice,
+  cross,
+  inventory,
+  invoiceIcon,
+  inventoryBlue,
+  inventoryYellow,
+  inventoryRed,
 };
 
 export const IMAGES = {

@@ -4,7 +4,8 @@ import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
 
 const CreateInvoice = () => {
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showDropdown1, setShowDropdown1] = useState(false);
+  const [showDropdown2, setShowDropdown2] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState({
@@ -58,13 +59,26 @@ const CreateInvoice = () => {
     { name: "Uttar-Pradesh", code: "UP" },
     // Add more states as needed
   ];
-  const handleStateSelect = (stateName: string, stateCode: string) => {
+  const invoice  = [
+    { name:"Cash Invoice" },
+    { name:"Cheque Invoice" },
+    { name:"Tax Invoice" },
+    { name:"Quote Invoice" },
+  ];
+  const handleStateSelect1 = (stateName: string, stateCode: string) => {
     setFormData((prev) => ({
       ...prev,
       Stateandcode: stateName,
       Code: stateCode,
     }));
-    setShowDropdown(false);
+    setShowDropdown1(false);
+  };
+  const handleStateSelect2 = (Invoicetype: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      invoicetype: Invoicetype,
+    }));
+    setShowDropdown2(false);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -72,17 +86,18 @@ const CreateInvoice = () => {
       dropdownRef.current &&
       !dropdownRef.current.contains(event.target as Node)
     ) {
-      setShowDropdown(false);
+      setShowDropdown1(false);
+      setShowDropdown2(false);
     }
   };
   useEffect(() => {
-    if (showDropdown) {
+    if (showDropdown1 ||showDropdown2) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
     }
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showDropdown]);
+  }, [showDropdown1]);
 
   return (
     <div>
@@ -111,7 +126,7 @@ const CreateInvoice = () => {
         />
         <div className=" flex gap-1">
           <div className="flex-2 relative" ref={dropdownRef}>
-            <div className="" onClick={() => setShowDropdown(true)}>
+            <div className="" onClick={() => setShowDropdown1(true)}>
               <InputField
                 label="State & Code"
                 required={true}
@@ -124,13 +139,13 @@ const CreateInvoice = () => {
                 onChange={handleChange}
               />
             </div>
-            {showDropdown && (
+            {showDropdown1 && (
               <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
                 {states.map((state) => (
                   <div
                     key={state.code}
                     className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-                    onClick={() => handleStateSelect(state.name, state.code)}
+                    onClick={() => handleStateSelect1(state.name, state.code)}
                   >
                     {state.name}
                   </div>
@@ -171,16 +186,35 @@ const CreateInvoice = () => {
           value={formData.taxtype}
           onChange={handleChange}
         />
-        <InputField
-          label="Invoice Type"
-          required={true}
-          inputBg=""
-          type="select"
-          name="invoicetype"
-          value={formData.invoicetype}
-          onChange={handleChange}
-          options={["Cash Invoice", "Cheque Invoice", "Tax Invoice","Quote Invoice"]}
-        />
+
+          <div className="flex-2 relative" ref={dropdownRef}>
+            <div className="" onClick={() => setShowDropdown2(true)}>
+              <InputField
+                label="Invoice Type"
+                required={true}
+                inputBg=""
+                type="text"
+                icon={ICONS.downArrow2}
+                placeholder="Search"
+                name="invoicetype"
+                value={formData.invoicetype}
+                onChange={handleChange}
+              />
+            </div>
+            {showDropdown2 && (
+              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
+                {invoice.map((invoice) => (
+                  <div
+                    key={invoice.name}
+                    className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+                    onClick={() => handleStateSelect2( invoice.name)}
+                  >
+                    {invoice.name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         <InputField
           label="Bank Name"
           required={true}
@@ -539,55 +573,7 @@ const CreateInvoice = () => {
         </div>
       </div>
 
-      {/* <div className=' border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed my-[22px]'>
-      </div>
-      <span className='text-sm font-Inter font-[600] '>Cheque Details</span>
-      <div className="w-full  pt-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
-        <InputField
-          label="Cheque Number"
-          required={true}
-          inputBg=""
-          type="number"
-          placeholder="Enter Cheque Number"
-          name="ChequeNumber"
-          value={formData.ChequeNumber}
-          onChange={handleChange}
-        />
-
-        <InputField
-          label="Cheque Date"
-          required={true}
-          inputBg=""
-          type="date"
-          placeholder="dd/mm/yyyy"
-          name="Chequedate"
-          value={formData.Chequedate}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Bank Name"
-          required={true}
-          inputBg=""
-          type="text"
-          placeholder="Enter bank name"
-          name="BankName"
-          value={formData.BankName}
-          onChange={handleChange}
-        />
-        
-        <InputField
-          label="Cheque Amount"
-          required={true}
-          inputBg=""
-          type="text"
-          placeholder="Enter amount"
-          name="ChequeAmount"
-          value={formData.ChequeAmount}
-          onChange={handleChange}
-        />
-      </div> */}
-      {/* <div className=' border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed my-[22px]'>
-      </div> */}
+    
       <div className="flex flex-col my-[22px]">
         <span className="text-sm font-Inter font-[600]">
           Terms & Conditions
