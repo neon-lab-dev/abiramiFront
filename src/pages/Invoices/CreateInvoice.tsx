@@ -44,10 +44,10 @@ const CreateInvoice = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(formData);
-  };
+  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   console.log(formData);
+  // };
 
   const states = [
     { name: "Andhra Pradesh", code: "AP" },
@@ -91,7 +91,7 @@ const CreateInvoice = () => {
     }
   };
   useEffect(() => {
-    if (showDropdown1 ||showDropdown2) {
+    if (showDropdown1 ) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);

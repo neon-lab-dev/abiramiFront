@@ -24,6 +24,7 @@ const CreateInventory = () => {
     state: "",
     country: "",
     status: "active",
+    image:imageFiles
   });
 
   const Catagory  = [

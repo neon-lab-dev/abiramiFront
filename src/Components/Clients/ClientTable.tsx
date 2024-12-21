@@ -1,7 +1,6 @@
 import React,{useState} from "react";
 import Table from "../Shared/Table/Table";
-import { ICONS } from "../../assets/index";
-import { useNavigate } from "react-router-dom"; 
+import { ICONS } from "../../assets/index"; 
 
 // Define a type for the row data
 interface Client {
@@ -19,7 +18,6 @@ interface Client {
 }
 
 const ClientTable: React.FC = () => {
-  const navigate = useNavigate();
   const icons = {
     i1: ICONS.blueTick,
     i2: ICONS.editBlack,

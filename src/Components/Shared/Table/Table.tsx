@@ -71,7 +71,8 @@ const Table: React.FC<TableProps> = ({
     const navigate = useNavigate(); // Hook to navigate
 
     const handleNavigateToDetails = (companyName: string) => {
-      navigate(`/clients/Detailpage`); // Navigate to details page with company name
+      navigate(`/clients/Detailpage`);
+      console.log(companyName)
     };
 
   const handleNextPage = () => {

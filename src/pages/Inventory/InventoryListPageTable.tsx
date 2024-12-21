@@ -53,6 +53,7 @@ const InventoryListPageTable: React.FC = () => {
     state: "",
     country: "",
     status: "active",
+    image:imageFiles
   });
 
   const handleChange = (
