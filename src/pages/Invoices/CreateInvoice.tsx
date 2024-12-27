@@ -4,7 +4,7 @@ import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
 
 const CreateInvoice = () => {
-  const [showDropdown1, setShowDropdown1] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -65,13 +65,13 @@ const CreateInvoice = () => {
     { name:"Tax Invoice" },
     { name:"Quote Invoice" },
   ];
-  const handleStateSelect1 = (stateName: string, stateCode: string) => {
+  const handleStateSelect = (stateName: string, stateCode: string) => {
     setFormData((prev) => ({
       ...prev,
       Stateandcode: stateName,
       Code: stateCode,
     }));
-    setShowDropdown1(false);
+    setShowDropdown(false);
   };
   const handleStateSelect2 = (Invoicetype: string) => {
     setFormData((prev) => ({
@@ -86,18 +86,18 @@ const CreateInvoice = () => {
       dropdownRef.current &&
       !dropdownRef.current.contains(event.target as Node)
     ) {
-      setShowDropdown1(false);
+      setShowDropdown(false);
       setShowDropdown2(false);
     }
   };
   useEffect(() => {
-    if (showDropdown1 ) {
+    if (showDropdown||showDropdown2 ) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
     }
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showDropdown1]);
+  }, [showDropdown,showDropdown2]);
 
   return (
     <div>
@@ -126,7 +126,7 @@ const CreateInvoice = () => {
         />
         <div className=" flex gap-1">
           <div className="flex-2 relative" ref={dropdownRef}>
-            <div className="" onClick={() => setShowDropdown1(true)}>
+            <div className="" onClick={() => setShowDropdown(true)}>
               <InputField
                 label="State & Code"
                 required={true}
@@ -139,13 +139,13 @@ const CreateInvoice = () => {
                 onChange={handleChange}
               />
             </div>
-            {showDropdown1 && (
+            {showDropdown && (
               <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
                 {states.map((state) => (
                   <div
                     key={state.code}
                     className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-                    onClick={() => handleStateSelect1(state.name, state.code)}
+                    onClick={() => handleStateSelect(state.name, state.code)}
                   >
                     {state.name}
                   </div>
@@ -215,7 +215,8 @@ const CreateInvoice = () => {
               </div>
             )}
           </div>
-        <InputField
+          {formData.invoicetype=="Cheque Invoice" && (<>
+            <InputField
           label="Bank Name"
           required={true}
           inputBg=""
@@ -244,7 +245,8 @@ const CreateInvoice = () => {
           name="ChequeAmount"
           value={formData.ChequeAmount}
           onChange={handleChange}
-        />
+        /></>)}
+        
        {formData.invoicetype=="Tax Invoice" && (<>
         <InputField
           label="Transport"
