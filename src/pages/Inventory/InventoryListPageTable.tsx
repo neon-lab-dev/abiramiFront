@@ -5,6 +5,7 @@ import DownloadButton from "../../Components/Shared/Table/DownloadExcelBtn";
 import Button from "../../Components/Shared/Button/Button";
 import InputField from "../../Components/Shared/InputField/InputField";
 import UploadImage from "./UploadImage";
+import InventoryLogsTable from "../../Components/Inventory/InventoryLogsTable";
 
 // Define a type for the row data
 interface Inventory {
@@ -28,6 +29,7 @@ const InventoryListPageTable: React.FC = () => {
   const [showDropdown2, setShowDropdown2] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isInventoryLogsOpen, setInventoryLogsOpen] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
 
@@ -49,8 +51,8 @@ const InventoryListPageTable: React.FC = () => {
     status: "active",
     image: imageFiles,
     TRType: "",
-    transactionUnits:"",
-    comment:""
+    transactionUnits: "",
+    comment: "",
   });
 
   const handleChange = (
@@ -82,10 +84,13 @@ const InventoryListPageTable: React.FC = () => {
   const editToggleModel = () => {
     setEditModalOpen(!isEditModalOpen);
   };
+  const LogToggleModel = () => {
+    setInventoryLogsOpen(!isInventoryLogsOpen);
+  };
   const handleActionClick = (actionType: string, item: Inventory) => {
     switch (actionType) {
       case "i1":
-        alert(`View clicked for ${item.quantity}`);
+        setInventoryLogsOpen(!isInventoryLogsOpen);
         break;
       case "i2":
         setEditModalOpen(!isEditModalOpen);
@@ -645,58 +650,58 @@ const InventoryListPageTable: React.FC = () => {
               />
             </div>
 
-             {/* heading */}
-             <span className="font-Inter font-[600] text-sm  ">
-                Inventroy Logs
-              </span>
-              <div className="w-full  pb-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
-            <div className="w-full flex items-center gap-4">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="TRType"
-                  value="sell"
-                  checked={formData.TRType === "sell"}
-                  onChange={handleChange}
-                  className="form-radio text-primary-10"
-                />
-                <span className="ml-2">Sell</span>
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="TRType"
-                  value="buy"
-                  checked={formData.TRType === "buy"}
-                  onChange={handleChange}
-                  className="form-radio text-primary-10"
-                />
-                <span className="ml-2">Buy</span>
-              </label>
+            {/* heading */}
+            <span className="font-Inter font-[600] text-sm  ">
+              Inventroy Logs
+            </span>
+            <div className="w-full  pb-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
+              <div className="w-full flex items-center gap-4">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="TRType"
+                    value="sell"
+                    checked={formData.TRType === "sell"}
+                    onChange={handleChange}
+                    className="form-radio text-primary-10"
+                  />
+                  <span className="ml-2">Sell</span>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="TRType"
+                    value="buy"
+                    checked={formData.TRType === "buy"}
+                    onChange={handleChange}
+                    className="form-radio text-primary-10"
+                  />
+                  <span className="ml-2">Buy</span>
+                </label>
+              </div>
+              <InputField
+                label="Transaction Units"
+                required={true}
+                inputBg=""
+                type="number"
+                placeholder="Enter Transaction Units"
+                name="transactionUnits"
+                value={formData.transactionUnits}
+                onChange={handleChange}
+              />
+              <InputField
+                label="Comment"
+                required={false}
+                inputBg=""
+                type="text"
+                placeholder="Enter comment"
+                name="comment"
+                value={formData.comment}
+                onChange={handleChange}
+              />{" "}
             </div>
-   
-            <InputField
-                  label="Transaction Units"
-                  required={true}
-                  inputBg=""
-                  type="number"
-                  placeholder="Enter Transaction Units"
-                  name="transactionUnits"
-                  value={formData.transactionUnits}
-                  onChange={handleChange}
-                />
-                <InputField
-                  label="Comment"
-                  required={false}
-                  inputBg=""
-                  type="text"
-                  placeholder="Enter comment"
-                  name="comment"
-                  value={formData.comment}
-                  onChange={handleChange}
-                /> </div>
- <div className=" border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
-<div className="col-span-3 flex justify-center gap-4 my-8">
+            <div className=" border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
+            <div className="col-span-3 flex justify-center gap-4 my-8">
               <Button
                 text="Clear Form"
                 type="reset"
@@ -708,10 +713,35 @@ const InventoryListPageTable: React.FC = () => {
                 color="bg-primary-10 text-white"
               />
             </div>
-         
           </div>
 
           <div></div>
+        </div>
+      )}
+      {isInventoryLogsOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+          <div className="bg-white rounded-3xl p-6 w-[70%] h-[550px] shadow-lg overflow-y-scroll custom-scrollbar scroll-none">
+            {/* heading */}
+            <div className="flex justify-between pb-4 ">
+              <span className="font-Inter font-[600] text-sm ">
+                Inventory Logs
+              </span>
+              <img
+                src={ICONS.close}
+                alt=""
+                onClick={LogToggleModel}
+                className=" cursor-pointer"
+              />
+            </div>
+            <div className="w-full  pb-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
+              
+              <div className="text-black whitespace-nowrap overflow-hidden text-ellipsis">Product Id:{" 7698"}</div>
+            
+              <div className="text-black whitespace-nowrap overflow-hidden text-ellipsis">Available Quantity:{" 600"}</div>
+            </div>
+            <div className=" border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
+<InventoryLogsTable/>
+          </div>
         </div>
       )}
     </div>
