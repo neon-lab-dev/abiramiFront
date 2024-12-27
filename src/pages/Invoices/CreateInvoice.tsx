@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
@@ -37,6 +37,7 @@ const CreateInvoice = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
+    console.log(e.target);
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -57,7 +58,6 @@ const CreateInvoice = () => {
     { name: "Maharashtra", code: "MH" },
     { name: "Jharkhand", code: "JH" },
     { name: "Uttar-Pradesh", code: "UP" },
-    // Add more states as needed
   ];
   const invoice  = [
     { name:"Cash Invoice" },
@@ -65,6 +65,7 @@ const CreateInvoice = () => {
     { name:"Tax Invoice" },
     { name:"Quote Invoice" },
   ];
+
   const handleStateSelect = (stateName: string, stateCode: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -73,6 +74,7 @@ const CreateInvoice = () => {
     }));
     setShowDropdown(false);
   };
+
   const handleStateSelect2 = (Invoicetype: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -81,23 +83,25 @@ const CreateInvoice = () => {
     setShowDropdown2(false);
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
-      setShowDropdown(false);
-      setShowDropdown2(false);
-    }
-  };
-  useEffect(() => {
-    if (showDropdown||showDropdown2 ) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showDropdown,showDropdown2]);
+  // const handleClickOutside = (event: MouseEvent) => {
+  //   console.log("object");
+  //   if (
+  //     dropdownRef.current &&
+  //     !dropdownRef.current.contains(event.target as Node)
+  //   ) {
+  //     setShowDropdown(false);
+  //     setShowDropdown2(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (showDropdown||showDropdown2 ) {
+  //     document.addEventListener("mousedown", handleClickOutside);
+  //   } else {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   }
+  //   return () => document.removeEventListener("mousedown", handleClickOutside);
+  // }, [showDropdown,showDropdown2]);
 
   return (
     <div>
@@ -140,16 +144,21 @@ const CreateInvoice = () => {
               />
             </div>
             {showDropdown && (
-              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
-                {states.map((state) => (
+              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-20">
+                {
+                states.map((state) => (
                   <div
                     key={state.code}
                     className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-                    onClick={() => handleStateSelect(state.name, state.code)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStateSelect(state.name, state.code)
+                    }}
                   >
                     {state.name}
                   </div>
-                ))}
+                ))
+                }
               </div>
             )}
           </div>
