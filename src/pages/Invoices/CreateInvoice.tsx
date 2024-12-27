@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
@@ -37,7 +37,6 @@ const CreateInvoice = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    console.log(e.target);
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -51,13 +50,14 @@ const CreateInvoice = () => {
   // };
 
   const states = [
-    { name: "Andhra Pradesh", code: "AP" },
-    { name: "Bihar", code: "BR" },
-    { name: "Delhi", code: "DL" },
-    { name: "Goa", code: "GA" },
-    { name: "Maharashtra", code: "MH" },
-    { name: "Jharkhand", code: "JH" },
-    { name: "Uttar-Pradesh", code: "UP" },
+    { name: "Andhra Pradesh", code: "28" },
+  { name: "Bihar",code: "10" },
+  { name: "Delhi", code: "7"},
+  { name: "Goa",  code: "30" },
+  { name: "Maharashtra", code: "27" },
+  { name: "Jharkhand", code: "20" },
+  { name: "Uttar Pradesh",code: "9 "},
+  { name: "Tamil Nadu",  code: "33" } 
   ];
   const invoice  = [
     { name:"Cash Invoice" },
@@ -65,7 +65,6 @@ const CreateInvoice = () => {
     { name:"Tax Invoice" },
     { name:"Quote Invoice" },
   ];
-
   const handleStateSelect = (stateName: string, stateCode: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -74,7 +73,6 @@ const CreateInvoice = () => {
     }));
     setShowDropdown(false);
   };
-
   const handleStateSelect2 = (Invoicetype: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -84,7 +82,6 @@ const CreateInvoice = () => {
   };
 
   // const handleClickOutside = (event: MouseEvent) => {
-  //   console.log("object");
   //   if (
   //     dropdownRef.current &&
   //     !dropdownRef.current.contains(event.target as Node)
@@ -93,7 +90,6 @@ const CreateInvoice = () => {
   //     setShowDropdown2(false);
   //   }
   // };
-
   // useEffect(() => {
   //   if (showDropdown||showDropdown2 ) {
   //     document.addEventListener("mousedown", handleClickOutside);
@@ -144,21 +140,16 @@ const CreateInvoice = () => {
               />
             </div>
             {showDropdown && (
-              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-20">
-                {
-                states.map((state) => (
+              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
+                {states.map((state) => (
                   <div
                     key={state.code}
                     className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleStateSelect(state.name, state.code)
-                    }}
+                    onClick={() => handleStateSelect(state.name, state.code)}
                   >
                     {state.name}
                   </div>
-                ))
-                }
+                ))}
               </div>
             )}
           </div>
@@ -452,7 +443,7 @@ const CreateInvoice = () => {
 
         {/* Bank Details and Totals */}
         <div className="flex justify-between max-md:flex-col-reverse gap-8 mt-6">
-          <div className="flex items-end justify-between gap-8 w-[75%] max-md:flex-col-reverse">
+          <div className="flex items-end justify-between gap-8 w-[66%] max-md:flex-col-reverse">
             <div className=" max-lg:gap-2">
               <h3 className="text-sm font-[600] mb-4">Bank details</h3>
               <div className="flex gap-2">
@@ -548,7 +539,7 @@ const CreateInvoice = () => {
             </div>
             <div className="flex justify-between items-center  py-2">
               <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
-                Tax | IGST @ 18%
+                {(formData.Code=="33")?"Tax | CGST @ 9% & SGST @ 9%":" Tax | IGST @ 18%"}
               </span>
               <div className="w-[111px]">
                 <InputField
@@ -615,3 +606,4 @@ const CreateInvoice = () => {
 };
 
 export default CreateInvoice;
+

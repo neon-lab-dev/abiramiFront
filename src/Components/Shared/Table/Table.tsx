@@ -23,14 +23,14 @@ interface TableProps {
   rowsPerPage?: number;
   tableHeight?: string;
   tableWidth?: string;
-  icons: {
+  icons?: {
     i1: string;
     i2: string;
     i3: string;
   };
-  bg_i1: string;
-  bg_i2: string;
-  bg_i3: string;
+  bg_i1?: string;
+  bg_i2?: string;
+  bg_i3?: string;
   onActionClick?:any
 }
 
@@ -179,9 +179,10 @@ const Table: React.FC<TableProps> = ({
                     </div>
                   </th>
                 ))}
-                <th className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85">
+                {icons && <th className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85">
                   Action
-                </th>
+                </th>}
+                
               </tr>
             </thead>
             <tbody className="bg-secondary-60 ">
@@ -250,8 +251,8 @@ const Table: React.FC<TableProps> = ({
                       )}
                     </td>
                   ))}
-                  <td>
-                    <div className="flex px-4 space-x-2 ">
+                  { icons &&<td>
+                    <div className="flex px-4 space-x-2 "> 
                       {row.iconsOrder.map((icon: string) => {
                         if (icon === "i1" && row.i1) {
                           return (
@@ -337,7 +338,8 @@ const Table: React.FC<TableProps> = ({
                         return null;
                       })}
                     </div>
-                  </td>
+                  </td>}
+                  
                   <td>
   {/* <div className="flex px-4 space-x-2">
     {currentData.map((col, colIndex) => (
