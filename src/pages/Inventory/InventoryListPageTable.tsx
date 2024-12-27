@@ -1,4 +1,4 @@
-import React ,{ useState,useRef,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Table from "../../Components/Shared/Table/Table";
 import { ICONS } from "../../assets/index";
 import DownloadButton from "../../Components/Shared/Table/DownloadExcelBtn";
@@ -25,19 +25,13 @@ interface Inventory {
 }
 
 const InventoryListPageTable: React.FC = () => {
-    
-    const [showDropdown2, setShowDropdown2] = useState(false);
+  const [showDropdown2, setShowDropdown2] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
 
-  const Catagory  = [
-    "C1" ,
-    "C2" ,
-   "C3" ,
-    "C4" ,
-  ];
+  const Catagory = ["C1", "C2", "C3", "C4"];
   const [formData, setFormData] = useState({
     refrence: "",
     category: "",
@@ -53,7 +47,10 @@ const InventoryListPageTable: React.FC = () => {
     state: "",
     country: "",
     status: "active",
-    image:imageFiles
+    image: imageFiles,
+    TRType: "",
+    transactionUnits:"",
+    comment:""
   });
 
   const handleChange = (
@@ -84,7 +81,7 @@ const InventoryListPageTable: React.FC = () => {
 
   const editToggleModel = () => {
     setEditModalOpen(!isEditModalOpen);
-  }
+  };
   const handleActionClick = (actionType: string, item: Inventory) => {
     switch (actionType) {
       case "i1":
@@ -464,15 +461,14 @@ const InventoryListPageTable: React.FC = () => {
     }));
     setShowDropdown2(false);
   };
-   useEffect(() => {
-      if (showDropdown2) {
-        document.addEventListener("mousedown", handleClickOutside);
-      } else {
-        document.removeEventListener("mousedown", handleClickOutside);
-      }
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [showDropdown2]);
-  
+  useEffect(() => {
+    if (showDropdown2) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showDropdown2]);
 
   return (
     <div>
@@ -521,121 +517,120 @@ const InventoryListPageTable: React.FC = () => {
                 Inventroy Information
               </span>
               <div className="w-full  pb-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
-              <InputField
-                label="Refrence"
-                required={true}
-                inputBg=""
-                type="text"
-                placeholder="Enter company name"
-                name="refrence"
-                value={formData.refrence}
-                onChange={handleChange}
-              />
+                <InputField
+                  label="Refrence"
+                  required={true}
+                  inputBg=""
+                  type="text"
+                  placeholder="Enter company name"
+                  name="refrence"
+                  value={formData.refrence}
+                  onChange={handleChange}
+                />
 
-<div className="flex-2 relative" ref={dropdownRef}>
-            <div className="" onClick={() => setShowDropdown2(true)}>
-              <InputField
-                label="Category"
-                required={true}
-                inputBg=""
-                type="select"
-                icon={ICONS.downArrow2}
-                placeholder="Enter the category"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-              />
-            </div>
-            {showDropdown2 && (
-              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
-                 {Catagory.map((category) => (
-        <div
-          key={category} // Use category as the unique key
-          className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-          onClick={() => handleStateSelect2(category)} // Pass category to handler
-        >
-          {category} {/* Display category */}
-        </div>
-      ))}
+                <div className="flex-2 relative" ref={dropdownRef}>
+                  <div className="" onClick={() => setShowDropdown2(true)}>
+                    <InputField
+                      label="Category"
+                      required={true}
+                      inputBg=""
+                      type="select"
+                      icon={ICONS.downArrow2}
+                      placeholder="Enter the category"
+                      name="category"
+                      value={formData.category}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  {showDropdown2 && (
+                    <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
+                      {Catagory.map((category) => (
+                        <div
+                          key={category} // Use category as the unique key
+                          className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+                          onClick={() => handleStateSelect2(category)} // Pass category to handler
+                        >
+                          {category} {/* Display category */}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <InputField
+                  label="Buying Cost"
+                  inputBg=""
+                  type="number"
+                  placeholder="Enter Buying Cost"
+                  name="buyingCost"
+                  value={formData.buyingCost}
+                  onChange={handleChange}
+                />
+
+                <InputField
+                  label="Qantity"
+                  required={true}
+                  inputBg=""
+                  type="number"
+                  placeholder="Enter quantity"
+                  name="quantity"
+                  value={formData.quantity}
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="Description"
+                  inputBg=""
+                  type="text"
+                  placeholder="Enter description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="SellingCost"
+                  inputBg=""
+                  type="number"
+                  placeholder="Enter Selling Cost"
+                  name="sellingCost"
+                  value={formData.sellingCost}
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="GST Number"
+                  inputBg=""
+                  type="text"
+                  placeholder="Enter the GST number"
+                  name="gstNo"
+                  value={formData.gstNo}
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="Quantity Type"
+                  inputBg=""
+                  type="text"
+                  placeholder="Enter Quantity Type"
+                  name="quantityType"
+                  value={formData.quantityType}
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="Alarm"
+                  inputBg=""
+                  type="number"
+                  placeholder="Enter Alarm"
+                  name="alarm"
+                  value={formData.alarm}
+                  onChange={handleChange}
+                />
               </div>
-            )}
-          </div>
-              <InputField
-                label="Buying Cost"
-                inputBg=""
-                type="number"
-                placeholder="Enter Buying Cost"
-                name="buyingCost"
-                value={formData.buyingCost}
-                onChange={handleChange}
-              />
-
-              <InputField
-                label="Qantity"
-                required={true}
-                inputBg=""
-                type="number"
-                placeholder="Enter quantity"
-                name="quantity"
-                value={formData.quantity}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Description"
-                inputBg=""
-                type="text"
-                placeholder="Enter description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-              />
-              <InputField
-                label="SellingCost"
-                inputBg=""
-                type="number"
-                placeholder="Enter Selling Cost"
-                name="sellingCost"
-                value={formData.sellingCost}
-                onChange={handleChange}
-              />
-              <InputField
-                label="GST Number"
-                inputBg=""
-                type="text"
-                placeholder="Enter the GST number"
-                name="gstNo"
-                value={formData.gstNo}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Quantity Type"
-                inputBg=""
-                type="text"
-                placeholder="Enter Quantity Type"
-                name="quantityType"
-                value={formData.quantityType}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Alarm"
-                inputBg=""
-                type="number"
-                placeholder="Enter Alarm"
-                name="alarm"
-                value={formData.alarm}
-                onChange={handleChange}
-              />
-            </div>
               <div className="py-4 w-full flex justify-center">
-            <UploadImage
-              removeImage={removeImage}
-              handleImageChange={handleImageChange}
-              imagePreviews={imagePreviews}
-            />
-          </div>
-
+                <UploadImage
+                  removeImage={removeImage}
+                  handleImageChange={handleImageChange}
+                  imagePreviews={imagePreviews}
+                />
+              </div>
             </div>
-            
+
             <div className=" border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
             <div className="col-span-3 flex justify-center gap-4 my-8">
               <Button
@@ -644,12 +639,79 @@ const InventoryListPageTable: React.FC = () => {
                 color="text-primary-10 bg-none"
               />
               <Button
-                text="Update Client"
+                text="Update Inventory"
                 type="submit"
                 color="bg-primary-10 text-white"
               />
             </div>
+
+             {/* heading */}
+             <span className="font-Inter font-[600] text-sm  ">
+                Inventroy Logs
+              </span>
+              <div className="w-full  pb-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
+            <div className="w-full flex items-center gap-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="TRType"
+                  value="sell"
+                  checked={formData.TRType === "sell"}
+                  onChange={handleChange}
+                  className="form-radio text-primary-10"
+                />
+                <span className="ml-2">Sell</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="TRType"
+                  value="buy"
+                  checked={formData.TRType === "buy"}
+                  onChange={handleChange}
+                  className="form-radio text-primary-10"
+                />
+                <span className="ml-2">Buy</span>
+              </label>
+            </div>
+   
+            <InputField
+                  label="Transaction Units"
+                  required={true}
+                  inputBg=""
+                  type="number"
+                  placeholder="Enter Transaction Units"
+                  name="transactionUnits"
+                  value={formData.transactionUnits}
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="Comment"
+                  required={false}
+                  inputBg=""
+                  type="text"
+                  placeholder="Enter comment"
+                  name="comment"
+                  value={formData.comment}
+                  onChange={handleChange}
+                /> </div>
+ <div className=" border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
+<div className="col-span-3 flex justify-center gap-4 my-8">
+              <Button
+                text="Clear Form"
+                type="reset"
+                color="text-primary-10 bg-none"
+              />
+              <Button
+                text="Update Logs"
+                type="submit"
+                color="bg-primary-10 text-white"
+              />
+            </div>
+         
           </div>
+
+          <div></div>
         </div>
       )}
     </div>

@@ -4,7 +4,7 @@ import { ICONS } from "../../assets/index";
 
 // Define a type for the row data
 interface Supplier {
-  company_name: string;
+  companyname: string;
   title_item: string;
   gst: string;
   mobile_no: string;
@@ -26,7 +26,7 @@ const SuppliersTable: React.FC = () => {
 
   const data: Supplier[] = [
     {
-      company_name: "kjsdgnbj",
+      companyname: "kjsdgnbj",
       title_item: "some text",
       gst: "ljadbvilhb4jh345kj4n",
       mobile_no: "985735689",
@@ -39,7 +39,7 @@ const SuppliersTable: React.FC = () => {
       iconsOrder: ["edit", "approve", "delete"]
     },
     {
-        company_name: "kjsdgnbj",
+        companyname: "kjsdgnbj",
         title_item: "some text",
         gst: "ljadbvilhb4jh345kj4n",
         mobile_no: "985735689",
@@ -51,7 +51,7 @@ const SuppliersTable: React.FC = () => {
         iconsOrder: ["edit", "approve", "delete"]
       },
       {
-        company_name: "kjsdgnbj",
+        companyname: "kjsdgnbj",
         title_item: "some text",
         gst: "ljadbvilhb4jh345kj4n",
         mobile_no: "985735689",
@@ -63,7 +63,7 @@ const SuppliersTable: React.FC = () => {
         iconsOrder: ["edit", "approve", "delete"]
       },
       {
-        company_name: "kjsdgnbj",
+        companyname: "kjsdgnbj",
         title_item: "some text",
         gst: "ljadbvilhb4jh345kj4n",
         mobile_no: "985735689",
@@ -75,7 +75,7 @@ const SuppliersTable: React.FC = () => {
         iconsOrder: ["edit", "approve", "delete"]
       },
       {
-        company_name: "kjsdgnbj",
+        companyname: "kjsdgnbj",
         title_item: "some text",
         gst: "ljadbvilhb4jh345kj4n",
         mobile_no: "985735689",
@@ -86,7 +86,7 @@ const SuppliersTable: React.FC = () => {
         canDelete: true,
         iconsOrder: ["edit", "approve", "delete"]
       },{
-        company_name: "kjsdgnbj",
+        companyname: "kjsdgnbj",
         title_item: "some text",
         gst: "ljadbvilhb4jh345kj4n",
         mobile_no: "985735689",
@@ -98,7 +98,7 @@ const SuppliersTable: React.FC = () => {
         iconsOrder: ["edit", "approve", "delete"]
       },
       {
-        company_name: "kjsdgnbj",
+        companyname: "kjsdgnbj",
         title_item: "some text",
         gst: "ljadbvilhb4jh345kj4n",
         mobile_no: "985735689",
@@ -110,7 +110,7 @@ const SuppliersTable: React.FC = () => {
         iconsOrder: ["edit", "approve", "delete"]
       },
       {
-        company_name: "kjsdgnbj",
+        companyname: "kjsdgnbj",
         title_item: "some text",
         gst: "ljadbvilhb4jh345kj4n",
         mobile_no: "985735689",
@@ -122,7 +122,7 @@ const SuppliersTable: React.FC = () => {
         iconsOrder: ["edit", "approve", "delete"]
       },
       {
-        company_name: "kjsdgnbj",
+        companyname: "kjsdgnbj",
         title_item: "some text",
         gst: "ljadbvilhb4jh345kj4n",
         mobile_no: "985735689",
@@ -133,7 +133,7 @@ const SuppliersTable: React.FC = () => {
         canDelete: true,
         iconsOrder: ["edit", "approve", "delete"]
       },{
-        company_name: "kjsdgnbj",
+        companyname: "kjsdgnbj",
         title_item: "some text",
         gst: "ljadbvilhb4jh345kj4n",
         mobile_no: "985735689",
@@ -146,7 +146,7 @@ const SuppliersTable: React.FC = () => {
       },
 
     {
-        company_name: "kjsdgnbj",
+        companyname: "kjsdgnbj",
         title_item: "some text",
         gst: "ljadbvilhb4jh345kj4n",
         mobile_no: "985735689",
@@ -158,7 +158,7 @@ const SuppliersTable: React.FC = () => {
         iconsOrder: ["edit", "approve", "delete"]
       },
       {
-        company_name: "kjsdgnbj",
+        companyname: "kjsdgnbj",
         title_item: "some text",
         gst: "ljadbvilhb4jh345kj4n",
         mobile_no: "985735689",
@@ -174,7 +174,7 @@ const SuppliersTable: React.FC = () => {
   const columns = [
     {
       header: "Company Name",
-      accessor: "company_name",
+      accessor: "companyname",
       cellClassName: "text-black",
     },
     {
