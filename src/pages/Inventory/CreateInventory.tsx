@@ -1,12 +1,12 @@
-import { useState, useRef,useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import UploadImage from "./UploadImage";
 import { ICONS } from "../../assets";
 
 const CreateInventory = () => {
-   const dropdownRef = useRef<HTMLDivElement>(null);
-    const [showDropdown2, setShowDropdown2] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [showDropdown2, setShowDropdown2] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
   const [formData, setFormData] = useState({
@@ -24,16 +24,11 @@ const CreateInventory = () => {
     state: "",
     country: "",
     status: "active",
-    image:imageFiles,
-    WarehouseLocation:"",
+    image: imageFiles,
+    WarehouseLocation: "",
   });
 
-  const Catagory  = [
-    "C1" ,
-    "C2" ,
-   "C3" ,
-    "C4" ,
-  ];
+  const Catagory = ["C1", "C2", "C3", "C4"];
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -84,15 +79,15 @@ const CreateInventory = () => {
     }));
     setShowDropdown2(false);
   };
-   useEffect(() => {
-      if (showDropdown2) {
-        document.addEventListener("mousedown", handleClickOutside);
-      } else {
-        document.removeEventListener("mousedown", handleClickOutside);
-      }
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [showDropdown2]);
-  
+  useEffect(() => {
+    if (showDropdown2) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showDropdown2]);
+
   return (
     <>
       <div className="max-h-[calc(100vh-90px)] overflow-y-auto scroll-none">
@@ -113,43 +108,49 @@ const CreateInventory = () => {
                 onChange={handleChange}
               />
               <div className="flex-2 relative" ref={dropdownRef}>
-            <div className="" onClick={() => setShowDropdown2(true)}>
-              <InputField
-                label="Category"
-                required={true}
-                inputBg=""
-                type="select"
-                icon={ICONS.downArrow2}
-                placeholder="Enter the category"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-              />
-            </div>
-            {showDropdown2 && (
-              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
-                 {Catagory.map((category) => (
-        <div
-          key={category} // Use category as the unique key
-          className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-          onClick={() => handleStateSelect2(category)} // Pass category to handler
-        >
-          {category} {/* Display category */}
-        </div>
-      ))}
+                <div className="" onClick={() => setShowDropdown2(true)}>
+                  <InputField
+                    label="Category"
+                    required={true}
+                    inputBg=""
+                    type="select"
+                    icon={ICONS.downArrow2}
+                    placeholder="Enter the category"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                  />
+                </div>
+                {showDropdown2 && (
+                  <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
+                    {Catagory.map((category) => (
+                      <div
+                        key={category} // Use category as the unique key
+                        className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+                        onClick={() => handleStateSelect2(category)} // Pass category to handler
+                      >
+                        {category} {/* Display category */}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <InputField
-                label="Buying Cost"
-                inputBg=""
-                type="text"
-                placeholder="Enter Buying Cost"
-                name="buyingCost"
-                value={formData.buyingCost}
-                onChange={handleChange}
-              />
-              
+              <div className=" relative group">
+                <InputField
+                  label="Buying Cost"
+                  inputBg=""
+                  type="text"
+                  placeholder="Enter Buying Cost"
+                  name="buyingCost"
+                  value={formData.buyingCost}
+                  onChange={handleChange}
+                />
+                <div className=" absolute bottom-[-50%] right-[6%] opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 group-hover:scale-[1] scale-[0.7] before:w-[20px] before:h-[20px] before:bg-[#8d8d8d] before:z-[-1] before:absolute before:top-[-35%] before:left-[1%] before:rotate-[40deg] before:rounded-b-3xl">
+                  <span className=" text-[0.9rem] bg-[#8d8d8d] text-secondary rounded px-3 py-2 ">
+               This filed accepts alphanumeric input.
+                  </span>
+                </div>
+              </div>
 
               <InputField
                 label="Quantity"
