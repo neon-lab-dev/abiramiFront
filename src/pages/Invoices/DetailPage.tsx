@@ -1,7 +1,5 @@
-import React from 'react'
 import Button from '../../Components/Shared/Button/Button'
 import { ICONS } from '../../assets'
-import InvoiceTable from '../../Components/Invoices/InvoiceTable'
 import { useNavigate } from 'react-router-dom'
 
 const DetailPage = () => {

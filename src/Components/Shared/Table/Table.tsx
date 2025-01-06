@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ICONS } from "../../../assets";
+import { useNavigate } from "react-router-dom";
 
 interface Column {
   header: string | JSX.Element;
@@ -21,15 +22,16 @@ interface TableProps {
   enablePagination?: boolean;
   rowsPerPage?: number;
   tableHeight?: string;
-  tableWidth?:string
-  icons: {
+  tableWidth?: string;
+  icons?: {
     i1: string;
     i2: string;
     i3: string;
   };
-  bg_i1: string;
-  bg_i2: string;
-  bg_i3: string;
+  bg_i1?: string;
+  bg_i2?: string;
+  bg_i3?: string;
+  onActionClick?:any
 }
 
 const formatDate = (date: Date) => {
@@ -39,7 +41,6 @@ const formatDate = (date: Date) => {
     day: "numeric",
     year: "numeric",
   });
-
 };
 
 const Table: React.FC<TableProps> = ({
@@ -49,12 +50,13 @@ const Table: React.FC<TableProps> = ({
   showViewAll,
   enablePagination = false,
   rowsPerPage = 5,
-  tableWidth="full",
+  tableWidth = "full",
   icons,
   tableHeight = "400px",
   bg_i1 = "bg-blue-500",
   bg_i2 = "bg-green-500",
   bg_i3 = "bg-red-500",
+  onActionClick
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = enablePagination
@@ -66,6 +68,17 @@ const Table: React.FC<TableProps> = ({
     ? data.slice(startIndex, endIndex)
     : data;
 
+    const navigate = useNavigate(); // Hook to navigate
+
+    const handleNavigateToDetails = (companyName: string) => {
+      navigate(`/clients/Detailpage`);
+      console.log(companyName)
+    };
+    const handleNavigateToInvoiceDetails = (companyName: string) => {
+      navigate(`/invoices/Detailpage`);
+      console.log(companyName)
+    };
+
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
@@ -74,17 +87,17 @@ const Table: React.FC<TableProps> = ({
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  const handleEdit = (row: Record<string, any>) => {
-    console.log("Edit clicked for:", row);
-  };
+  // const handleEdit = (row: Record<string, any>) => {
+  //   console.log("Edit clicked for:", row);
+  // };
 
-  const handleApprove = (row: Record<string, any>) => {
-    console.log("Approve clicked for:", row);
-  };
+  // const handleApprove = (row: Record<string, any>) => {
+  //   console.log("Approve clicked for:", row);
+  // };
 
-  const handleDelete = (row: Record<string, any>) => {
-    console.log("Delete clicked for:", row);
-  };
+  // const handleDelete = (row: Record<string, any>) => {
+  //   console.log("Delete clicked for:", row);
+  // };
   const i3CustomClass = (i1: boolean, i2: boolean, i3: boolean) => {
     if (i1 && i2 && i3) return;
     if (i1 && i2) return;
@@ -114,10 +127,10 @@ const Table: React.FC<TableProps> = ({
 
         {/* Wrapper to enable horizontal scrolling */}
         <div
-          className={` overflow-x-auto ${!enablePagination? "scrollbar-y-visible":"scrollbar-hide"}  ${
-            !enablePagination ? "overflow-y-auto " : ""
-          } `}
-          style={{ maxHeight: tableHeight ,minWidth:tableWidth}}
+          className={` overflow-x-auto ${
+            !enablePagination ? "scrollbar-y-visible" : "scrollbar-hide"
+          }  ${!enablePagination ? "overflow-y-auto " : ""} `}
+          style={{ maxHeight: tableHeight, minWidth: tableWidth }}
         >
           <table className="min-w-full text-left border-separate border-spacing-y-1">
             <thead className="sticky top-0 bg-secondary-60 min-h-10">
@@ -128,40 +141,48 @@ const Table: React.FC<TableProps> = ({
                     className="pl-3 py-3 font-normal text-[14px] leading-[20px] text-neutral-85 whitespace-nowrap  text-ellipsis"
                     style={{ minWidth: col.width }}
                   >
-                 <div className="flex items-center justify-between font-normal text-[14px] leading-[20px] text-neutral-85 whitespace-nowrap">
-  {col.header}
-  <div className={`flex ${col.icon1 && col.icon2 ? 'flex-col items-center w-auto' : ''}`}>
-    {[col.icon1, col.icon2]
-      .filter(Boolean)
-      .map((icon, index) => (
-        <button
-          key={index}
-          onClick={() => {
-            if (index === 0 && col.onIcon1Click) {
-              col.onIcon1Click(); // Call onIcon1Click if it's defined
-            } else if (index === 1 && col.onIcon2Click) {
-              col.onIcon2Click(); // Call onIcon2Click if it's defined
-            }
-          }}
-          className="mt-1 p-0 flex items-center justify-center" // Optional padding adjustments
-        >
-          <img
-            src={icon}
-            alt={`${col.header} icon`}
-            className={`mt-1 ${col.icon1 && col.icon2 ? 'h-[6px] w-3' : 'h-5 w-5'}`}
-          />
-        </button>
-      ))}
-  </div>
-</div>
-
-
-
+                    <div className="flex items-center justify-between font-normal text-[14px] leading-[20px] text-neutral-85 whitespace-nowrap">
+                      {col.header}
+                      <div
+                        className={`flex ${
+                          col.icon1 && col.icon2
+                            ? "flex-col items-center w-auto"
+                            : ""
+                        }`}
+                      >
+                        {[col.icon1, col.icon2]
+                          .filter(Boolean)
+                          .map((icon, index) => (
+                            <button
+                              key={index}
+                              onClick={() => {
+                                if (index === 0 && col.onIcon1Click) {
+                                  col.onIcon1Click(); // Call onIcon1Click if it's defined
+                                } else if (index === 1 && col.onIcon2Click) {
+                                  col.onIcon2Click(); // Call onIcon2Click if it's defined
+                                }
+                              }}
+                              className="mt-1 p-0 flex items-center justify-center" // Optional padding adjustments
+                            >
+                              <img
+                                src={icon}
+                                alt={`${col.header} icon`}
+                                className={`mt-1 ${
+                                  col.icon1 && col.icon2
+                                    ? "h-[6px] w-3"
+                                    : "h-5 w-5"
+                                }`}
+                              />
+                            </button>
+                          ))}
+                      </div>
+                    </div>
                   </th>
                 ))}
-                <th className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85">
+                {icons && <th className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85">
                   Action
-                </th>
+                </th>}
+                
               </tr>
             </thead>
             <tbody className="bg-secondary-60 ">
@@ -192,7 +213,37 @@ const Table: React.FC<TableProps> = ({
                         >
                           {row[col.accessor]}
                         </span>
-                      ) : typeof row[col.accessor] === "object" &&
+                      ) :col.accessor === "company_name" ? (
+                        <span
+                          className="text-blue-500 cursor-pointer hover:underline"
+                          onClick={() =>
+                            handleNavigateToDetails(row[col.accessor])
+                          }
+                        >
+                          {row[col.accessor]}
+                        </span>
+                      ) :col.accessor === "invoice_id" ? (
+                        <span
+                          className="text-blue-500 cursor-pointer hover:underline"
+                          onClick={() =>
+                            handleNavigateToInvoiceDetails(row[col.accessor])
+                          }
+                        >
+                          {row[col.accessor]}
+                        </span>
+                      ) : col.accessor === "quantity" ? (
+                        <span
+                        className={`${
+                          row.quantity === 0
+                            ? "text-red-500 bg-red-100"
+                            : row.quantity <= row.alarm
+                            ? "text-yellow-500 bg-yellow-100"
+                            : "text-black bg-gray-200"
+                        } px-2 py-1 rounded-xl text-center flex justify-center`}
+                        >
+                          {row[col.accessor]}
+                        </span>
+                      ): typeof row[col.accessor] === "object" &&
                         row[col.accessor] instanceof Date ? (
                         formatDate(row[col.accessor])
                       ) : (
@@ -200,8 +251,8 @@ const Table: React.FC<TableProps> = ({
                       )}
                     </td>
                   ))}
-                  <td>
-                    <div className="flex px-4 space-x-2 ">
+                  { icons &&<td>
+                    <div className="flex px-4 space-x-2 "> 
                       {row.iconsOrder.map((icon: string) => {
                         if (icon === "i1" && row.i1) {
                           return (
@@ -216,7 +267,7 @@ const Table: React.FC<TableProps> = ({
                             >
                               <button
                                 key="i1"
-                                onClick={() => handleEdit(row)}
+                                onClick={() => onActionClick("i1", row)}
                                 className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
                               >
                                 <img
@@ -243,7 +294,7 @@ const Table: React.FC<TableProps> = ({
                               />
                               <button
                                 key="i2"
-                                onClick={() => handleApprove(row)}
+                                onClick={() => onActionClick("i2", row)}
                                 className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i2}`}
                               >
                                 <img
@@ -271,7 +322,7 @@ const Table: React.FC<TableProps> = ({
                               />
                               <button
                                 key="i3"
-                                onClick={() => handleDelete(row)}
+                                onClick={() => onActionClick("i3", row)}
                                 className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i3}  `}
                               >
                                 <img
@@ -287,7 +338,74 @@ const Table: React.FC<TableProps> = ({
                         return null;
                       })}
                     </div>
-                  </td>
+                  </td>}
+                  
+                  <td>
+  {/* <div className="flex px-4 space-x-2">
+    {currentData.map((col, colIndex) => (
+      <div key={colIndex}>
+        {row.iconsOrder.map((icon: string) => {
+          if (icon === "i1" && row.i1) {
+            return (
+              <div
+                key="i1"
+                className={`${i1CustomClass(row.i1, row.i2, row.i3)} max-w-[46px] mr-${
+                  row.i1 && row.i2 && !row.i3 ? "2" : "0"
+                }`}
+              >
+                <button
+                  onClick={() => onActionClick("view", col)} // Pass 'col' here
+                  className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i1}`}
+                >
+                  <img src={icons.i1} alt="Edit" className="h-3 w-3" />
+                </button>
+              </div>
+            );
+          }
+
+          if (icon === "i2" && row.i2) {
+            return (
+              <div
+                key="i2"
+                className={`flex items-center gap-${
+                  row.i1 && row.i2 && !row.i3 ? "4" : "2"
+                } ml-${row.i1 && row.i2 && !row.i3 ? "4" : "2"}`}
+              >
+                <img src={ICONS.graybar} alt="|" className="h-3 w-[2px]" />
+                <button
+                  onClick={() => onActionClick("edit", col)} // Pass 'col' here
+                  className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i2}`}
+                >
+                  <img src={icons.i2} alt="i2" className="h-3 w-3" />
+                </button>
+              </div>
+            );
+          }
+
+          if (icon === "i3" && row.i3) {
+            return (
+              <div
+                key="i3"
+                className={`flex items-center gap-2 ml-0 ${i3CustomClass(row.i1, row.i2, row.i3)}`}
+              >
+                <img src={ICONS.graybar} alt="|" className="h-3 w-[2px]" />
+                <button
+                  onClick={() => onActionClick("delete", col)} // Pass 'col' here
+                  className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i3}`}
+                >
+                  <img src={icons.i3} alt="i3" className="h-3 w-3" />
+                </button>
+              </div>
+            );
+          }
+
+          return null;
+        })}
+      </div>
+    ))}
+  </div> */}
+</td>
+
                 </tr>
               ))}
             </tbody>

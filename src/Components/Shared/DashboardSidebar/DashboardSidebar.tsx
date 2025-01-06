@@ -32,11 +32,11 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
       text: "Clients",
       path: "/clients",
       children: [
-        {
-          icon: ICONS.ClientDetailsIcon,
-          text: "Client Details",
-          path: "/clients/Detailpage",
-        },
+        // {
+        //   icon: ICONS.ClientDetailsIcon,
+        //   text: "Client Details",
+        //   path: "/clients/Detailpage",
+        // },
         {
           icon: ICONS.CreateClientIcon,
           text: "Create Client",
@@ -61,11 +61,11 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
       text: "Invoices",
       path: "/invoices",
       children: [
-        {
-          icon: ICONS.InvoicesDetails,
-          text: "Invoice Details",
-          path: "/invoices/Detailpage",
-        },
+        // {
+        //   icon: ICONS.InvoicesDetails,
+        //   text: "Invoice Details",
+        //   path: "/invoices/Detailpage",
+        // },
         {
           icon: ICONS.CreateInvoice,
           text: "Create Invoice",

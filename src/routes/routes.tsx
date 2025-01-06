@@ -13,6 +13,8 @@ import CreatePurchase from "../pages/Purchase/CreatePurchase";
 import ClientDetail from "../pages/Clients/DetailPage";
 import CreateClients from "../pages/Clients/CreateClients";
 import Inventory from "../pages/Inventory/ListPage"
+import CreateInventory from "../pages/Inventory/CreateInventory";
+import InventoryTable from "../pages/Inventory/InventoryListPageTable"
 
 export const router = createBrowserRouter([  
   {
@@ -68,6 +70,15 @@ export const router = createBrowserRouter([
         path: "/inventory",
         element: <Inventory />,
       },
+      {
+        path: "/inventory/createInventory",
+        element: <CreateInventory />,
+      },
+      {
+        path: "/inventory/InventoryTable",
+        element: <InventoryTable/>
+      },
+      
     ]
   },
 ]);

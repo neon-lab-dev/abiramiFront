@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import Table from "../Shared/Table/Table";
-import { ICONS } from "../../assets/index";
+import { ICONS } from "../../assets/index"; 
 
 // Define a type for the row data
 interface Client {
@@ -193,8 +193,8 @@ const ClientTable: React.FC = () => {
     {
       header: "Company Name",
       accessor: "company_name",
-      cellClassName: " text-neutral-25 ",
-      width:"196px"
+      cellClassName: "text-neutral-25 ",
+      width: "196px",
     },
     {
       header: "Contact Person",

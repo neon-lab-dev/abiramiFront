@@ -5,7 +5,7 @@ import DownloadButton from "../Shared/Table/DownloadExcelBtn";
 import Button from "../Shared/Button/Button";
 
 interface Purchase {
-    company_name: string;
+    companyName: string;
     invoice_number: string;
     gst: string;
     total_bill_value: number;
@@ -31,7 +31,7 @@ interface Purchase {
 
     const data: Purchase[] = [
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -44,7 +44,7 @@ interface Purchase {
           iconsOrder: ["i1", "i2", "i3"]
            },
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -56,7 +56,7 @@ interface Purchase {
           i3: false,  
           iconsOrder: ["i1", "i2", "i3"]   },
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -68,7 +68,7 @@ interface Purchase {
           i3: false,  
           iconsOrder: ["i1", "i2", "i3"]   },
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -80,7 +80,7 @@ interface Purchase {
           i3: false,  
           iconsOrder: ["i1", "i2", "i3"]   },
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -92,7 +92,7 @@ interface Purchase {
           i3: false,  
           iconsOrder: ["i1", "i2", "i3"]   },
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -104,7 +104,7 @@ interface Purchase {
           i3: false,  
           iconsOrder: ["i1", "i2", "i3"]   },
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -116,7 +116,7 @@ interface Purchase {
           i3: false,  
           iconsOrder: ["i1", "i2", "i3"]   },
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -128,7 +128,7 @@ interface Purchase {
           i3: false,  
           iconsOrder: ["i1", "i2", "i3"]   },
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -140,7 +140,7 @@ interface Purchase {
           i3: false,  
           iconsOrder: ["i1", "i2", "i3"]   },
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -153,7 +153,7 @@ interface Purchase {
           iconsOrder: ["i1", "i2", "i3"]   },
     
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -165,7 +165,7 @@ interface Purchase {
           i3: false,  
           iconsOrder: ["i1", "i2", "i3"]   },
         {
-          company_name: "kjsdgnbj",
+          companyName: "kjsdgnbj",
           invoice_number: "some text",
           gst: "ljadbvilhb4jh345kj4n",
           total_bill_value: 985735689,
@@ -198,7 +198,7 @@ interface Purchase {
       const columns = [
         {
           header: "Company",
-          accessor: "company_name",
+          accessor: "companyName",
           cellClassName: " text-neutral-25 ",
           icon1: ICONS.search,
           width:"250px"
