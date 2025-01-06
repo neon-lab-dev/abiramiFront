@@ -40,25 +40,53 @@ const CreateInvoice = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value,  
     }));
   };
 
-  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   console.log(formData);
-  // };
 
   const states = [
-    { name: "Andhra Pradesh", code: "28" },
-  { name: "Bihar",code: "10" },
-  { name: "Delhi", code: "7"},
-  { name: "Goa",  code: "30" },
-  { name: "Maharashtra", code: "27" },
-  { name: "Jharkhand", code: "20" },
-  { name: "Uttar Pradesh",code: "9 "},
-  { name: "Tamil Nadu",  code: "33" } 
+    { name: "Jammu and Kashmir", code: "01" },
+    { name: "Himachal Pradesh", code: "02" },
+    { name: "Punjab", code: "03" },
+    { name: "Chandigarh", code: "04" },
+    { name: "Uttarakhand", code: "05" },
+    { name: "Haryana", code: "06" },
+    { name: "Delhi", code: "07" },
+    { name: "Rajasthan", code: "08" },
+    { name: "Uttar Pradesh", code: "09" },
+    { name: "Bihar", code: "10" },
+    { name: "Sikkim", code: "11" },
+    { name: "Arunachal Pradesh", code: "12" },
+    { name: "Nagaland", code: "13" },
+    { name: "Manipur", code: "14" },
+    { name: "Mizoram", code: "15" },
+    { name: "Tripura", code: "16" },
+    { name: "Meghalaya", code: "17" },
+    { name: "Assam", code: "18" },
+    { name: "West Bengal", code: "19" },
+    { name: "Jharkhand", code: "20" },
+    { name: "Odisha", code: "21" },
+    { name: "Chhattisgarh", code: "22" },
+    { name: "Madhya Pradesh", code: "23" },
+    { name: "Gujarat", code: "24" },
+    { name: "Dadra and Nagar Haveli and Daman and Diu", code: "26" },
+    { name: "Maharashtra", code: "27" },
+    { name: "Andhra Pradesh (Before Division)", code: "28" },
+    { name: "Karnataka", code: "29" },
+    { name: "Goa", code: "30" },
+    { name: "Lakshadweep", code: "31" },
+    { name: "Kerala", code: "32" },
+    { name: "Tamil Nadu", code: "33" },
+    { name: "Puducherry", code: "34" },
+    { name: "Andaman and Nicobar Islands", code: "35" },
+    { name: "Telangana", code: "36" },
+    { name: "Andhra Pradesh (Newly Added)", code: "37" },
+    { name: "Ladakh (Newly Added)", code: "38" },
+    { name: "Other Territory", code: "97" },
+    { name: "Centre Jurisdiction", code: "99" }
   ];
+  
   const invoice  = [
     { name:"Cash Invoice" },
     { name:"Cheque Invoice" },
@@ -70,6 +98,7 @@ const CreateInvoice = () => {
       ...prev,
       Stateandcode: stateName,
       Code: stateCode,
+      taxtype: stateCode === "33" ? "CGST & SGST" : "IGST", 
     }));
     setShowDropdown(false);
   };
@@ -81,23 +110,6 @@ const CreateInvoice = () => {
     setShowDropdown2(false);
   };
 
-  // const handleClickOutside = (event: MouseEvent) => {
-  //   if (
-  //     dropdownRef.current &&
-  //     !dropdownRef.current.contains(event.target as Node)
-  //   ) {
-  //     setShowDropdown(false);
-  //     setShowDropdown2(false);
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (showDropdown||showDropdown2 ) {
-  //     document.addEventListener("mousedown", handleClickOutside);
-  //   } else {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   }
-  //   return () => document.removeEventListener("mousedown", handleClickOutside);
-  // }, [showDropdown,showDropdown2]);
 
   return (
     <div>
@@ -184,7 +196,7 @@ const CreateInvoice = () => {
           placeholder="Enter Tax type"
           name="taxtype"
           value={formData.taxtype}
-          onChange={handleChange}
+          readOnly
         />
 
           <div className="flex-2 relative" ref={dropdownRef}>
@@ -507,7 +519,7 @@ const CreateInvoice = () => {
                 />
               </div>
             </div>
-            <div className="flex justify-between items-center  py-2">
+            {/* <div className="flex justify-between items-center  py-2">
               <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
                 Discount
               </span>
@@ -521,7 +533,7 @@ const CreateInvoice = () => {
                   onChange={handleChange}
                 />
               </div>
-            </div>
+            </div> */}
             <div className="flex justify-between items-center  py-2">
               <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
                 PF Amount

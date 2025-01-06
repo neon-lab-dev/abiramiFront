@@ -24,7 +24,8 @@ const CreateInventory = () => {
     state: "",
     country: "",
     status: "active",
-    image:imageFiles
+    image:imageFiles,
+    WarehouseLocation:"",
   });
 
   const Catagory  = [
@@ -139,18 +140,19 @@ const CreateInventory = () => {
               </div>
             )}
           </div>
-              <InputField
+          <InputField
                 label="Buying Cost"
                 inputBg=""
-                type="number"
+                type="text"
                 placeholder="Enter Buying Cost"
                 name="buyingCost"
                 value={formData.buyingCost}
                 onChange={handleChange}
               />
+              
 
               <InputField
-                label="Qantity"
+                label="Quantity"
                 required={true}
                 inputBg=""
                 type="number"
@@ -178,12 +180,12 @@ const CreateInventory = () => {
                 onChange={handleChange}
               />
               <InputField
-                label="GST Number"
+                label="Warehouse Location"
                 inputBg=""
                 type="text"
-                placeholder="Enter the GST number"
-                name="quantityType"
-                value={formData.quantityType}
+                placeholder="Enter the Warehouse Location"
+                name="WarehouseLocation"
+                value={formData.WarehouseLocation}
                 onChange={handleChange}
               />
               <InputField

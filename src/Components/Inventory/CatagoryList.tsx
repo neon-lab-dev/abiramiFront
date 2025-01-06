@@ -36,6 +36,15 @@ const CatagoryList = () => {
       {/* Header Section */}
       <div className="w-full py-2 mb-2 flex justify-between items-center">
         <h3 className="font-bold px-2">Inventory List Page</h3>
+        <div className="flex flexrow gap-4 ">
+        <div className="rounded-md p-1 px-2 bg-none bg-secondary-120 flex gap-2 justify-center items-center">
+          <img src={ICONS.InputField} alt="Search Icon" />
+          <input
+            type="search"
+            placeholder="Search"
+            className="border-0 hidden md:block outline-0 md:w-[170px] lg:w-[200px] bg-transparent text-black placeholder:text-black"
+          />
+        </div>
         <Button
           text="Create Category"
           imgSrc={ICONS.clientOutline}
@@ -43,6 +52,8 @@ const CatagoryList = () => {
           iconClassName="h-[24px] w-[24px]"
           onClick={toggleEditModal}
         />
+        </div>
+        
       </div>
 
       {/* Category Cards Section */}

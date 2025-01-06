@@ -9,6 +9,7 @@ type TInputProps = {
   name: string; // To handle input names
   value?: string; // Optional value prop to bind with form state
   onChange?: (e: React.ChangeEvent<HTMLInputElement >) => void; // Unified onChange handler
+  readOnly?:boolean
  
 };
 
@@ -23,6 +24,7 @@ const InputField: React.FC<TInputProps> = ({
   name,
   value,
   onChange,
+  readOnly,
   
 
 }) => {
