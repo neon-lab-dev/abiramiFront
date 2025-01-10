@@ -5,6 +5,7 @@ import { ICONS } from "../../assets";
 
 const CreateInvoice = () => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -93,6 +94,16 @@ const CreateInvoice = () => {
     { name:"Tax Invoice" },
     { name:"Quote Invoice" },
   ];
+  const status=[{
+    status:"Paid"
+  },
+  {
+    status:"Pending"
+  },{
+    status:"Draft/Performa Invoice"
+  },]
+
+  
   const handleStateSelect = (stateName: string, stateCode: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -108,6 +119,13 @@ const CreateInvoice = () => {
       invoicetype: Invoicetype,
     }));
     setShowDropdown2(false);
+  };
+  const handleStateSelect1 = (Status: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      status: Status,
+    }));
+    setShowDropdown1(false);
   };
 
 
@@ -178,7 +196,7 @@ const CreateInvoice = () => {
           </div>
         </div>
 
-        <InputField
+        {/* <InputField
           label="Status"
           required={true}
           inputBg=""
@@ -187,7 +205,66 @@ const CreateInvoice = () => {
           name="status"
           value={formData.status}
           onChange={handleChange}
+        /> */}
+        <div className="flex-2 relative" ref={dropdownRef}>
+            <div className="" onClick={() => setShowDropdown1(true)}>
+              <InputField
+                label="Status"
+                required={true}
+                inputBg=""
+                type="text"
+                icon={ICONS.downArrow2}
+                placeholder="Search"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+              />
+            </div>
+            {showDropdown1 && (
+              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
+                {status.map((status) => (
+                  <div
+                    key={status.status}
+                    className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+                    onClick={() => handleStateSelect1( status.status)}
+                  >
+                    {status.status}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          {formData.invoicetype=="Cheque Invoice" && (<>
+            <InputField
+          label="Bank Name"
+          required={true}
+          inputBg=""
+          type="text"
+          placeholder="Enter bank name"
+          name="BankName"
+          value={formData.BankName}
+          onChange={handleChange}
         />
+        <InputField
+          label="Cheque Number"
+          required={true}
+          inputBg=""
+          type="number"
+          placeholder="Enter Cheque Number"
+          name="ChequeNumber"
+          value={formData.ChequeNumber}
+          onChange={handleChange}
+        />
+        <InputField
+          label="Cheque Amount"
+          required={true}
+          inputBg=""
+          type="text"
+          placeholder="Enter amount"
+          name="ChequeAmount"
+          value={formData.ChequeAmount}
+          onChange={handleChange}
+        /></>)}
         <InputField
           label="Tax Type"
           required={true}

@@ -97,7 +97,7 @@ const InventoryListPageTable: React.FC = () => {
 
         break;
       case "i3":
-        alert(`Delete clicked for ${item.quantity}`);
+        // alert(`Delete clicked for ${item.quantity}`);
         break;
       default:
         console.log("Unknown action");
