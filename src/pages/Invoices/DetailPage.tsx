@@ -15,6 +15,7 @@ const DetailPage = () => {
     "Original for Recipient",
     "Duplicate for Transporter",
     "Triplicate for Supplier",
+    "Extra Copy"
   ];
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const navigate = useNavigate();
@@ -160,7 +161,6 @@ const DetailPage = () => {
         </div>
       </div>
 
-      (
     <div className="bg-secondary-60 opacity-75 w-full p-6 flex flex-col rounded-2xl my-[22px]">
       <span className="font-Inter font-[600] text-sm">Item Description</span>
 
@@ -266,7 +266,7 @@ const DetailPage = () => {
         </div>
       </div>
 
-      <div className={`flex gap-4 justify-end py-[22px]  sticky   bg-white z-10 ${isOpen?" h-52 bottom-4 ":"bottom-0"}  `}>
+      <div className={`flex gap-4 justify-end py-[22px]  sticky   bg-white z-10 ${isOpen?" h-56 bottom-4 ":"bottom-0"}  `}>
       <div className="relative">
       {/* Dropdown Button */}
       <button

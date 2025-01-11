@@ -43,7 +43,7 @@ const InventoryListPageTable: React.FC = () => {
     quantityType: "",
     alarm: "",
     sellingCost: "",
-    gstNo: "",
+    WarehouseLocation: "",
     city: "",
     pinCode: "",
     state: "",
@@ -561,18 +561,25 @@ const InventoryListPageTable: React.FC = () => {
                     </div>
                   )}
                 </div>
+                <div className=" relative group">
                 <InputField
                   label="Buying Cost"
                   inputBg=""
-                  type="number"
+                  type="text"
                   placeholder="Enter Buying Cost"
                   name="buyingCost"
                   value={formData.buyingCost}
                   onChange={handleChange}
                 />
+                <div className=" absolute bottom-[-50%] right-[6%] opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 group-hover:scale-[1] scale-[0.7] before:w-[20px] before:h-[20px] before:bg-[#8d8d8d] before:z-[-1] before:absolute before:top-[-35%] before:left-[1%] before:rotate-[40deg] before:rounded-b-3xl">
+                  <span className=" text-[0.9rem] bg-[#8d8d8d] text-secondary rounded px-3 py-2 ">
+               This filed accepts alphanumeric input.
+                  </span>
+                </div>
+              </div>
 
                 <InputField
-                  label="Qantity"
+                  label="Quantity"
                   required={true}
                   inputBg=""
                   type="number"
@@ -600,14 +607,14 @@ const InventoryListPageTable: React.FC = () => {
                   onChange={handleChange}
                 />
                 <InputField
-                  label="GST Number"
-                  inputBg=""
-                  type="text"
-                  placeholder="Enter the GST number"
-                  name="gstNo"
-                  value={formData.gstNo}
-                  onChange={handleChange}
-                />
+                label="Warehouse Location"
+                inputBg=""
+                type="text"
+                placeholder="Enter the Warehouse Location"
+                name="WarehouseLocation"
+                value={formData.WarehouseLocation}
+                onChange={handleChange}
+              />
                 <InputField
                   label="Quantity Type"
                   inputBg=""
