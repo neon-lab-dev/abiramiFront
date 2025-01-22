@@ -2,11 +2,13 @@ import React, { useRef, useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
+import { createSupplier } from "../../api/api";
 
 const CreateInvoice = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState({
@@ -29,10 +31,10 @@ const CreateInvoice = () => {
     state: "",
     country: "",
     status: "",
-    transport:"",
-    placeOfSupply:"",
-    PONo:"",
-    vehicleNumber:""
+    transport: "",
+    placeOfSupply: "",
+    PONo: "",
+    vehicleNumber: "",
   });
 
   const handleChange = (
@@ -41,10 +43,9 @@ const CreateInvoice = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,  
+      [name]: value,
     }));
   };
-
 
   const states = [
     { name: "Jammu and Kashmir", code: "01" },
@@ -85,31 +86,33 @@ const CreateInvoice = () => {
     { name: "Andhra Pradesh (Newly Added)", code: "37" },
     { name: "Ladakh (Newly Added)", code: "38" },
     { name: "Other Territory", code: "97" },
-    { name: "Centre Jurisdiction", code: "99" }
+    { name: "Centre Jurisdiction", code: "99" },
   ];
-  
-  const invoice  = [
-    { name:"Cash Invoice" },
-    { name:"Cheque Invoice" },
-    { name:"Tax Invoice" },
-    { name:"Quote Invoice" },
-  ];
-  const status=[{
-    status:"Paid"
-  },
-  {
-    status:"Pending"
-  },{
-    status:"Draft/Performa Invoice"
-  },]
 
-  
+  const invoice = [
+    { name: "Cash Invoice" },
+    { name: "Cheque Invoice" },
+    { name: "Tax Invoice" },
+    { name: "Quote Invoice" },
+  ];
+  const status = [
+    {
+      status: "Paid",
+    },
+    {
+      status: "Pending",
+    },
+    {
+      status: "Draft/Performa Invoice",
+    },
+  ];
+
   const handleStateSelect = (stateName: string, stateCode: string) => {
     setFormData((prev) => ({
       ...prev,
       Stateandcode: stateName,
       Code: stateCode,
-      taxtype: stateCode === "33" ? "CGST & SGST" : "IGST", 
+      taxtype: stateCode === "33" ? "CGST & SGST" : "IGST",
     }));
     setShowDropdown(false);
   };
@@ -128,6 +131,70 @@ const CreateInvoice = () => {
     setShowDropdown1(false);
   };
 
+  const handleSubmit = async () => {
+    console.log(formData);
+    const data = {
+      ClientName: "",
+      ivoicedate: "",
+      Stateandcode: "",
+      taxtype: "",
+      invoicetype: "",
+      ChequeNumber: "",
+      Chequedate: "",
+      BankName: "",
+      ChequeAmount: "",
+      Code: "",
+      email: "",
+      address1: "",
+      address2: "",
+      address3: "",
+      city: "",
+      pinCode: "",
+      state: "",
+      country: "",
+      status: "",
+      transport: "",
+      placeOfSupply: "",
+      PONo: "",
+      vehicleNumber: "",
+    };
+    setIsSubmitting(true);
+    try {
+      const response = await createSupplier(data);
+      console.log("Supplier created successfully:", response.data);
+      alert("Supplier created successfully!");
+      setFormData({
+        ClientName: "",
+        ivoicedate: "",
+        Stateandcode: "",
+        taxtype: "",
+        invoicetype: "",
+        ChequeNumber: "",
+        Chequedate: "",
+        BankName: "",
+        ChequeAmount: "",
+        Code: "",
+        email: "",
+        address1: "",
+        address2: "",
+        address3: "",
+        city: "",
+        pinCode: "",
+        state: "",
+        country: "",
+        status: "",
+        transport: "",
+        placeOfSupply: "",
+        PONo: "",
+        vehicleNumber: "",
+      });
+    } catch (error) {
+      console.error("Error creating supplier:", error);
+      alert("Failed to create supplier. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div>
@@ -207,64 +274,67 @@ const CreateInvoice = () => {
           onChange={handleChange}
         /> */}
         <div className="flex-2 relative" ref={dropdownRef}>
-            <div className="" onClick={() => setShowDropdown1(true)}>
-              <InputField
-                label="Status"
-                required={true}
-                inputBg=""
-                type="text"
-                icon={ICONS.downArrow2}
-                placeholder="Search"
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-              />
-            </div>
-            {showDropdown1 && (
-              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
-                {status.map((status) => (
-                  <div
-                    key={status.status}
-                    className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-                    onClick={() => handleStateSelect1( status.status)}
-                  >
-                    {status.status}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          {formData.invoicetype=="Cheque Invoice" && (<>
+          <div className="" onClick={() => setShowDropdown1(true)}>
             <InputField
-          label="Bank Name"
-          required={true}
-          inputBg=""
-          type="text"
-          placeholder="Enter bank name"
-          name="BankName"
-          value={formData.BankName}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Cheque Number"
-          required={true}
-          inputBg=""
-          type="number"
-          placeholder="Enter Cheque Number"
-          name="ChequeNumber"
-          value={formData.ChequeNumber}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Cheque Amount"
-          required={true}
-          inputBg=""
-          type="text"
-          placeholder="Enter amount"
-          name="ChequeAmount"
-          value={formData.ChequeAmount}
-          onChange={handleChange}
-        /></>)}
+              label="Status"
+              required={true}
+              inputBg=""
+              type="text"
+              icon={ICONS.downArrow2}
+              placeholder="Search"
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+            />
+          </div>
+          {showDropdown1 && (
+            <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
+              {status.map((status) => (
+                <div
+                  key={status.status}
+                  className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+                  onClick={() => handleStateSelect1(status.status)}
+                >
+                  {status.status}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        {formData.invoicetype == "Cheque Invoice" && (
+          <>
+            <InputField
+              label="Bank Name"
+              required={true}
+              inputBg=""
+              type="text"
+              placeholder="Enter bank name"
+              name="BankName"
+              value={formData.BankName}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Cheque Number"
+              required={true}
+              inputBg=""
+              type="number"
+              placeholder="Enter Cheque Number"
+              name="ChequeNumber"
+              value={formData.ChequeNumber}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Cheque Amount"
+              required={true}
+              inputBg=""
+              type="text"
+              placeholder="Enter amount"
+              name="ChequeAmount"
+              value={formData.ChequeAmount}
+              onChange={handleChange}
+            />
+          </>
+        )}
         <InputField
           label="Tax Type"
           required={true}
@@ -276,108 +346,113 @@ const CreateInvoice = () => {
           readOnly
         />
 
-          <div className="flex-2 relative" ref={dropdownRef}>
-            <div className="" onClick={() => setShowDropdown2(true)}>
-              <InputField
-                label="Invoice Type"
-                required={true}
-                inputBg=""
-                type="text"
-                icon={ICONS.downArrow2}
-                placeholder="Search"
-                name="invoicetype"
-                value={formData.invoicetype}
-                onChange={handleChange}
-              />
-            </div>
-            {showDropdown2 && (
-              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
-                {invoice.map((invoice) => (
-                  <div
-                    key={invoice.name}
-                    className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-                    onClick={() => handleStateSelect2( invoice.name)}
-                  >
-                    {invoice.name}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          {formData.invoicetype=="Cheque Invoice" && (<>
+        <div className="flex-2 relative" ref={dropdownRef}>
+          <div className="" onClick={() => setShowDropdown2(true)}>
             <InputField
-          label="Bank Name"
-          required={true}
-          inputBg=""
-          type="text"
-          placeholder="Enter bank name"
-          name="BankName"
-          value={formData.BankName}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Cheque Number"
-          required={true}
-          inputBg=""
-          type="number"
-          placeholder="Enter Cheque Number"
-          name="ChequeNumber"
-          value={formData.ChequeNumber}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Cheque Amount"
-          required={true}
-          inputBg=""
-          type="text"
-          placeholder="Enter amount"
-          name="ChequeAmount"
-          value={formData.ChequeAmount}
-          onChange={handleChange}
-        /></>)}
-        
-       {formData.invoicetype=="Tax Invoice" && (<>
-        <InputField
-          label="Transport"
-          required={true}
-          inputBg=""
-          type="text"
-          placeholder="Enter Transport"
-          name="transport"
-          value={formData.transport}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Place of Supply"
-          required={true}
-          inputBg=""
-          type="text"
-          placeholder="Enter Place of Supply"
-          name="placeOfSupply"
-          value={formData.placeOfSupply}
-          onChange={handleChange}
-        />
-         <InputField
-          label="P.O.No"
-          required={true}
-          inputBg=""
-          type="number"
-          placeholder="Enter P.O.No"
-          name="PONo"
-          value={formData.PONo}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Vehicle Number"
-          required={true}
-          inputBg=""
-          type="string"
-          placeholder=" Enter Vehicle Number"
-          name="vehicleNumber"
-          value={formData.vehicleNumber}
-          onChange={handleChange}
-        /> </>)}
-       
+              label="Invoice Type"
+              required={true}
+              inputBg=""
+              type="text"
+              icon={ICONS.downArrow2}
+              placeholder="Search"
+              name="invoicetype"
+              value={formData.invoicetype}
+              onChange={handleChange}
+            />
+          </div>
+          {showDropdown2 && (
+            <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
+              {invoice.map((invoice) => (
+                <div
+                  key={invoice.name}
+                  className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+                  onClick={() => handleStateSelect2(invoice.name)}
+                >
+                  {invoice.name}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        {formData.invoicetype == "Cheque Invoice" && (
+          <>
+            <InputField
+              label="Bank Name"
+              required={true}
+              inputBg=""
+              type="text"
+              placeholder="Enter bank name"
+              name="BankName"
+              value={formData.BankName}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Cheque Number"
+              required={true}
+              inputBg=""
+              type="number"
+              placeholder="Enter Cheque Number"
+              name="ChequeNumber"
+              value={formData.ChequeNumber}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Cheque Amount"
+              required={true}
+              inputBg=""
+              type="text"
+              placeholder="Enter amount"
+              name="ChequeAmount"
+              value={formData.ChequeAmount}
+              onChange={handleChange}
+            />
+          </>
+        )}
+
+        {formData.invoicetype == "Tax Invoice" && (
+          <>
+            <InputField
+              label="Transport"
+              required={true}
+              inputBg=""
+              type="text"
+              placeholder="Enter Transport"
+              name="transport"
+              value={formData.transport}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Place of Supply"
+              required={true}
+              inputBg=""
+              type="text"
+              placeholder="Enter Place of Supply"
+              name="placeOfSupply"
+              value={formData.placeOfSupply}
+              onChange={handleChange}
+            />
+            <InputField
+              label="P.O.No"
+              required={true}
+              inputBg=""
+              type="number"
+              placeholder="Enter P.O.No"
+              name="PONo"
+              value={formData.PONo}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Vehicle Number"
+              required={true}
+              inputBg=""
+              type="string"
+              placeholder=" Enter Vehicle Number"
+              name="vehicleNumber"
+              value={formData.vehicleNumber}
+              onChange={handleChange}
+            />{" "}
+          </>
+        )}
       </div>
       <span className="text-sm font-Inter font-[600] ">Product Details</span>
       <div className="mt-[22px]">
@@ -628,7 +703,9 @@ const CreateInvoice = () => {
             </div>
             <div className="flex justify-between items-center  py-2">
               <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
-                {(formData.Code=="33")?"Tax | CGST @ 9% & SGST @ 9%":" Tax | IGST @ 18%"}
+                {formData.Code == "33"
+                  ? "Tax | CGST @ 9% & SGST @ 9%"
+                  : " Tax | IGST @ 18%"}
               </span>
               <div className="w-[111px]">
                 <InputField
@@ -664,7 +741,6 @@ const CreateInvoice = () => {
         </div>
       </div>
 
-    
       <div className="flex flex-col my-[22px]">
         <span className="text-sm font-Inter font-[600]">
           Terms & Conditions
@@ -683,7 +759,12 @@ const CreateInvoice = () => {
 
       {/* Buttons */}
       <div className="col-span-3 flex justify-end gap-4 my-8">
-        <Button text="Save" type="reset" color="text-primary-10 bg-none" />
+        <Button
+          onClick={handleSubmit}
+          text="Save"
+          type="reset"
+          color="text-primary-10 bg-none"
+        />
         <Button
           text="Save & Print"
           type="submit"
@@ -695,4 +776,3 @@ const CreateInvoice = () => {
 };
 
 export default CreateInvoice;
-

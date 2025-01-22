@@ -25,8 +25,9 @@ const Button: React.FC<ButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      className={`${textClass=="hidden" ? "px-3": "px-5 "} py-2 rounded-xl font-medium flex justify-between items-center gap-2 ${color}`}
-
+      className={`${
+        textClass == "hidden" ? "px-3" : "px-5 "
+      } py-2 rounded-xl font-medium flex justify-between items-center gap-2 ${color}`}
     >
       {imgSrc && (
         <img src={imgSrc} alt={text} className={`w-4 h-4 ${iconClassName}`} />

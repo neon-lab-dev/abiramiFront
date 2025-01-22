@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
+import axiosInstance from "../../api/axios";
+import { createClient } from "../../api/api";
 
 const CreateClients = () => {
   const [formData, setFormData] = useState({
@@ -22,8 +24,11 @@ const CreateClients = () => {
     country: "",
     status: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -31,10 +36,55 @@ const CreateClients = () => {
     }));
   };
 
-  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   console.log(formData);
-  // };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const clientData = {
+      companyName: formData.CompanyName,
+      contactPerson: formData.ContactPerson,
+      GST: formData.gstnumber,
+      mobileNum: formData.MobileNumber,
+      landLineNum: formData.LandlineNumber,
+      email: formData.email,
+      addressLine1: formData.address1,
+      addressLine2: formData.address2,
+      addressLine3: formData.address3,
+      city: formData.city,
+      pincode: parseInt(formData.pinCode),
+      state: formData.state,
+      country: formData.country,
+      status: formData.status.toUpperCase(),
+    };
+    setIsSubmitting(true);
+    try {
+      const response = await createClient(clientData);
+      console.log("Client created successfully:", response.data);
+      alert("Client created successfully!");
+      setFormData({
+        CompanyName: "",
+        ContactPerson: "",
+        gstnumber: "",
+        MobileNumber: "",
+        LandlineNumber: "",
+        active: "",
+        Inactive: "",
+        Code: "",
+        email: "",
+        address1: "",
+        address2: "",
+        address3: "",
+        city: "",
+        pinCode: "",
+        state: "",
+        country: "",
+        status: "",
+      });
+    } catch (error) {
+      console.error("Error creating client:", error);
+      alert("Failed to create client. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div>
       <div>
@@ -155,8 +205,8 @@ const CreateClients = () => {
             inputBg=""
             type="number"
             placeholder="Enter pincode"
-            name="pinCode" 
-            value={formData.pinCode} 
+            name="pinCode"
+            value={formData.pinCode}
             onChange={handleChange}
           />
           <InputField
@@ -218,6 +268,7 @@ const CreateClients = () => {
           text="Create Client"
           type="submit"
           color="bg-primary-10 text-white"
+          onClick={handleSubmit}
         />
       </div>
     </div>

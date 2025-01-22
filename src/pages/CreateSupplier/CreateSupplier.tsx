@@ -1,8 +1,11 @@
 import { useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
+import axiosInstance from "../../api/axios";
+import { createSupplier } from "../../api/api";
 
 const CreateSupplier = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     companyName: "",
     title: "",
@@ -28,9 +31,52 @@ const CreateSupplier = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
+    const data = {
+      companyName: formData.companyName,
+      title: formData.title,
+      GST: formData.gstNumber,
+      mobileNum: formData.mobileNumber,
+      landLineNum: formData.landlineNumber,
+      email: formData.email,
+      addressLine1: formData.address1,
+      addressLine2: formData.address2,
+      addressLine3: formData.address3,
+      city: formData.city,
+      pincode: parseInt(formData.pinCode),
+      state: formData.state,
+      country: formData.country,
+      status: formData.status,
+    };
+    setIsSubmitting(true);
+    try {
+      const response = await createSupplier(data);
+      console.log("Supplier created successfully:", response.data);
+      alert("Supplier created successfully!");
+      setFormData({
+        companyName: "",
+        title: "",
+        gstNumber: "",
+        mobileNumber: "",
+        landlineNumber: "",
+        email: "",
+        address1: "",
+        address2: "",
+        address3: "",
+        city: "",
+        pinCode: "",
+        state: "",
+        country: "",
+        status: "active",
+      });
+    } catch (error) {
+      console.error("Error creating supplier:", error);
+      alert("Failed to create supplier. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

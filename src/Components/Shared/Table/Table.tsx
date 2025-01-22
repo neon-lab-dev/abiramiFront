@@ -31,7 +31,7 @@ interface TableProps {
   bg_i1?: string;
   bg_i2?: string;
   bg_i3?: string;
-  onActionClick?:any
+  onActionClick?: any;
 }
 
 const formatDate = (date: Date) => {
@@ -56,28 +56,27 @@ const Table: React.FC<TableProps> = ({
   bg_i1 = "bg-blue-500",
   bg_i2 = "bg-green-500",
   bg_i3 = "bg-red-500",
-  onActionClick
+  onActionClick,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = enablePagination
-    ? Math.ceil(data.length / rowsPerPage)
+    ? Math.ceil(data?.length / rowsPerPage)
     : 1;
   const startIndex = enablePagination ? (currentPage - 1) * rowsPerPage : 0;
   const endIndex = enablePagination ? startIndex + rowsPerPage : data.length;
   const currentData = enablePagination
-    ? data.slice(startIndex, endIndex)
+    ? data?.slice(startIndex, endIndex)
     : data;
 
-    const navigate = useNavigate(); // Hook to navigate
+  const navigate = useNavigate(); // Hook to navigate
 
-    const handleNavigateToDetails = (companyName: string) => {
-      navigate(`/clients/Detailpage`);
-      console.log(companyName)
-    };
-    const handleNavigateToInvoiceDetails = (companyName: string) => {
-      navigate(`/invoices/Detailpage`);
-      console.log(companyName)
-    };
+  const handleNavigateToDetails = (id: string) => {
+    navigate(`/clients/Detailpage/${id}`);
+  };
+  const handleNavigateToInvoiceDetails = (companyName: string) => {
+    navigate(`/invoices/Detailpage`);
+    console.log(companyName);
+  };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -108,6 +107,11 @@ const Table: React.FC<TableProps> = ({
     if (i1 && i2) return;
     if (i1 && i3) return "w-[55px]";
   };
+
+  const onEditClick = () => {};
+  
+  const onDeleteClick = () => {};
+
   return (
     <div
       className={` w-full overflow-x-scroll custom-scrollbar my-5 scrollbar-hide`}
@@ -179,169 +183,194 @@ const Table: React.FC<TableProps> = ({
                     </div>
                   </th>
                 ))}
-                {icons && <th className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85">
-                  Action
-                </th>}
-                
+                {icons && (
+                  <th className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85">
+                    Action
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-secondary-60 ">
-              {currentData.map((row, rowIndex) => (
-                <tr
-                  key={rowIndex}
-                  className="rounded-lg border-secondary-60 border  bg-white transition-all min-h-10 "
-                >
-                  {columns.map((col, colIndex) => (
-                    <td
-                      key={colIndex}
-                      className={`pr-4 pl-3 py-4 rounded-lg text-[14px] ${
-                        typeof col.cellClassName === "function"
-                          ? col.cellClassName(row)
-                          : col.cellClassName || ""
-                      }${colIndex === 0 ? "text-[#4186F3]" : ""} `}
-                      style={{ width: col.width }}
-                    >
-                      {col.cellRenderer ? (
-                        col.cellRenderer(row) // Use custom cellRenderer if defined
-                      ) : col.accessor === "status" ? (
-                        <span
-                          className={`${
-                            row.status === "Active"
-                              ? " text-neutral-90 bg-sucess-10"
-                              : "text-red-600 bg-red-100"
-                          } px-2 py-1 rounded-xl`}
+              {currentData?.map((row, rowIndex) => {
+                return (
+                  <tr
+                    key={rowIndex}
+                    className="rounded-lg border-secondary-60 border  bg-white transition-all min-h-10 "
+                  >
+                    {columns.map((col, colIndex) => {
+                      return (
+                        <td
+                          key={colIndex}
+                          className={`pr-4 pl-3 py-4 rounded-lg text-[14px] ${
+                            typeof col.cellClassName === "function"
+                              ? col.cellClassName(row)
+                              : col.cellClassName || ""
+                          }${colIndex === 0 ? "text-[#4186F3]" : ""} `}
+                          style={{ width: col.width }}
                         >
-                          {row[col.accessor]}
-                        </span>
-                      ) :col.accessor === "company_name" ? (
-                        <span
-                          className="text-blue-500 cursor-pointer hover:underline"
-                          onClick={() =>
-                            handleNavigateToDetails(row[col.accessor])
-                          }
+                          {col.cellRenderer ? (
+                            col.cellRenderer(row) // Use custom cellRenderer if defined
+                          ) : col.accessor === "status" ? (
+                            <span
+                              className={`${
+                                row.status === "ACTIVE"
+                                  ? " text-neutral-90 bg-sucess-10"
+                                  : "text-red-600 bg-red-100"
+                              } px-2 py-1 rounded-xl`}
+                            >
+                              {row[col.accessor]}
+                            </span>
+                          ) : col.accessor === "companyName" ? (
+                            <span
+                              className="text-blue-500 cursor-pointer hover:underline"
+                              onClick={() => handleNavigateToDetails(row.id)}
+                            >
+                              {row[col.accessor]}
+                            </span>
+                          ) : col.accessor === "invoice_id" ? (
+                            <span
+                              className="text-blue-500 cursor-pointer hover:underline"
+                              onClick={() =>
+                                handleNavigateToInvoiceDetails(
+                                  row[col.accessor]
+                                )
+                              }
+                            >
+                              {row[col.accessor]}
+                            </span>
+                          ) : col.accessor === "quantity" ? (
+                            <span
+                              className={`${
+                                row.quantity === 0
+                                  ? "text-red-500 bg-red-100"
+                                  : row.quantity <= row.alarm
+                                  ? "text-yellow-500 bg-yellow-100"
+                                  : "text-black bg-gray-200"
+                              } px-2 py-1 rounded-xl text-center flex justify-center`}
+                            >
+                              {row[col.accessor]}
+                            </span>
+                          ) : typeof row[col.accessor] === "object" &&
+                            row[col.accessor] instanceof Date ? (
+                            formatDate(row[col.accessor])
+                          ) : (
+                            row[col.accessor]
+                          )}
+                        </td>
+                      );
+                    })}
+                    {/* {icons && (
+                      <td>
+                        <div className="flex px-4 space-x-2 ">
+                          {row?.iconsOrder?.map((icon: string) => {
+                            if (icon === "i1" && row.i1) {
+                              return (
+                                <div
+                                  className={`${i1CustomClass(
+                                    row.i1,
+                                    row.i2,
+                                    row.i3
+                                  )} max-w-[46px] mr-${
+                                    row.i1 && row.i2 && !row.i3 ? "2" : "0"
+                                  }`}
+                                >
+                                  <button
+                                    key="i1"
+                                    onClick={() => onActionClick("i1", row)}
+                                    className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
+                                  >
+                                    <img
+                                      src={icons.i1}
+                                      alt="Edit"
+                                      className="h-3 w-3"
+                                    />
+                                  </button>
+                                </div>
+                              );
+                            }
+
+                            if (icon === "i2" && row.i2) {
+                              return (
+                                <div
+                                  className={`flex items-center gap-${
+                                    row.i1 && row.i2 && !row.i3 ? "4" : "2"
+                                  } ml-${
+                                    row.i1 && row.i2 && !row.i3 ? "4" : "2"
+                                  }`}
+                                >
+                                  <img
+                                    src={ICONS.graybar}
+                                    alt="|"
+                                    className="h-3 w-[2px]"
+                                  />
+                                  <button
+                                    key="i2"
+                                    onClick={() => onActionClick("i2", row)}
+                                    className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i2}`}
+                                  >
+                                    <img
+                                      src={icons.i2}
+                                      alt="i2"
+                                      className="h-3 w-3"
+                                    />
+                                  </button>
+                                </div>
+                              );
+                            }
+                            if (icon === "i3" && row.i3) {
+                              return (
+                                <div
+                                  className={`flex items-center gap-2 ml-0 ${i3CustomClass(
+                                    row.i1,
+                                    row.i2,
+                                    row.i3
+                                  )}`}
+                                >
+                                  <img
+                                    src={ICONS.graybar}
+                                    alt="|"
+                                    className="h-3 w-[2px]"
+                                  />
+                                  <button
+                                    key="i3"
+                                    onClick={() => onActionClick("i3", row)}
+                                    className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i3}  `}
+                                  >
+                                    <img
+                                      src={icons.i3}
+                                      alt="i3"
+                                      className="h-3 w-3"
+                                    />
+                                  </button>
+                                </div>
+                              );
+                            }
+
+                            return null;
+                          })}
+                        </div>
+                      </td>
+                    )} */}
+                    <td>
+                      <div className="flex gap-4">
+                        <button
+                          key="i2"
+                          onClick={() => onEditClick()}
+                          className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
                         >
-                          {row[col.accessor]}
-                        </span>
-                      ) :col.accessor === "invoice_id" ? (
-                        <span
-                          className="text-blue-500 cursor-pointer hover:underline"
-                          onClick={() =>
-                            handleNavigateToInvoiceDetails(row[col.accessor])
-                          }
+                          <img src={icons.i2} alt="Edit" className="h-4 w-4" />
+                        </button>
+                        <button
+                          key="i3"
+                          onClick={() => onDeleteClick()}
+                          className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
                         >
-                          {row[col.accessor]}
-                        </span>
-                      ) : col.accessor === "quantity" ? (
-                        <span
-                        className={`${
-                          row.quantity === 0
-                            ? "text-red-500 bg-red-100"
-                            : row.quantity <= row.alarm
-                            ? "text-yellow-500 bg-yellow-100"
-                            : "text-black bg-gray-200"
-                        } px-2 py-1 rounded-xl text-center flex justify-center`}
-                        >
-                          {row[col.accessor]}
-                        </span>
-                      ): typeof row[col.accessor] === "object" &&
-                        row[col.accessor] instanceof Date ? (
-                        formatDate(row[col.accessor])
-                      ) : (
-                        row[col.accessor]
-                      )}
+                          <img src={icons.i3} alt="Edit" className="h-4 w-4" />
+                        </button>
+                      </div>
                     </td>
-                  ))}
-                  { icons &&<td>
-                    <div className="flex px-4 space-x-2 "> 
-                      {row.iconsOrder.map((icon: string) => {
-                        if (icon === "i1" && row.i1) {
-                          return (
-                            <div
-                              className={`${i1CustomClass(
-                                row.i1,
-                                row.i2,
-                                row.i3
-                              )} max-w-[46px] mr-${
-                                row.i1 && row.i2 && !row.i3 ? "2" : "0"
-                              }`}
-                            >
-                              <button
-                                key="i1"
-                                onClick={() => onActionClick("i1", row)}
-                                className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
-                              >
-                                <img
-                                  src={icons.i1}
-                                  alt="Edit"
-                                  className="h-3 w-3"
-                                />
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        if (icon === "i2" && row.i2) {
-                          return (
-                            <div
-                              className={`flex items-center gap-${
-                                row.i1 && row.i2 && !row.i3 ? "4" : "2"
-                              } ml-${row.i1 && row.i2 && !row.i3 ? "4" : "2"}`}
-                            >
-                              <img
-                                src={ICONS.graybar}
-                                alt="|"
-                                className="h-3 w-[2px]"
-                              />
-                              <button
-                                key="i2"
-                                onClick={() => onActionClick("i2", row)}
-                                className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i2}`}
-                              >
-                                <img
-                                  src={icons.i2}
-                                  alt="i2"
-                                  className="h-3 w-3"
-                                />
-                              </button>
-                            </div>
-                          );
-                        }
-                        if (icon === "i3" && row.i3) {
-                          return (
-                            <div
-                              className={`flex items-center gap-2 ml-0 ${i3CustomClass(
-                                row.i1,
-                                row.i2,
-                                row.i3
-                              )}`}
-                            >
-                              <img
-                                src={ICONS.graybar}
-                                alt="|"
-                                className="h-3 w-[2px]"
-                              />
-                              <button
-                                key="i3"
-                                onClick={() => onActionClick("i3", row)}
-                                className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i3}  `}
-                              >
-                                <img
-                                  src={icons.i3}
-                                  alt="i3"
-                                  className="h-3 w-3"
-                                />
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        return null;
-                      })}
-                    </div>
-                  </td>}
-                  
-                  <td>
-  {/* <div className="flex px-4 space-x-2">
+                    <td>
+                      {/* <div className="flex px-4 space-x-2">
     {currentData.map((col, colIndex) => (
       <div key={colIndex}>
         {row.iconsOrder.map((icon: string) => {
@@ -404,10 +433,10 @@ const Table: React.FC<TableProps> = ({
       </div>
     ))}
   </div> */}
-</td>
-
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

@@ -25,10 +25,10 @@ const InvoiceListPageTable: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [typeFilter, setTypeFilter] = useState<string>("");
 
-  const removeFilter=()=>{
+  const removeFilter = () => {
     setStatusFilter("");
-    setTypeFilter("")
-  }
+    setTypeFilter("");
+  };
 
   const formatCurrency = (value: number) => {
     return `₹ ${value.toLocaleString()}`;
@@ -39,7 +39,6 @@ const InvoiceListPageTable: React.FC = () => {
     i2: ICONS.editBlack,
     i3: ICONS.deleteRed,
   };
-  
 
   const data: Invoice[] = [
     {
@@ -202,11 +201,11 @@ const InvoiceListPageTable: React.FC = () => {
   ];
   const [sortedData, setSortedData] = useState(data); // Initial data array
 
-  const handleSort = (data: Invoice[], order: "asc" | "desc"): void  => {
+  const handleSort = (data: Invoice[], order: "asc" | "desc"): void => {
     const sorted = [...sortedData].sort((a, b) => {
       const dateA = new Date(a.created_date);
       const dateB = new Date(b.created_date);
-      
+
       if (order === "asc") {
         return dateA.getTime() - dateB.getTime(); // Convert dates to timestamps
       } else if (order === "desc") {
@@ -214,7 +213,7 @@ const InvoiceListPageTable: React.FC = () => {
       }
       return 0;
     });
-    
+
     setSortedData(sorted);
   };
 
@@ -243,10 +242,8 @@ const InvoiceListPageTable: React.FC = () => {
                 }}
                 className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "PAID"
-
                     ? "text-white bg-customBlue-20"
                     : "text-neutral-100"
-
                 }`}
               >
                 Paid
@@ -258,10 +255,8 @@ const InvoiceListPageTable: React.FC = () => {
                 }}
                 className={`block w-full text-left p-2  hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "PENDING"
-
                     ? "text-white bg-customBlue-20"
                     : "text-neutral-100"
-
                 }`}
               >
                 Pending
@@ -273,10 +268,8 @@ const InvoiceListPageTable: React.FC = () => {
                 }}
                 className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "DRAFT"
-
                     ? "text-white bg-blue-20"
                     : "text-neutral-100"
-
                 }`}
               >
                 Draft
@@ -297,9 +290,8 @@ const InvoiceListPageTable: React.FC = () => {
           statusClass =
             "text-yellow-500 bg-secondary-35 h-[28px]  py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Yellow for PENDING (PENDING)
         } else if (row.invoice_status === "DRAFT") {
-
-          statusClass = "text-gray-500  font-sans text-[12px] font-normal leading-[20px] text-left"; // Gray for DRAFT
-
+          statusClass =
+            "text-gray-500  font-sans text-[12px] font-normal leading-[20px] text-left"; // Gray for DRAFT
         }
 
         return <span className={statusClass}>{row.invoice_status}</span>;
@@ -311,8 +303,8 @@ const InvoiceListPageTable: React.FC = () => {
       header: "Client",
       accessor: "client",
       cellClassName: "text-black",
-      icon1:ICONS.search,
-      width:"200px"
+      icon1: ICONS.search,
+      width: "200px",
     },
     {
       header: (
@@ -333,8 +325,6 @@ const InvoiceListPageTable: React.FC = () => {
                 className={`block w-full text-left p-2  hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   typeFilter === "Cheque Invoice"
                     ? "text-white bg-customBlue-20"
-
-
                     : "text-neutral-100"
                 }`}
               >
@@ -348,11 +338,7 @@ const InvoiceListPageTable: React.FC = () => {
                 className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   typeFilter === "Quote Invoice"
                     ? "text-white bg-customBlue-20"
-
-
                     : "text-neutral-100"
-
-
                 }`}
               >
                 Quote Invoice
@@ -365,11 +351,7 @@ const InvoiceListPageTable: React.FC = () => {
                 className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   typeFilter === "Tax invoice"
                     ? "text-white bg-customBlue-20"
-
-
                     : "text-neutral-100"
-
-
                 }`}
               >
                 Tax invoice
@@ -381,19 +363,19 @@ const InvoiceListPageTable: React.FC = () => {
 
       accessor: "invoice_type",
       cellClassName: "text-black",
-      width:"175px"
+      width: "175px",
     },
     {
       header: "Total Amount",
       accessor: "total_amount",
       cellRenderer: (row: Invoice) => {
-        console.log(row.total_amount); // For debugging
         return (
           <span className="text-black">{formatCurrency(row.total_amount)}</span>
         );
       },
-      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
-      width:"175px"
+      cellClassName:
+        "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      width: "175px",
     },
     {
       header: "Tax",
@@ -402,27 +384,28 @@ const InvoiceListPageTable: React.FC = () => {
         console.log(row.tax); // For debugging
         return <span className="text-black">{formatCurrency(row.tax)}</span>;
       },
-      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
-      width:"111px"
+      cellClassName:
+        "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      width: "111px",
     },
 
     {
       header: "Created Date",
       accessor: "created_date",
-      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      cellClassName:
+        "text-black whitespace-nowrap overflow-hidden text-ellipsis",
       format: (value: Date) =>
         value.toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
           year: "numeric",
         }),
-        icon2:ICONS.downArrow2,
-      icon1:ICONS.upArrow,
-      width:"175px",
-      onIcon1Click: () => handleSort( data,"asc"),
-      onIcon2Click: () => handleSort( data,"desc")},
-    
-    
+      icon2: ICONS.downArrow2,
+      icon1: ICONS.upArrow,
+      width: "175px",
+      onIcon1Click: () => handleSort(data, "asc"),
+      onIcon2Click: () => handleSort(data, "desc"),
+    },
   ];
   const filteredData = data.filter(
     (invoice) =>
@@ -445,32 +428,32 @@ const InvoiceListPageTable: React.FC = () => {
         bg_i3="bg-primary-40"
       />
       <div className=" flex justify-between">
-      <div className="flex justify-between md:gap-4 gap-3">
-      <Button
-        text="Start Date - End Date"
-        imgSrc={ICONS.calanderGray}   
-        color='border-neutral-80 border-2 bg-white text-[14px] text-black md:w-[290]'
-        iconClassName="h-[16px] w-[16px] order-2"
-        textClass="hidden"
-      />
-      <Button
-        text="Filter"
-        imgSrc={ICONS.filterGray}   
-        color='border-neutral-80 border-2 bg-white text-[14px] text-black'
-        iconClassName="h-[16px] w-[16px]"
-        textClass="hidden"
-      />
-      <Button
-        text="Remove Filter"
-        imgSrc={ICONS.removeFilterGray}  
-        color='border-neutral-80 border-2 bg-white text-[14px] text-black'
-        iconClassName="h-[16px] w-[16px]"
-        textClass="hidden"
-        onClick={removeFilter}
-      />
+        <div className="flex justify-between md:gap-4 gap-3">
+          <Button
+            text="Start Date - End Date"
+            imgSrc={ICONS.calanderGray}
+            color="border-neutral-80 border-2 bg-white text-[14px] text-black md:w-[290]"
+            iconClassName="h-[16px] w-[16px] order-2"
+            textClass="hidden"
+          />
+          <Button
+            text="Filter"
+            imgSrc={ICONS.filterGray}
+            color="border-neutral-80 border-2 bg-white text-[14px] text-black"
+            iconClassName="h-[16px] w-[16px]"
+            textClass="hidden"
+          />
+          <Button
+            text="Remove Filter"
+            imgSrc={ICONS.removeFilterGray}
+            color="border-neutral-80 border-2 bg-white text-[14px] text-black"
+            iconClassName="h-[16px] w-[16px]"
+            textClass="hidden"
+            onClick={removeFilter}
+          />
+        </div>
+        <DownloadButton data={data} />
       </div>
-    <DownloadButton data={data}/>
-    </div>
     </div>
   );
 };

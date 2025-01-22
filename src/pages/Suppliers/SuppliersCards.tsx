@@ -2,8 +2,24 @@ import { Link } from "react-router-dom";
 import { ICONS } from "../../assets";
 import Button from "../../Components/Shared/Button/Button";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
+import { useEffect, useState } from "react";
+import { getSuppliers } from "../../api/api";
 
 export default function SuppliersCards() {
+  const [suppliers, setSuppliers] = useState([]);
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const data: any[] = await getSuppliers();
+        setSuppliers(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchSuppliers();
+  }, []);
+  console.log(suppliers);
   return (
     <div className="w-full ">
       <div className="w-full py-2 mb-2 flex justify-between items-center">
@@ -21,21 +37,21 @@ export default function SuppliersCards() {
           cardBg="bg-secondary-10"
           iconBg="bg-secondary-65"
           title="Total Suppliers"
-          value="7,265"
+          value={suppliers.totalCount}
           icon={ICONS.SupplierIcon2}
         />
         <StatusCard
           cardBg="bg-secondary-20"
           iconBg="bg-secondary-75"
           title="Active Suppliers"
-          value="17,265"
+          value={suppliers.activeCount}
           icon={ICONS.SupplierIcon1}
         />
         <StatusCard
           cardBg="bg-secondary-40"
           iconBg="bg-secondary-85"
-          title="Active Suppliers"
-          value="5"
+          title="Inactive Suppliers"
+          value={suppliers.inactiveCount}
           icon={ICONS.SupplierIcon3}
         />
       </div>
