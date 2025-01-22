@@ -56,7 +56,7 @@ const Table: React.FC<TableProps> = ({
   bg_i1 = "bg-blue-500",
   bg_i2 = "bg-green-500",
   bg_i3 = "bg-red-500",
-  onActionClick,
+  editToggleModel,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = enablePagination
@@ -108,8 +108,10 @@ const Table: React.FC<TableProps> = ({
     if (i1 && i3) return "w-[55px]";
   };
 
-  const onEditClick = () => {};
-  
+  const onEditClick = () => {
+    editToggleModel();
+  };
+
   const onDeleteClick = () => {};
 
   return (

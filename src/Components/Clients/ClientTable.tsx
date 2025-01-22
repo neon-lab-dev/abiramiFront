@@ -17,7 +17,13 @@ interface Client {
   iconsOrder: string[];
 }
 
-const ClientTable = ({ clients }: { clients: [] }) => {
+const ClientTable = ({
+  clients,
+  editToggleModel,
+}: {
+  clients: [];
+  editToggleModel: any;
+}) => {
   const icons = {
     i1: ICONS.blueTick,
     i2: ICONS.editBlack,
@@ -275,6 +281,7 @@ const ClientTable = ({ clients }: { clients: [] }) => {
         bg_i1="bg-customBlue-10"
         bg_i2="bg-secondary-175"
         bg_i3="bg-primary-40"
+        editToggleModel={editToggleModel}
       />
     </div>
   );
