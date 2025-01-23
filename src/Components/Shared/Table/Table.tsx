@@ -108,8 +108,8 @@ const Table: React.FC<TableProps> = ({
     if (i1 && i3) return "w-[55px]";
   };
 
-  const onEditClick = () => {
-    editToggleModel();
+  const onEditClick = (id: string) => {
+    editToggleModel(id);
   };
 
   const onDeleteClick = () => {};
@@ -194,6 +194,7 @@ const Table: React.FC<TableProps> = ({
             </thead>
             <tbody className="bg-secondary-60 ">
               {currentData?.map((row, rowIndex) => {
+                console.log(row);
                 return (
                   <tr
                     key={rowIndex}
@@ -357,7 +358,7 @@ const Table: React.FC<TableProps> = ({
                       <div className="flex gap-4">
                         <button
                           key="i2"
-                          onClick={() => onEditClick()}
+                          onClick={() => onEditClick(row.id)}
                           className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
                         >
                           <img src={icons.i2} alt="Edit" className="h-4 w-4" />
