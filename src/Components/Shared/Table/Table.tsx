@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ICONS } from "../../../assets";
 import { useNavigate } from "react-router-dom";
+import { formatDateWithOrdinal } from "../../../utils";
 
 interface Column {
   header: string | JSX.Element;
@@ -57,6 +58,7 @@ const Table: React.FC<TableProps> = ({
   bg_i2 = "bg-green-500",
   bg_i3 = "bg-red-500",
   editToggleModel,
+  handleDelete,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = enablePagination
@@ -112,7 +114,9 @@ const Table: React.FC<TableProps> = ({
     editToggleModel(id);
   };
 
-  const onDeleteClick = () => {};
+  const onDeleteClick = (id: string) => {
+    handleDelete(id);
+  };
 
   return (
     <div
@@ -194,7 +198,6 @@ const Table: React.FC<TableProps> = ({
             </thead>
             <tbody className="bg-secondary-60 ">
               {currentData?.map((row, rowIndex) => {
-                console.log(row);
                 return (
                   <tr
                     key={rowIndex}
@@ -225,8 +228,18 @@ const Table: React.FC<TableProps> = ({
                             </span>
                           ) : col.accessor === "companyName" ? (
                             <span
-                              className="text-blue-500 cursor-pointer hover:underline"
-                              onClick={() => handleNavigateToDetails(row.id)}
+                              className={`${
+                                col.navigate === false
+                                  ? ""
+                                  : "text-blue-500 cursor-pointer hover:underline"
+                              }`}
+                              onClick={() => {
+                                if (col.navigate === false) {
+                                  return;
+                                } else {
+                                  handleNavigateToDetails(row.id);
+                                }
+                              }}
                             >
                               {row[col.accessor]}
                             </span>
@@ -256,6 +269,8 @@ const Table: React.FC<TableProps> = ({
                           ) : typeof row[col.accessor] === "object" &&
                             row[col.accessor] instanceof Date ? (
                             formatDate(row[col.accessor])
+                          ) : col.type === "date" ? (
+                            formatDateWithOrdinal(row[col.accessor])
                           ) : (
                             row[col.accessor]
                           )}
@@ -365,7 +380,7 @@ const Table: React.FC<TableProps> = ({
                         </button>
                         <button
                           key="i3"
-                          onClick={() => onDeleteClick()}
+                          onClick={() => onDeleteClick(row.id)}
                           className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
                         >
                           <img src={icons.i3} alt="Edit" className="h-4 w-4" />

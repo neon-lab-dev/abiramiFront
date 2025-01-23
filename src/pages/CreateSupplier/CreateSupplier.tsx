@@ -79,6 +79,25 @@ const CreateSupplier = () => {
     }
   };
 
+  const clearForm = () => {
+    setFormData({
+      companyName: "",
+      title: "",
+      gstNumber: "",
+      mobileNumber: "",
+      landlineNumber: "",
+      email: "",
+      address1: "",
+      address2: "",
+      address3: "",
+      city: "",
+      pinCode: "",
+      state: "",
+      country: "",
+      status: "active",
+    });
+  };
+
   return (
     <div className="max-h-[calc(100vh-90px)] overflow-y-auto scroll-none">
       <form onSubmit={handleSubmit} className="">
@@ -267,6 +286,7 @@ const CreateSupplier = () => {
             text="Clear Form"
             type="reset"
             color="text-primary-10 bg-none"
+            onClick={clearForm}
           />
           <Button
             text="Submit Form"

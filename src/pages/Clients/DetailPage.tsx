@@ -3,7 +3,6 @@ import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import DashboardTable from "../../Components/Dashboard/DashboardTable";
-import InputField from "../../Components/Shared/InputField/InputField";
 import { useNavigate, useParams } from "react-router-dom";
 import { deleteClient, getClientById, updateClient } from "../../api/api";
 import { formatDateWithOrdinal } from "../../utils";
@@ -35,17 +34,7 @@ const DetailPage = () => {
     status: "",
   });
   const [loading, setLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    console.log(name, value);
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+
   const editToggleModel = () => {
     setEditModalOpen(!isEditModalOpen);
   };
@@ -68,7 +57,11 @@ const DetailPage = () => {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete?")) {
       const response = await deleteClient(id);
-      console.log("Item deleted!");
+      console.log("Item deleted!", response);
+      if (response.status === 200) {
+        alert("Client deleted Successfully!!!");
+        navigate("/clients");
+      }
     } else {
       console.log("Delete action canceled.");
     }
@@ -95,56 +88,6 @@ const DetailPage = () => {
       status: client.status,
     });
   }, [client]);
-
-  const handleUpdate = async () => {
-    const clientData = {
-      companyName: formData.CompanyName,
-      contactPerson: formData.ContactPerson,
-      GST: formData.gstnumber,
-      mobileNum: formData.MobileNumber,
-      landLineNum: formData.LandlineNumber,
-      // email: formData.email,
-      addressLine1: formData.address1,
-      addressLine2: formData.address2,
-      addressLine3: formData.address3,
-      city: formData.city,
-      pincode: parseInt(formData.pinCode),
-      state: formData.state,
-      country: formData.country,
-      status: formData.status.toUpperCase(),
-    };
-    setIsSubmitting(true);
-    try {
-      const response = await updateClient(id, clientData);
-      console.log("Client updated successfully:", response.data);
-      alert("Client updated successfully!");
-      setFormData({
-        CompanyName: "",
-        ContactPerson: "",
-        gstnumber: "",
-        MobileNumber: "",
-        LandlineNumber: "",
-        active: "",
-        Inactive: "",
-        Code: "",
-        email: "",
-        address1: "",
-        address2: "",
-        address3: "",
-        city: "",
-        pinCode: "",
-        state: "",
-        country: "",
-        status: "",
-      });
-    } catch (error) {
-      console.error("Error updating client:", error);
-      alert("Failed to update client. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-      navigate(0);
-    }
-  };
 
   return (
     <React.Fragment>
@@ -191,10 +134,10 @@ const DetailPage = () => {
                       className="font-inter text-[18px] font-medium leading-[36px]
               "
                     >
-                      Company name goes here
+                      {client.companyName}
                     </span>
                     <span className="bg-secondary-165 py-1 px-3 text-primary-50 rounded-[12px] w-[67px] h-7 flex items-center justify-center">
-                      active
+                      {client.status}
                     </span>
                   </div>
                   <div className="flex flex-col mt-4">

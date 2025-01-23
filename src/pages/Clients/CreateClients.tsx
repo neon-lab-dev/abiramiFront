@@ -3,6 +3,7 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import axiosInstance from "../../api/axios";
 import { createClient } from "../../api/api";
+import { useNavigate } from "react-router-dom";
 
 const CreateClients = () => {
   const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ const CreateClients = () => {
     status: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -59,25 +61,8 @@ const CreateClients = () => {
       const response = await createClient(clientData);
       console.log("Client created successfully:", response.data);
       alert("Client created successfully!");
-      setFormData({
-        CompanyName: "",
-        ContactPerson: "",
-        gstnumber: "",
-        MobileNumber: "",
-        LandlineNumber: "",
-        active: "",
-        Inactive: "",
-        Code: "",
-        email: "",
-        address1: "",
-        address2: "",
-        address3: "",
-        city: "",
-        pinCode: "",
-        state: "",
-        country: "",
-        status: "",
-      });
+      clearForm();
+      navigate("/clients");
     } catch (error) {
       console.error("Error creating client:", error);
       alert("Failed to create client. Please try again.");
@@ -85,6 +70,29 @@ const CreateClients = () => {
       setIsSubmitting(false);
     }
   };
+
+  const clearForm = () => {
+    setFormData({
+      CompanyName: "",
+      ContactPerson: "",
+      gstnumber: "",
+      MobileNumber: "",
+      LandlineNumber: "",
+      active: "",
+      Inactive: "",
+      Code: "",
+      email: "",
+      address1: "",
+      address2: "",
+      address3: "",
+      city: "",
+      pinCode: "",
+      state: "",
+      country: "",
+      status: "",
+    });
+  };
+
   return (
     <div>
       <div>
@@ -263,12 +271,14 @@ const CreateClients = () => {
           text="Clear Form"
           type="reset"
           color="text-primary-10 bg-none"
+          onClick={clearForm}
         />
         <Button
-          text="Create Client"
+          text={isSubmitting ? "Submitting..." : "Create Client"}
           type="submit"
           color="bg-primary-10 text-white"
           onClick={handleSubmit}
+          disabled={isSubmitting}
         />
       </div>
     </div>

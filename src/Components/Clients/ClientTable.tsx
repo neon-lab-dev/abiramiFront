@@ -20,6 +20,7 @@ interface Client {
 const ClientTable = ({
   clients,
   editToggleModel,
+  handleDelete,
 }: {
   clients: [];
   editToggleModel: any;
@@ -190,11 +191,10 @@ const ClientTable = ({
     },
   ];
 
-  console.log(clients.data);
-
   const [sortedData, setSortedData] = useState(clients.data); // Initial data array
 
   const handleSort = (data: Client[], order: "asc" | "desc"): void => {
+    console.log("hi");
     const sorted = [...sortedData].sort((a, b) => {
       const dateA = new Date(a.created_date);
       const dateB = new Date(b.created_date);
@@ -209,7 +209,7 @@ const ClientTable = ({
 
     setSortedData(sorted);
   };
-
+  console.log(sortedData);
   const columns = [
     {
       header: "Company Name",
@@ -247,6 +247,7 @@ const ClientTable = ({
     {
       header: "Created Date",
       accessor: "createdAt",
+      type: "date",
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
       format: (value: Date) =>
@@ -276,12 +277,13 @@ const ClientTable = ({
         tableName="Recent Invoice"
         showViewAll={false}
         enablePagination={true}
-        rowsPerPage={5}
+        rowsPerPage={10}
         icons={icons}
         bg_i1="bg-customBlue-10"
         bg_i2="bg-secondary-175"
         bg_i3="bg-primary-40"
         editToggleModel={editToggleModel}
+        handleDelete={handleDelete}
       />
     </div>
   );

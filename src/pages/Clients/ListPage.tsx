@@ -4,7 +4,7 @@ import ClientTable from "../../Components/Clients/ClientTable";
 import Button from "../../Components/Shared/Button/Button";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import { useEffect, useState } from "react";
-import { getClients } from "../../api/api";
+import { deleteClient, getClients } from "../../api/api";
 import Loader from "../../lib/loader";
 import UpdateModal from "./UpdateModal";
 
@@ -39,6 +39,19 @@ const ListPage = () => {
 
     fetchClients();
   }, []);
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm("Are you sure you want to delete?")) {
+      const response = await deleteClient(id);
+      console.log("Item deleted!", response);
+      if (response.status === 200) {
+        alert("Client deleted Successfully!!!");
+        navigate(0);
+      }
+    } else {
+      console.log("Delete action canceled.");
+    }
+  };
 
   return (
     <>
@@ -86,7 +99,11 @@ const ListPage = () => {
               icon={ICONS.clienticon3}
             />
           </div>
-          <ClientTable clients={clients} editToggleModel={editToggleModel} />
+          <ClientTable
+            clients={clients}
+            editToggleModel={editToggleModel}
+            handleDelete={handleDelete}
+          />
         </div>
       )}
       {/* Modal Overlay */}

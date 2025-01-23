@@ -76,7 +76,7 @@ export const searchClient = async (query) => {
   }
 };
 
-export const updateClient = async (id, clientData) => {
+export const updateClient = async (id: string, clientData) => {
   try {
     const response = await axiosInstance.put(`/clients/${id}`, clientData);
     return response.data;
@@ -86,12 +86,12 @@ export const updateClient = async (id, clientData) => {
   }
 };
 
-export const deleteClient = async (id) => {
+export const deleteClient = async (id: string) => {
   try {
     const response = await axiosInstance.delete(`/clients/${id}`);
     return response.data;
   } catch (error) {
-    console.error("Update client error:", error);
+    console.error("Delete client error:", error);
     throw error;
   }
 };
@@ -112,6 +112,26 @@ export const getSuppliers = async () => {
     return response.data;
   } catch (error) {
     console.error("Get clients error:", error);
+    throw error;
+  }
+};
+
+export const getSupplierById = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/suppliers/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
+    throw error;
+  }
+};
+
+export const deleteSupplier = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(`/suppliers/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete client error:", error);
     throw error;
   }
 };

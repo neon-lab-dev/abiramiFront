@@ -128,6 +128,28 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
     });
   }, [client]);
 
+  const clearForm = () => {
+    setFormData({
+      CompanyName: "",
+      ContactPerson: "",
+      gstnumber: "",
+      MobileNumber: "",
+      LandlineNumber: "",
+      active: "",
+      Inactive: "",
+      Code: "",
+      email: "",
+      address1: "",
+      address2: "",
+      address3: "",
+      city: "",
+      pinCode: "",
+      state: "",
+      country: "",
+      status: "",
+    });
+  };
+
   return (
     <>
       <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
@@ -300,12 +322,14 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                   text="Clear Form"
                   type="reset"
                   color="text-primary-10 bg-none"
+                  onClick={clearForm}
                 />
                 <Button
                   text={isSubmitting ? `Updating...` : `Update Client`}
                   type="submit"
                   color="bg-primary-10 text-white"
                   onClick={handleUpdate}
+                  disabled={isSubmitting}
                 />
               </div>
             </>

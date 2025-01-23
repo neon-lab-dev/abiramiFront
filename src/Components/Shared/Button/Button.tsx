@@ -20,11 +20,13 @@ const Button: React.FC<ButtonProps> = ({
   iconClassName,
   textClass,
   onClick,
+  disabled,
 }) => {
   return (
     <button
       type={type}
       onClick={onClick}
+      disabled={disabled}
       className={`${
         textClass == "hidden" ? "px-3" : "px-5 "
       } py-2 rounded-xl font-medium flex justify-between items-center gap-2 ${color}`}
