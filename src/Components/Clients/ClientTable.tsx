@@ -194,10 +194,9 @@ const ClientTable = ({
   const [sortedData, setSortedData] = useState(clients.data); // Initial data array
 
   const handleSort = (data: Client[], order: "asc" | "desc"): void => {
-    console.log("hi");
     const sorted = [...sortedData].sort((a, b) => {
-      const dateA = new Date(a.created_date);
-      const dateB = new Date(b.created_date);
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
 
       if (order === "asc") {
         return dateA.getTime() - dateB.getTime(); // Convert dates to timestamps
@@ -209,7 +208,6 @@ const ClientTable = ({
 
     setSortedData(sorted);
   };
-  console.log(sortedData);
   const columns = [
     {
       header: "Company Name",
@@ -272,7 +270,7 @@ const ClientTable = ({
   return (
     <div>
       <Table
-        data={clients.data}
+        data={sortedData}
         columns={columns}
         tableName="Recent Invoice"
         showViewAll={false}

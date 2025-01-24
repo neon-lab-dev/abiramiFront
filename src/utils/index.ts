@@ -21,3 +21,19 @@ export function formatDateWithOrdinal(dateString: string): string {
     day
   )} ${month}, ${year}`;
 }
+
+export const handleSort = <T>(
+  data: T[],
+  key: keyof T,
+  order: "asc" | "desc"
+): T[] => {
+  return [...data].sort((a, b) => {
+    if (a[key] < b[key]) {
+      return order === "asc" ? -1 : 1;
+    }
+    if (a[key] > b[key]) {
+      return order === "asc" ? 1 : -1;
+    }
+    return 0;
+  });
+};

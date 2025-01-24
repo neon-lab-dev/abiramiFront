@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ICONS } from "../../../assets";
 import { useNavigate } from "react-router-dom";
 import { formatDateWithOrdinal } from "../../../utils";
+import { useSearch } from "../../../context/SearchContext";
 
 interface Column {
   header: string | JSX.Element;
@@ -61,16 +62,34 @@ const Table: React.FC<TableProps> = ({
   handleDelete,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const { searchQuery } = useSearch();
+  const [searchedData, setSearchedData] = useState([]);
+  useEffect(() => {
+    const filteredData = data?.filter((item) => {
+      console.log(item);
+      return (
+        item?.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item?.mobile?.includes(searchQuery)
+      );
+    });
+    console.log(searchQuery);
+    if (searchQuery !== "") {
+      setSearchedData(filteredData);
+    } else {
+      setSearchedData(data);
+    }
+  }, [searchQuery, data]);
+
   const totalPages = enablePagination
     ? Math.ceil(data?.length / rowsPerPage)
     : 1;
   const startIndex = enablePagination ? (currentPage - 1) * rowsPerPage : 0;
   const endIndex = enablePagination ? startIndex + rowsPerPage : data?.length;
   const currentData = enablePagination
-    ? data?.slice(startIndex, endIndex)
-    : data;
+    ? searchedData?.slice(startIndex, endIndex)
+    : searchedData;
 
-  const navigate = useNavigate(); // Hook to navigate
+  const navigate = useNavigate();
 
   const handleNavigateToDetails = (id: string) => {
     navigate(`/clients/Detailpage/${id}`);
@@ -88,17 +107,6 @@ const Table: React.FC<TableProps> = ({
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  // const handleEdit = (row: Record<string, any>) => {
-  //   console.log("Edit clicked for:", row);
-  // };
-
-  // const handleApprove = (row: Record<string, any>) => {
-  //   console.log("Approve clicked for:", row);
-  // };
-
-  // const handleDelete = (row: Record<string, any>) => {
-  //   console.log("Delete clicked for:", row);
-  // };
   const i3CustomClass = (i1: boolean, i2: boolean, i3: boolean) => {
     if (i1 && i2 && i3) return;
     if (i1 && i2) return;

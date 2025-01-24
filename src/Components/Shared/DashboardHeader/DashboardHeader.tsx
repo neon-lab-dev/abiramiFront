@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { ICONS } from "../../../assets";
+import { useSearch } from "../../../context/SearchContext";
 
 interface DashboardHeaderProps {
   HandleSidebar: (data: boolean) => void;
@@ -11,9 +12,15 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   callNav,
 }) => {
   const location = useLocation();
+  const { searchQuery, setSearchQuery } = useSearch();
 
   // Split the pathname by "/" and filter out empty strings
   const pathSegments = location.pathname.split("/").filter(Boolean);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+  console.log(searchQuery);
 
   return (
     <div className="bg-white mb-6 py-5 px-0 md:px-7 border-b flex justify-between items-center">
@@ -59,6 +66,8 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           <input
             type="search"
             placeholder="Search"
+            value={searchQuery}
+            onChange={handleSearch}
             className="border-0 hidden md:block outline-0 md:w-[170px] lg:w-[200px] bg-transparent text-secondary-110 placeholder:text-secondary-110"
           />
         </div>
