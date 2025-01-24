@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { deleteClient, getSuppliers } from "../../api/api";
+import { deleteClient, deleteSupplier, getSuppliers } from "../../api/api";
 import ListPage from "./ListPage";
 import SuppliersCards from "./SuppliersCards";
 import SuppliersTable from "../../Components/Suppliers/SuppliersTable";
@@ -35,10 +35,10 @@ export default function Suppliers() {
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete?")) {
-      const response = await deleteSuppliers(id);
+      const response = await deleteSupplier(id);
       console.log("Item deleted!", response);
       if (response.status === 200) {
-        alert("Client deleted Successfully!!!");
+        alert("Supplier deleted Successfully!!!");
         navigate(0);
       }
     } else {

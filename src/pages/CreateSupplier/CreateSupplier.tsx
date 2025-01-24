@@ -3,6 +3,7 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import axiosInstance from "../../api/axios";
 import { createSupplier } from "../../api/api";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const CreateSupplier = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,6 +23,7 @@ const CreateSupplier = () => {
     country: "",
     status: "active",
   });
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -76,6 +78,7 @@ const CreateSupplier = () => {
       alert("Failed to create supplier. Please try again.");
     } finally {
       setIsSubmitting(false);
+      navigate("/suppliers");
     }
   };
 
@@ -289,9 +292,10 @@ const CreateSupplier = () => {
             onClick={clearForm}
           />
           <Button
-            text="Submit Form"
+            text={isSubmitting ? "Submitting..." : "Submit Form"}
             type="submit"
             color="bg-primary-10 text-white"
+            disabled={isSubmitting}
           />
         </div>
       </form>

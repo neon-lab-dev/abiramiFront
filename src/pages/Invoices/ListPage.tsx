@@ -31,7 +31,6 @@ const ListPage = () => {
 
     fetchInvoices();
   }, []);
-  console.log(invoices);
 
   // Optional: Close the dropdown if clicked outside
   const handleClickOutside = (event: MouseEvent) => {
@@ -139,7 +138,7 @@ const ListPage = () => {
         />
       </div>
       <div className="my-[22px]">
-        <InvoiceListPageTable />
+        <InvoiceListPageTable invoices={invoices.data} />
       </div>
     </div>
   );

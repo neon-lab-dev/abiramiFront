@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
@@ -9,8 +9,13 @@ const CreateInvoice = () => {
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const [subTotal, setSubTotal] = useState<number>();
+  const [pfamount, setPfamount] = useState<number>();
+  const [tax, setTax] = useState<number>();
+  const [total, setTotal] = useState<number>();
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
     ClientName: "",
     ivoicedate: "",
@@ -36,6 +41,40 @@ const CreateInvoice = () => {
     PONo: "",
     vehicleNumber: "",
   });
+  const [rows, setRows] = useState([
+    {
+      description: "",
+      hsn: "",
+      quantity: "",
+      rate: "",
+      discount: "",
+      amount: "",
+    },
+  ]);
+
+  const addRow = () => {
+    setRows([
+      ...rows,
+      {
+        description: "",
+        hsn: "",
+        quantity: "",
+        rate: "",
+        discount: "",
+        amount: "",
+      },
+    ]);
+  };
+
+  const removeRow = (index) => {
+    setRows(rows.filter((_, idx) => idx !== index));
+  };
+
+  const handleInputChange = (index, field, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index][field] = value;
+    setRows(updatedRows);
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -134,67 +173,100 @@ const CreateInvoice = () => {
   const handleSubmit = async () => {
     console.log(formData);
     const data = {
-      ClientName: "",
-      ivoicedate: "",
-      Stateandcode: "",
-      taxtype: "",
-      invoicetype: "",
-      ChequeNumber: "",
-      Chequedate: "",
-      BankName: "",
-      ChequeAmount: "",
-      Code: "",
-      email: "",
-      address1: "",
-      address2: "",
-      address3: "",
-      city: "",
-      pinCode: "",
-      state: "",
-      country: "",
-      status: "",
-      transport: "",
-      placeOfSupply: "",
-      PONo: "",
-      vehicleNumber: "",
+      ClientName: formData.ClientName,
+      ivoicedate: formData.ivoicedate,
+      Stateandcode: formData.Stateandcode,
+      taxtype: formData.taxtype,
+      invoicetype: formData.invoicetype,
+      ChequeNumber: formData.ChequeNumber,
+      Chequedate: formData.Chequedate,
+      BankName: formData.BankName,
+      ChequeAmount: formData.ChequeAmount,
+      Code: formData.Code,
+      email: formData.email,
+      address1: formData.address1,
+      address2: formData.address2,
+      address3: formData.address3,
+      city: formData.city,
+      pinCode: formData.pinCode,
+      state: formData.state,
+      country: formData.country,
+      status: formData.status,
+      transport: formData.transport,
+      placeOfSupply: formData.placeOfSupply,
+      PONo: formData.PONo,
+      vehicleNumber: formData.vehicleNumber,
+      productDetails: rows,
     };
-    setIsSubmitting(true);
-    try {
-      const response = await createSupplier(data);
-      console.log("Supplier created successfully:", response.data);
-      alert("Supplier created successfully!");
-      setFormData({
-        ClientName: "",
-        ivoicedate: "",
-        Stateandcode: "",
-        taxtype: "",
-        invoicetype: "",
-        ChequeNumber: "",
-        Chequedate: "",
-        BankName: "",
-        ChequeAmount: "",
-        Code: "",
-        email: "",
-        address1: "",
-        address2: "",
-        address3: "",
-        city: "",
-        pinCode: "",
-        state: "",
-        country: "",
-        status: "",
-        transport: "",
-        placeOfSupply: "",
-        PONo: "",
-        vehicleNumber: "",
-      });
-    } catch (error) {
-      console.error("Error creating supplier:", error);
-      alert("Failed to create supplier. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    console.log(data)
+    // setIsSubmitting(true);
+    // try {
+    //   const response = await createSupplier(data);
+    //   console.log("Supplier created successfully:", response.data);
+    //   alert("Supplier created successfully!");
+    //   setFormData({
+    //     ClientName: "",
+    //     ivoicedate: "",
+    //     Stateandcode: "",
+    //     taxtype: "",
+    //     invoicetype: "",
+    //     ChequeNumber: "",
+    //     Chequedate: "",
+    //     BankName: "",
+    //     ChequeAmount: "",
+    //     Code: "",
+    //     email: "",
+    //     address1: "",
+    //     address2: "",
+    //     address3: "",
+    //     city: "",
+    //     pinCode: "",
+    //     state: "",
+    //     country: "",
+    //     status: "",
+    //     transport: "",
+    //     placeOfSupply: "",
+    //     PONo: "",
+    //     vehicleNumber: "",
+    //   });
+    // } catch (error) {
+    //   console.error("Error creating supplier:", error);
+    //   alert("Failed to create supplier. Please try again.");
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
   };
+
+  useEffect(() => {
+    const calculateValues = () => {
+      // Calculate Subtotal
+      const calculatedSubTotal = rows.reduce((sum, row) => {
+        const quantity = parseFloat(row.quantity) || 0;
+        const rate = parseFloat(row.rate) || 0;
+        const discount = parseFloat(row.discount) || 0;
+        const amount = quantity * rate - discount;
+        return sum + amount;
+      }, 0);
+
+      setSubTotal(calculatedSubTotal);
+
+      // Calculate PF Amount (e.g., 10% of Subtotal)
+      const calculatedPfAmount = (10 / 100) * calculatedSubTotal;
+      setPfamount(calculatedPfAmount);
+
+      // Calculate Tax (e.g., 18% of Subtotal)
+      const calculatedTax = (18 / 100) * calculatedSubTotal;
+      setTax(calculatedTax);
+
+      // Calculate Total
+      const calculatedTotal =
+        calculatedSubTotal + calculatedPfAmount + calculatedTax;
+      setTotal(calculatedTotal);
+    };
+    calculateValues();
+  }, [rows]);
+
+  console.log(formData);
 
   return (
     <div>
@@ -461,6 +533,7 @@ const CreateInvoice = () => {
           imgSrc={ICONS.invoiceplus}
           color="bg-secondary-120 text-[14px] text-secondary-125"
           iconClassName="h-[24px] w-[24px]"
+          onClick={addRow}
         />
       </div>
 
@@ -484,124 +557,180 @@ const CreateInvoice = () => {
                 <th className=" px-4 py-2 text-center">Action</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td className=" px-4 py-2 text-center text-sm font-normal leading-5 font-inter text-neutral-5 opacity-[0.6]">
-                  1
-                </td>
-                <td className=" px-4 py-2">
-                  <input
-                    type="text"
-                    placeholder="Enter Description"
-                    className="w-full p-1 border border-secondary-145 rounded"
-                  />
-                </td>
-                <td className=" px-4 py-2">
-                  <input
-                    type="text"
-                    placeholder="Enter HSN No."
-                    className="w-full p-1  border border-secondary-145 rounded"
-                  />
-                </td>
-                <td className=" px-4 py-2">
-                  <input
-                    type="text"
-                    placeholder="Enter quantity"
-                    className="w-full p-1 border border-secondary-145  rounded"
-                  />
-                </td>
-                <td className=" px-4 py-2">
-                  <input
-                    type="text"
-                    placeholder="Enter rate"
-                    className="w-full p-1 border border-secondary-145 rounded"
-                  />
-                </td>
-                <td className=" px-4 py-2">
-                  <input
-                    type="text"
-                    placeholder="Enter amount"
-                    className="w-full p-1 border border-secondary-145 rounded"
-                  />
-                </td>
-                <td className=" px-4 py-2">
-                  <input
-                    type="text"
-                    placeholder="Enter amount"
-                    className="w-full p-1 border border-secondary-145 rounded"
-                  />
-                </td>
-                <td className=" px-4 py-2 text-center text-red-500 cursor-pointer">
+            <tbody className="">
+              {rows.map((row, index) => (
+                <tr>
+                  <td className=" px-4 py-2 text-center text-sm font-normal leading-5 font-inter text-neutral-5 opacity-[0.6]">
+                    {index + 1}
+                  </td>
+                  <td className=" px-4 py-2">
+                    <input
+                      type="text"
+                      placeholder="Enter Description"
+                      value={row.description}
+                      onChange={(e) =>
+                        handleInputChange(index, "description", e.target.value)
+                      }
+                      className="w-full p-1 border border-secondary-145 rounded"
+                    />
+                  </td>
+                  <td className=" px-4 py-2">
+                    <input
+                      type="text"
+                      placeholder="Enter HSN No."
+                      value={row.hsn}
+                      onChange={(e) =>
+                        handleInputChange(index, "hsn", e.target.value)
+                      }
+                      className="w-full p-1  border border-secondary-145 rounded"
+                    />
+                  </td>
+                  <td className=" px-4 py-2">
+                    <input
+                      type="text"
+                      placeholder="Enter quantity"
+                      value={row.quantity}
+                      onChange={(e) =>
+                        handleInputChange(index, "quantity", e.target.value)
+                      }
+                      className="w-full p-1 border border-secondary-145  rounded"
+                    />
+                  </td>
+                  <td className=" px-4 py-2">
+                    <input
+                      type="text"
+                      placeholder="Enter rate"
+                      value={row.rate}
+                      onChange={(e) =>
+                        handleInputChange(index, "rate", e.target.value)
+                      }
+                      className="w-full p-1 border border-secondary-145 rounded"
+                    />
+                  </td>
+                  <td className=" px-4 py-2">
+                    <input
+                      type="text"
+                      placeholder="Enter discount"
+                      value={row.discount}
+                      onChange={(e) =>
+                        handleInputChange(index, "discount", e.target.value)
+                      }
+                      className="w-full p-1 border border-secondary-145 rounded"
+                    />
+                  </td>
+                  <td className=" px-4 py-2">
+                    <input
+                      type="text"
+                      placeholder="Enter amount"
+                      value={row.amount}
+                      onChange={(e) =>
+                        handleInputChange(index, "amount", e.target.value)
+                      }
+                      className="w-full p-1 border border-secondary-145 rounded"
+                    />
+                  </td>
+                  <td className=" px-4 py-2 text-center text-red-500 cursor-pointer">
+                    <Button
+                      text=""
+                      imgSrc={ICONS.invoicedelete}
+                      color=""
+                      iconClassName="h-[24px] w-[24px]"
+                      onClick={() => removeRow(index)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Responsive (Mobile View) */}
+
+          <div className="lg:hidden grid gap-4">
+            {rows.map((row, index) => (
+              <>
+                <div className="flex items-center justify-between">
+                  <span>S. No: {index + 1}</span>
                   <Button
                     text=""
                     imgSrc={ICONS.invoicedelete}
                     color=""
                     iconClassName="h-[24px] w-[24px]"
                   />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          {/* Responsive (Mobile View) */}
-          <div className="lg:hidden grid gap-4">
-            <div className="flex items-center justify-between">
-              <span>S. No: 1</span>
-              <Button
-                text=""
-                imgSrc={ICONS.invoicedelete}
-                color=""
-                iconClassName="h-[24px] w-[24px]"
-              />
-            </div>
-            <div>
-              <label>Description</label>
-              <input
-                type="text"
-                placeholder="Enter Description"
-                className="w-full p-2 border border-secondary-145 rounded mt-1"
-              />
-            </div>
-            <div>
-              <label>HSN No.</label>
-              <input
-                type="text"
-                placeholder="Enter HSN No."
-                className="w-full p-2 border border-secondary-145 rounded mt-1"
-              />
-            </div>
-            <div>
-              <label>Quantity</label>
-              <input
-                type="text"
-                placeholder="Enter quantity"
-                className="w-full p-2 border border-secondary-145 rounded mt-1"
-              />
-            </div>
-            <div>
-              <label>Rate</label>
-              <input
-                type="text"
-                placeholder="Enter rate"
-                className="w-full p-2 border border-secondary-145 rounded mt-1"
-              />
-            </div>
-            <div>
-              <label>Discount</label>
-              <input
-                type="text"
-                placeholder="Enter amount"
-                className="w-full p-2 border border-secondary-145 rounded mt-1"
-              />
-            </div>
-            <div>
-              <label>Amount</label>
-              <input
-                type="text"
-                placeholder="Enter amount"
-                className="w-full p-2 border border-secondary-145 rounded mt-1"
-              />
-            </div>
+                </div>
+                <div>
+                  <label>Description</label>
+                  <input
+                    type="text"
+                    placeholder="Enter Description"
+                    value={row.description}
+                    onChange={(e) =>
+                      handleInputChange(index, "description", e.target.value)
+                    }
+                    className="w-full p-2 border border-secondary-145 rounded mt-1"
+                  />
+                </div>
+                <div>
+                  <label>HSN No.</label>
+                  <input
+                    type="text"
+                    placeholder="Enter HSN No."
+                    value={row.hsn}
+                    onChange={(e) =>
+                      handleInputChange(index, "hsn", e.target.value)
+                    }
+                    className="w-full p-2 border border-secondary-145 rounded mt-1"
+                  />
+                </div>
+                <div>
+                  <label>Quantity</label>
+                  <input
+                    type="text"
+                    placeholder="Enter quantity"
+                    value={row.quantity}
+                    onChange={(e) =>
+                      handleInputChange(index, "quantity", e.target.value)
+                    }
+                    className="w-full p-2 border border-secondary-145 rounded mt-1"
+                  />
+                </div>
+                <div>
+                  <label>Rate</label>
+                  <input
+                    type="text"
+                    placeholder="Enter rate"
+                    value={row.rate}
+                    onChange={(e) =>
+                      handleInputChange(index, "rate", e.target.value)
+                    }
+                    className="w-full p-2 border border-secondary-145 rounded mt-1"
+                  />
+                </div>
+                <div>
+                  <label>Discount</label>
+                  <input
+                    type="text"
+                    placeholder="Enter discount"
+                    value={row.discount}
+                    onChange={(e) =>
+                      handleInputChange(index, "discount", e.target.value)
+                    }
+                    className="w-full p-2 border border-secondary-145 rounded mt-1"
+                  />
+                </div>
+                <div>
+                  <label>Amount</label>
+                  <input
+                    type="text"
+                    placeholder="Enter amount"
+                    value={row.amount}
+                    onChange={(e) =>
+                      handleInputChange(index, "amount", e.target.value)
+                    }
+                    className="w-full p-2 border border-secondary-145 rounded mt-1"
+                  />
+                </div>
+              </>
+            ))}
           </div>
         </div>
 
@@ -668,6 +797,8 @@ const CreateInvoice = () => {
                   placeholder="₹ 0"
                   name=""
                   onChange={handleChange}
+                  value={subTotal}
+                  readOnly
                 />
               </div>
             </div>

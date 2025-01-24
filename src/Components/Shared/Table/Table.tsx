@@ -65,7 +65,7 @@ const Table: React.FC<TableProps> = ({
     ? Math.ceil(data?.length / rowsPerPage)
     : 1;
   const startIndex = enablePagination ? (currentPage - 1) * rowsPerPage : 0;
-  const endIndex = enablePagination ? startIndex + rowsPerPage : data.length;
+  const endIndex = enablePagination ? startIndex + rowsPerPage : data?.length;
   const currentData = enablePagination
     ? data?.slice(startIndex, endIndex)
     : data;
