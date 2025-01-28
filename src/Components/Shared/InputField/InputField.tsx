@@ -8,9 +8,8 @@ type TInputProps = {
   icon?: string;
   name: string; // To handle input names
   value?: string; // Optional value prop to bind with form state
-  onChange?: (e: React.ChangeEvent<HTMLInputElement >) => void; // Unified onChange handler
-  readOnly?:boolean
- 
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Unified onChange handler
+  readOnly?: boolean;
 };
 
 const InputField: React.FC<TInputProps> = ({
@@ -25,8 +24,6 @@ const InputField: React.FC<TInputProps> = ({
   value,
   onChange,
   readOnly,
-  
-
 }) => {
   return (
     <div className="w-full">
@@ -42,7 +39,6 @@ const InputField: React.FC<TInputProps> = ({
           label ? "mt-2" : ""
         } rounded-md w-full ${inputBg}`}
       >
-        
         <input
           type={type ? type : "text"}
           className="w-full px-4 py-2 rounded-md border bg-transparent outline-none"
@@ -50,7 +46,9 @@ const InputField: React.FC<TInputProps> = ({
           name={name} // Set the name prop
           value={value} // Bind value from form state
           onChange={onChange} // Trigger the onChange function when input changes
-          />
+          readOnly={readOnly}
+          autoComplete="off"
+        />
         {icon && (
           <div
             className={`absolute top-3 right-3 flex justify-center items-center ${iconBg}`}

@@ -12,7 +12,6 @@ export const login = async (email: string, password: string) => {
     throw error;
   }
 };
-
 export const signup = async (
   firstName: string,
   lastName: string,
@@ -43,7 +42,6 @@ export const createClient = async (clientData: any) => {
     throw error;
   }
 };
-
 export const getClients = async () => {
   try {
     const response = await axiosInstance.get("/clients");
@@ -53,7 +51,6 @@ export const getClients = async () => {
     throw error;
   }
 };
-
 export const getClientById = async (id: string) => {
   try {
     const response = await axiosInstance.get(`/clients/${id}`);
@@ -63,7 +60,6 @@ export const getClientById = async (id: string) => {
     throw error;
   }
 };
-
 export const searchClient = async (query) => {
   try {
     const response = await axiosInstance.get(`/clients/search`, {
@@ -75,7 +71,6 @@ export const searchClient = async (query) => {
     throw error;
   }
 };
-
 export const updateClient = async (id: string, clientData) => {
   try {
     const response = await axiosInstance.put(`/clients/${id}`, clientData);
@@ -85,7 +80,6 @@ export const updateClient = async (id: string, clientData) => {
     throw error;
   }
 };
-
 export const deleteClient = async (id: string) => {
   try {
     const response = await axiosInstance.delete(`/clients/${id}`);
@@ -115,7 +109,6 @@ export const getSuppliers = async () => {
     throw error;
   }
 };
-
 export const getSupplierById = async (id: string) => {
   try {
     const response = await axiosInstance.get(`/suppliers/${id}`);
@@ -125,7 +118,6 @@ export const getSupplierById = async (id: string) => {
     throw error;
   }
 };
-
 export const deleteSupplier = async (id: string) => {
   try {
     const response = await axiosInstance.delete(`/suppliers/${id}`);
@@ -146,6 +138,15 @@ export const createInvoices = async (data: any) => {
     throw error;
   }
 };
+export const createInvoicesByClientName = async (data: any, clientName) => {
+  try {
+    const response = await axiosInstance.post(`/invoices/${clientName}`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Create client error:", error);
+    throw error;
+  }
+};
 export const getInvoices = async () => {
   try {
     const response = await axiosInstance.get("/invoices");
@@ -155,14 +156,101 @@ export const getInvoices = async () => {
     throw error;
   }
 };
+export const getInvoiceById = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/invoices/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
+    throw error;
+  }
+};
+export const updateInvoice = async (id: string, invoiceData) => {
+  try {
+    const response = await axiosInstance.put(`/invoices/${id}`, invoiceData);
+    return response.data;
+  } catch (error) {
+    console.error("Update invoice error:", error);
+    throw error;
+  }
+};
+export const deleteInvoice = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(`/invoices/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete invoice error:", error);
+    throw error;
+  }
+};
 
 // Inventory APIs
 export const createInventories = async (data: any) => {
   try {
-    const response = await axiosInstance.post(`/inventories`, data);
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key) => {
+      if (Array.isArray(data[key])) {
+        data[key].forEach((item: any) => formData.append(key, item));
+      } else {
+        formData.append(key, data[key]);
+      }
+    });
+
+    const response = await axiosInstance.post(`/inventories`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
     return response.data;
   } catch (error) {
-    console.error("Create client error:", error);
+    console.error("Create inventories error:", error);
+    throw error;
+  }
+};
+
+export const getInventories = async () => {
+  try {
+    const response = await axiosInstance.get("/inventory");
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
+    throw error;
+  }
+};
+
+export const updateInventories = async (id: string, data: any) => {
+  try {
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key) => {
+      if (Array.isArray(data[key])) {
+        data[key].forEach((item: any) => formData.append(key, item));
+      } else {
+        formData.append(key, data[key]);
+      }
+    });
+
+    const response = await axiosInstance.put(`/inventories/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Update inventories error:", error);
+    throw error;
+  }
+};
+
+export const getCategories = async () => {
+  try {
+    const response = await axiosInstance.get("/inventory/category");
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
     throw error;
   }
 };

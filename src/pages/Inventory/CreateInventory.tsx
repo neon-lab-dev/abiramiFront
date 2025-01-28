@@ -3,15 +3,18 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import UploadImage from "./UploadImage";
 import { ICONS } from "../../assets";
+import { getCategories } from "../../api/api";
 
 const CreateInventory = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     refrence: "",
     category: "",
+    categoryId: "",
     description: "",
     buyingCost: "",
     quantity: "",
@@ -27,8 +30,8 @@ const CreateInventory = () => {
     image: imageFiles,
     WarehouseLocation: "",
   });
+  const [categories, setCategories] = useState<string[]>();
 
-  const Catagory = ["C1", "C2", "C3", "C4"];
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -41,7 +44,19 @@ const CreateInventory = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    const data = {
+      refrence: formData.refrence,
+      categoryId: formData.category,
+      description: formData.description,
+      buyingCost: formData.buyingCost,
+      quantity: formData.quantity,
+      quantityType: formData.quantityType,
+      alarm: formData.alarm,
+      sellingCost: formData.sellingCost,
+      status: "active",
+      file: imageFiles[0],
+      warehouseLocation: formData.WarehouseLocation,
+    };
   };
 
   // remove selected image
@@ -55,6 +70,7 @@ const CreateInventory = () => {
 
     if (file) {
       setImageFiles((prev) => [...prev, file]);
+      // setImageFiles(file);
 
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -72,10 +88,11 @@ const CreateInventory = () => {
     }
   };
 
-  const handleStateSelect2 = (catagory: string) => {
+  const handleStateSelect2 = (cateogry: string, catagoryId: string) => {
     setFormData((prev) => ({
       ...prev,
-      category: catagory,
+      category: category,
+      categoryId: categoryId,
     }));
     setShowDropdown2(false);
   };
@@ -89,8 +106,24 @@ const CreateInventory = () => {
   }, [showDropdown2]);
 
   useEffect(() => {
+    console.log(imageFiles);
     setFormData({ ...formData, image: imageFiles });
   }, [imageFiles]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const data: any[] = await getCategories();
+        setCategories(data.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   return (
     <>
@@ -127,13 +160,15 @@ const CreateInventory = () => {
                 </div>
                 {showDropdown2 && (
                   <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
-                    {Catagory.map((category) => (
+                    {categories?.map((category) => (
                       <div
-                        key={category} // Use category as the unique key
+                        key={category.id} // Use category as the unique key
                         className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-                        onClick={() => handleStateSelect2(category)} // Pass category to handler
+                        onClick={() =>
+                          handleStateSelect2(category.name, category.id)
+                        } // Pass category to handler
                       >
-                        {category} {/* Display category */}
+                        {category.name} {/* Display category */}
                       </div>
                     ))}
                   </div>
@@ -149,11 +184,11 @@ const CreateInventory = () => {
                   value={formData.buyingCost}
                   onChange={handleChange}
                 />
-                <div className=" absolute bottom-[-50%] right-[6%] opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 group-hover:scale-[1] scale-[0.7] before:w-[20px] before:h-[20px] before:bg-[#8d8d8d] before:z-[-1] before:absolute before:top-[-35%] before:left-[1%] before:rotate-[40deg] before:rounded-b-3xl">
+                {/* <div className=" absolute bottom-[-50%] right-[6%] opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 group-hover:scale-[1] scale-[0.7] before:w-[20px] before:h-[20px] before:bg-[#8d8d8d] before:z-[-1] before:absolute before:top-[-35%] before:left-[1%] before:rotate-[40deg] before:rounded-b-3xl">
                   <span className=" text-[0.9rem] bg-[#8d8d8d] text-secondary rounded px-3 py-2 ">
                     This filed accepts alphanumeric input.
                   </span>
-                </div>
+                </div> */}
               </div>
 
               <InputField

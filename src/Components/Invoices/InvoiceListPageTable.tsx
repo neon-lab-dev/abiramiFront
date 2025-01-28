@@ -19,7 +19,7 @@ interface Invoice {
   iconsOrder: string[];
 }
 
-const InvoiceListPageTable = ({ invoices }) => {
+const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   const [dropdownOpen1, setDropdownOpen1] = useState(false);
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("");
@@ -321,6 +321,19 @@ const InvoiceListPageTable = ({ invoices }) => {
             <div className="absolute bg-white mt-1 z-50 rounded-[6px] shadow-dropdown">
               <button
                 onClick={() => {
+                  setTypeFilter("Cash Invoice");
+                  setDropdownOpen2(false);
+                }}
+                className={`block w-full text-left p-2  hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
+                  typeFilter === "Cheque Invoice"
+                    ? "text-white bg-customBlue-20"
+                    : "text-neutral-100"
+                }`}
+              >
+                Cash Invoice
+              </button>
+              <button
+                onClick={() => {
                   setTypeFilter("Cheque Invoice");
                   setDropdownOpen2(false);
                 }}
@@ -369,11 +382,9 @@ const InvoiceListPageTable = ({ invoices }) => {
     },
     {
       header: "Total Amount",
-      accessor: "total_amount",
+      accessor: "totalAmount",
       cellRenderer: (row: Invoice) => {
-        return (
-          <span className="text-black">{formatCurrency(row.total_amount)}</span>
-        );
+        return <span className="text-black">{row.totalAmount}</span>;
       },
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
@@ -428,6 +439,8 @@ const InvoiceListPageTable = ({ invoices }) => {
         bg_i1="bg-customBlue-10"
         bg_i2="bg-neutral-65"
         bg_i3="bg-primary-40"
+        editToggleModel={editToggleModel}
+        handleDelete={handleDelete}
       />
       <div className=" flex justify-between">
         <div className="flex justify-between md:gap-4 gap-3">

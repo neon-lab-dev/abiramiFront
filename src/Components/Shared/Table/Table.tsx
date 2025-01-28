@@ -66,10 +66,10 @@ const Table: React.FC<TableProps> = ({
   const [searchedData, setSearchedData] = useState([]);
   useEffect(() => {
     const filteredData = data?.filter((item) => {
-      console.log(item);
       return (
         item?.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item?.mobile?.includes(searchQuery)
+        item?.mobileNum?.includes(searchQuery) ||
+        item?.addressLine1?.includes(searchQuery)
       );
     });
     console.log(searchQuery);
@@ -198,8 +198,11 @@ const Table: React.FC<TableProps> = ({
                   </th>
                 ))}
                 {icons && (
-                  <th className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85">
-                    Action
+                  <th
+                    style={{ minWidth: "160px" }}
+                    className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85"
+                  >
+                    <div>Action</div>
                   </th>
                 )}
               </tr>
@@ -227,12 +230,12 @@ const Table: React.FC<TableProps> = ({
                           ) : col.accessor === "status" ? (
                             <span
                               className={`${
-                                row.status === "ACTIVE"
+                                row.status.toUpperCase() === "ACTIVE"
                                   ? " text-neutral-90 bg-sucess-10"
                                   : "text-red-600 bg-red-100"
                               } px-2 py-1 rounded-xl`}
                             >
-                              {row[col.accessor]}
+                              {row[col.accessor].toUpperCase()}
                             </span>
                           ) : col.accessor === "companyName" ? (
                             <span
@@ -380,16 +383,23 @@ const Table: React.FC<TableProps> = ({
                     <td>
                       <div className="flex gap-4">
                         <button
+                          key="i1"
+                          // onClick={() => onEditClick(row.id)}
+                          className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
+                        >
+                          <img src={icons.i1} alt="Edit" className="h-4 w-4" />
+                        </button>
+                        <button
                           key="i2"
                           onClick={() => onEditClick(row.id)}
-                          className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
+                          className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i2}  `}
                         >
                           <img src={icons.i2} alt="Edit" className="h-4 w-4" />
                         </button>
                         <button
                           key="i3"
                           onClick={() => onDeleteClick(row.id)}
-                          className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
+                          className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i3}  `}
                         >
                           <img src={icons.i3} alt="Edit" className="h-4 w-4" />
                         </button>

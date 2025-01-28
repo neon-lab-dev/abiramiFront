@@ -208,25 +208,26 @@ const ClientTable = ({
 
     setSortedData(sorted);
   };
+
   const columns = [
     {
       header: "Company Name",
       accessor: "companyName",
       cellClassName: "text-neutral-25 ",
-      width: "196px",
+      width: "220px",
     },
     {
       header: "Contact Person",
       accessor: "contactPerson",
       cellClassName: "text-black",
-      width: "160px",
+      width: "180px",
     },
     {
       header: "GST",
       accessor: "GST",
       cellClassName: "text-black",
       icon1: ICONS.search,
-      width: "148px",
+      width: "160px",
     },
     {
       header: "Mobile No.",
@@ -234,13 +235,13 @@ const ClientTable = ({
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
       icon1: ICONS.search,
-      width: "148px",
+      width: "160px",
     },
     {
       header: "Address",
       accessor: "addressLine1",
       cellClassName: "text-black",
-      width: "216px",
+      width: "220px",
     },
     {
       header: "Created Date",
@@ -256,14 +257,14 @@ const ClientTable = ({
         }),
       icon2: ICONS.downArrow2,
       icon1: ICONS.upArrow,
-      width: "143px",
+      width: "160px",
       onIcon1Click: () => handleSort(data, "asc"),
       onIcon2Click: () => handleSort(data, "desc"),
     },
     {
       header: "Status",
       accessor: "status",
-      width: "112px",
+      width: "130px",
     },
   ];
 

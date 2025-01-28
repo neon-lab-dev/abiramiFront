@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
-import { createSupplier } from "../../api/api";
+import { convertNumberToWords, formatNumber } from "../../utils";
+import { createInvoices } from "../../api/api";
 
 const CreateInvoice = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -11,8 +12,11 @@ const CreateInvoice = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [subTotal, setSubTotal] = useState<number>();
+  const [pfPercent, setPfPercent] = useState<number>(10);
   const [pfamount, setPfamount] = useState<number>();
+  const [taxPercent, setTaxPercent] = useState<number>(18);
   const [tax, setTax] = useState<number>();
+  const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -40,15 +44,20 @@ const CreateInvoice = () => {
     placeOfSupply: "",
     PONo: "",
     vehicleNumber: "",
+    subTotal: 0,
+    pfamount: 0,
+    roundOff: 0,
+    tax: 0,
+    total: 0,
   });
   const [rows, setRows] = useState([
     {
       description: "",
-      hsn: "",
-      quantity: "",
-      rate: "",
-      discount: "",
-      amount: "",
+      HSNno: "",
+      quantity: null,
+      rate: null,
+      discount: null,
+      amount: null,
     },
   ]);
 
@@ -57,7 +66,7 @@ const CreateInvoice = () => {
       ...rows,
       {
         description: "",
-        hsn: "",
+        HSNno: "",
         quantity: "",
         rate: "",
         discount: "",
@@ -70,9 +79,29 @@ const CreateInvoice = () => {
     setRows(rows.filter((_, idx) => idx !== index));
   };
 
-  const handleInputChange = (index, field, value) => {
+  // const handleInputChange = (index, field, value) => {
+  //   const updatedRows = [...rows];
+  //   updatedRows[index][field] = value;
+  //   setRows(updatedRows);
+  // };
+
+  const handleInputChange = (index: number, field: string, value: number) => {
     const updatedRows = [...rows];
-    updatedRows[index][field] = value;
+    if (["quantity", "rate", "discount", "amount"].includes(field)) {
+      updatedRows[index][field] = parseFloat(value) || 0;
+    } else {
+      updatedRows[index][field] = value;
+    }
+
+    // Automatically calculate the amount if relevant fields are updated
+    if (["quantity", "rate", "discount"].includes(field)) {
+      const quantity = updatedRows[index].quantity || 0;
+      const rate = updatedRows[index].rate || 0;
+      const discount = updatedRows[index].discount || 0;
+
+      updatedRows[index].amount = quantity * rate * (1 - discount);
+    }
+    console.log(updatedRows);
     setRows(updatedRows);
   };
 
@@ -171,70 +200,74 @@ const CreateInvoice = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(formData);
     const data = {
-      ClientName: formData.ClientName,
-      ivoicedate: formData.ivoicedate,
-      Stateandcode: formData.Stateandcode,
-      taxtype: formData.taxtype,
-      invoicetype: formData.invoicetype,
-      ChequeNumber: formData.ChequeNumber,
-      Chequedate: formData.Chequedate,
-      BankName: formData.BankName,
-      ChequeAmount: formData.ChequeAmount,
-      Code: formData.Code,
-      email: formData.email,
-      address1: formData.address1,
-      address2: formData.address2,
-      address3: formData.address3,
-      city: formData.city,
-      pinCode: formData.pinCode,
-      state: formData.state,
-      country: formData.country,
-      status: formData.status,
+      clientName: formData.ClientName,
+      date: formData.ivoicedate,
+      state: formData.Stateandcode,
+      code: Number(formData.Code),
+      billingStatus: formData.status,
+      invoiceType: formData.invoicetype,
+      totalAmount: total,
+      taxGST: tax,
+      bankName: formData.BankName,
+      chequeNumber: formData.ChequeNumber,
+      chequeAmount: Number(formData.ChequeAmount),
       transport: formData.transport,
       placeOfSupply: formData.placeOfSupply,
-      PONo: formData.PONo,
-      vehicleNumber: formData.vehicleNumber,
+      poNo: formData.PONo,
+      vehicleNo: formData.vehicleNumber,
+      taxType: formData.taxtype,
+      subTotal: subTotal,
+      pfAmount: pfamount,
+      roundOff: roundOff,
+
+      // chequedate: formData.Chequedate,
+      // email: formData.email,
+      // address1: formData.address1,
+      // address2: formData.address2,
+      // address3: formData.address3,
+      // city: formData.city,
+      // pinCode: formData.pinCode,
+      // country: formData.country,
       productDetails: rows,
     };
-    console.log(data)
-    // setIsSubmitting(true);
-    // try {
-    //   const response = await createSupplier(data);
-    //   console.log("Supplier created successfully:", response.data);
-    //   alert("Supplier created successfully!");
-    //   setFormData({
-    //     ClientName: "",
-    //     ivoicedate: "",
-    //     Stateandcode: "",
-    //     taxtype: "",
-    //     invoicetype: "",
-    //     ChequeNumber: "",
-    //     Chequedate: "",
-    //     BankName: "",
-    //     ChequeAmount: "",
-    //     Code: "",
-    //     email: "",
-    //     address1: "",
-    //     address2: "",
-    //     address3: "",
-    //     city: "",
-    //     pinCode: "",
-    //     state: "",
-    //     country: "",
-    //     status: "",
-    //     transport: "",
-    //     placeOfSupply: "",
-    //     PONo: "",
-    //     vehicleNumber: "",
-    //   });
-    // } catch (error) {
-    //   console.error("Error creating supplier:", error);
-    //   alert("Failed to create supplier. Please try again.");
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
+    console.log(data);
+    setIsSubmitting(true);
+    try {
+      const response = await createInvoices(data);
+      console.log("Invoice created successfully:", response.data);
+      alert("Invoice created successfully!");
+      // setFormData({
+      //   ClientName: "",
+      //   ivoicedate: "",
+      //   Stateandcode: "",
+      //   taxtype: "",
+      //   invoicetype: "",
+      //   ChequeNumber: "",
+      //   Chequedate: "",
+      //   BankName: "",
+      //   ChequeAmount: "",
+      //   Code: "",
+      //   email: "",
+      //   address1: "",
+      //   address2: "",
+      //   address3: "",
+      //   city: "",
+      //   pinCode: "",
+      //   state: "",
+      //   country: "",
+      //   status: "",
+      //   transport: "",
+      //   placeOfSupply: "",
+      //   PONo: "",
+      //   vehicleNumber: "",
+      // });
+    } catch (error) {
+      console.error("Error creating invoice:", error);
+      alert("Failed to create invoice. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -244,29 +277,74 @@ const CreateInvoice = () => {
         const quantity = parseFloat(row.quantity) || 0;
         const rate = parseFloat(row.rate) || 0;
         const discount = parseFloat(row.discount) || 0;
-        const amount = quantity * rate - discount;
+        const amount = quantity * rate * (1 - discount);
         return sum + amount;
       }, 0);
 
       setSubTotal(calculatedSubTotal);
 
       // Calculate PF Amount (e.g., 10% of Subtotal)
-      const calculatedPfAmount = (10 / 100) * calculatedSubTotal;
-      setPfamount(calculatedPfAmount);
+      const calculatedPfAmount = (pfPercent / 100) * calculatedSubTotal;
+      setPfamount(Number(calculatedPfAmount.toFixed(2)));
 
       // Calculate Tax (e.g., 18% of Subtotal)
-      const calculatedTax = (18 / 100) * calculatedSubTotal;
-      setTax(calculatedTax);
+      const calculatedTax = (taxPercent / 100) * calculatedSubTotal;
+      setTax(Number(calculatedTax.toFixed(2)));
 
       // Calculate Total
       const calculatedTotal =
         calculatedSubTotal + calculatedPfAmount + calculatedTax;
-      setTotal(calculatedTotal);
+      const roundedTotal = Math.round(calculatedTotal);
+      setRoundOff(roundedTotal);
+      setTotal(roundedTotal);
     };
     calculateValues();
   }, [rows]);
 
-  console.log(formData);
+  useEffect(() => {
+    console.log(formData.invoicetype.toLowerCase());
+    if (formData.invoicetype.toLowerCase() == "cash invoice") {
+      setFormData({
+        ...formData,
+        ChequeNumber: "",
+        ChequeAmount: "",
+        BankName: "",
+        transport: "",
+        placeOfSupply: "",
+        PONo: "",
+        vehicleNumber: "",
+      });
+    }
+    if (formData.invoicetype.toLowerCase() != "check invoice") {
+      setFormData({
+        ...formData,
+        ChequeNumber: "",
+        ChequeAmount: "",
+        BankName: "",
+      });
+    }
+    if (formData.invoicetype.toLowerCase() != "tax invoice") {
+      setFormData({
+        ...formData,
+        transport: "",
+        placeOfSupply: "",
+        PONo: "",
+        vehicleNumber: "",
+      });
+    }
+    if (formData.invoicetype.toLowerCase() == "quote invoice") {
+      setFormData({
+        ...formData,
+        ChequeNumber: "",
+        ChequeAmount: "",
+        BankName: "",
+        transport: "",
+        placeOfSupply: "",
+        PONo: "",
+        vehicleNumber: "",
+      });
+    }
+  }, [formData.invoicetype]);
 
   return (
     <div>
@@ -326,7 +404,7 @@ const CreateInvoice = () => {
             <InputField
               label=""
               inputBg=""
-              type="text"
+              type="number"
               placeholder="code"
               name="Code"
               value={formData.Code}
@@ -373,7 +451,7 @@ const CreateInvoice = () => {
             </div>
           )}
         </div>
-        {formData.invoicetype == "Cheque Invoice" && (
+        {/* {formData.invoicetype == "Cheque Invoice" && (
           <>
             <InputField
               label="Bank Name"
@@ -406,7 +484,7 @@ const CreateInvoice = () => {
               onChange={handleChange}
             />
           </>
-        )}
+        )} */}
         <InputField
           label="Tax Type"
           required={true}
@@ -462,7 +540,7 @@ const CreateInvoice = () => {
               label="Cheque Number"
               required={true}
               inputBg=""
-              type="number"
+              type="string"
               placeholder="Enter Cheque Number"
               name="ChequeNumber"
               value={formData.ChequeNumber}
@@ -472,7 +550,7 @@ const CreateInvoice = () => {
               label="Cheque Amount"
               required={true}
               inputBg=""
-              type="text"
+              type="number"
               placeholder="Enter amount"
               name="ChequeAmount"
               value={formData.ChequeAmount}
@@ -578,16 +656,16 @@ const CreateInvoice = () => {
                     <input
                       type="text"
                       placeholder="Enter HSN No."
-                      value={row.hsn}
+                      value={row.HSNno}
                       onChange={(e) =>
-                        handleInputChange(index, "hsn", e.target.value)
+                        handleInputChange(index, "HSNno", e.target.value)
                       }
                       className="w-full p-1  border border-secondary-145 rounded"
                     />
                   </td>
                   <td className=" px-4 py-2">
                     <input
-                      type="text"
+                      type="number"
                       placeholder="Enter quantity"
                       value={row.quantity}
                       onChange={(e) =>
@@ -598,7 +676,7 @@ const CreateInvoice = () => {
                   </td>
                   <td className=" px-4 py-2">
                     <input
-                      type="text"
+                      type="number"
                       placeholder="Enter rate"
                       value={row.rate}
                       onChange={(e) =>
@@ -609,7 +687,7 @@ const CreateInvoice = () => {
                   </td>
                   <td className=" px-4 py-2">
                     <input
-                      type="text"
+                      type="number"
                       placeholder="Enter discount"
                       value={row.discount}
                       onChange={(e) =>
@@ -620,9 +698,9 @@ const CreateInvoice = () => {
                   </td>
                   <td className=" px-4 py-2">
                     <input
-                      type="text"
+                      type="number"
                       placeholder="Enter amount"
-                      value={row.amount}
+                      value={row?.amount}
                       onChange={(e) =>
                         handleInputChange(index, "amount", e.target.value)
                       }
@@ -674,9 +752,9 @@ const CreateInvoice = () => {
                   <input
                     type="text"
                     placeholder="Enter HSN No."
-                    value={row.hsn}
+                    value={row.HSNno}
                     onChange={(e) =>
-                      handleInputChange(index, "hsn", e.target.value)
+                      handleInputChange(index, "HSNno", e.target.value)
                     }
                     className="w-full p-2 border border-secondary-145 rounded mt-1"
                   />
@@ -684,7 +762,7 @@ const CreateInvoice = () => {
                 <div>
                   <label>Quantity</label>
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Enter quantity"
                     value={row.quantity}
                     onChange={(e) =>
@@ -696,7 +774,7 @@ const CreateInvoice = () => {
                 <div>
                   <label>Rate</label>
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Enter rate"
                     value={row.rate}
                     onChange={(e) =>
@@ -708,7 +786,7 @@ const CreateInvoice = () => {
                 <div>
                   <label>Discount</label>
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Enter discount"
                     value={row.discount}
                     onChange={(e) =>
@@ -720,7 +798,7 @@ const CreateInvoice = () => {
                 <div>
                   <label>Amount</label>
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Enter amount"
                     value={row.amount}
                     onChange={(e) =>
@@ -779,7 +857,7 @@ const CreateInvoice = () => {
                 Total (in words)
               </h3>
               <p className="text-sm leading-5 font-inter font-[600]">
-                Seventy five lakhs and three thousand
+                {convertNumberToWords(total)}
               </p>
             </div>
           </div>
@@ -827,6 +905,7 @@ const CreateInvoice = () => {
                   inputBg="bg-white w-full "
                   type="text"
                   placeholder="₹ 0"
+                  value={pfamount}
                   name=""
                   onChange={handleChange}
                 />
@@ -845,6 +924,7 @@ const CreateInvoice = () => {
                   type="text"
                   placeholder="₹ 0"
                   name=""
+                  value={tax}
                   onChange={handleChange}
                 />
               </div>
@@ -860,13 +940,16 @@ const CreateInvoice = () => {
                   type="text"
                   placeholder="₹ 0"
                   name=""
+                  value={roundOff}
                   onChange={handleChange}
                 />
               </div>
             </div>
             <div className="flex justify-between font-bold text-lg mt-8">
               <span className="text-sm font-[600]">Total</span>
-              <span className="text-sm font-[600]">₹ 75,03,000.00</span>
+              <span className="text-sm font-[600]">
+                ₹ {formatNumber(total)}
+              </span>
             </div>
           </div>
         </div>
