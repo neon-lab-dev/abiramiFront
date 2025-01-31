@@ -133,3 +133,9 @@ export const convertNumberToWords = (num) => {
   str += "Only";
   return str;
 };
+
+export const isObjectEmpty = (data: object): boolean => {
+  return Object.values(data).some(
+    (value) => !value || value.toString().trim() === ""
+  );
+};

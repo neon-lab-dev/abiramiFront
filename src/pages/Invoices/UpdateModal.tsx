@@ -19,7 +19,6 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
   const [invoiceData, setInvoiceData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [subTotal, setSubTotal] = useState<number>();
   const [pfPercent, setPfPercent] = useState<number>(10);
   const [pfamount, setPfamount] = useState<number>();
@@ -378,6 +377,7 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
     });
     setRows(
       invoiceData?.productDetails?.map((product) => ({
+        id: product.id || "",
         description: product.description || "",
         HSNno: product.HSNno || "",
         quantity: product.quantity || 0,

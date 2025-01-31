@@ -3,6 +3,8 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 interface SearchContextType {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  searchResults: any[];
+  setSearchResults: (results: any[]) => void;
 }
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
@@ -13,9 +15,11 @@ interface SearchProviderProps {
 
 export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   return (
-    <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
+    <SearchContext.Provider
+      value={{ searchQuery, setSearchQuery, searchResults, setSearchResults }}
+    >
       {children}
     </SearchContext.Provider>
   );

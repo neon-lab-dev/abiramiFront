@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { ICONS } from "../../../assets";
 import { useSearch } from "../../../context/SearchContext";
+import { getSearchFunction } from "../../../utils/searchUtils";
 
 interface DashboardHeaderProps {
   HandleSidebar: (data: boolean) => void;
@@ -12,13 +13,25 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   callNav,
 }) => {
   const location = useLocation();
-  const { searchQuery, setSearchQuery } = useSearch();
+  const { searchQuery, setSearchQuery, setSearchResults } = useSearch();
 
   // Split the pathname by "/" and filter out empty strings
   const pathSegments = location.pathname.split("/").filter(Boolean);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+  const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim() !== "") {
+      const searchFunction = getSearchFunction(location.pathname);
+      if (searchFunction) {
+        try {
+          const results = await searchFunction(searchQuery);
+          setSearchResults(results);
+        } catch (error) {
+          console.error("Search API error:", error);
+        }
+      } else {
+        console.warn("No search function available for this route.");
+      }
+    }
   };
   console.log(searchQuery);
 
@@ -67,7 +80,8 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             type="search"
             placeholder="Search"
             value={searchQuery}
-            onChange={handleSearch}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearch}
             className="border-0 hidden md:block outline-0 md:w-[170px] lg:w-[200px] bg-transparent text-secondary-110 placeholder:text-secondary-110"
           />
         </div>

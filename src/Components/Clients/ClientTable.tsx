@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
 
@@ -208,6 +208,12 @@ const ClientTable = ({
 
     setSortedData(sorted);
   };
+
+  useEffect(() => {
+    setSortedData(clients.data);
+  }, [clients]);
+
+  console.log(sortedData);
 
   const columns = [
     {

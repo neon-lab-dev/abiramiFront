@@ -64,22 +64,22 @@ const Table: React.FC<TableProps> = ({
   handleDelete,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const { searchQuery } = useSearch();
-  const [searchedData, setSearchedData] = useState([]);
-  useEffect(() => {
-    const filteredData = data?.filter((item) => {
-      return (
-        item?.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item?.mobileNum?.includes(searchQuery) ||
-        item?.addressLine1?.includes(searchQuery)
-      );
-    });
-    if (searchQuery !== "") {
-      setSearchedData(filteredData);
-    } else {
-      setSearchedData(data);
-    }
-  }, [searchQuery, data]);
+  // const { searchQuery } = useSearch();
+  // const [searchedData, setSearchedData] = useState([]);
+  // useEffect(() => {
+  //   const filteredData = data?.filter((item) => {
+  //     return (
+  //       item?.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //       item?.mobileNum?.includes(searchQuery) ||
+  //       item?.addressLine1?.includes(searchQuery)
+  //     );
+  //   });
+  //   if (searchQuery !== "") {
+  //     setSearchedData(filteredData);
+  //   } else {
+  //     setSearchedData(data);
+  //   }
+  // }, [searchQuery, data]);
 
   const totalPages = enablePagination
     ? Math.ceil(data?.length / rowsPerPage)
@@ -87,8 +87,8 @@ const Table: React.FC<TableProps> = ({
   const startIndex = enablePagination ? (currentPage - 1) * rowsPerPage : 0;
   const endIndex = enablePagination ? startIndex + rowsPerPage : data?.length;
   const currentData = enablePagination
-    ? searchedData?.slice(startIndex, endIndex)
-    : searchedData;
+    ? data?.slice(startIndex, endIndex)
+    : data;
 
   const navigate = useNavigate();
 
@@ -150,7 +150,7 @@ const Table: React.FC<TableProps> = ({
           }  ${!enablePagination ? "overflow-y-auto " : ""} `}
           style={{ maxHeight: tableHeight, minWidth: tableWidth }}
         >
-          <table className="min-w-full min-h-[200px] text-left border-separate border-spacing-y-1">
+          <table className="min-w-full  text-left border-separate border-spacing-y-1">
             <thead className="sticky top-0 bg-secondary-60 min-h-10">
               <tr className="">
                 {columns.map((col, index) => (

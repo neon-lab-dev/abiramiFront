@@ -4,6 +4,8 @@ import Button from "../../Components/Shared/Button/Button";
 import axiosInstance from "../../api/axios";
 import { createSupplier } from "../../api/api";
 import { Navigate, useNavigate } from "react-router-dom";
+import { isObject } from "chart.js/helpers";
+import { isObjectEmpty } from "../../utils";
 
 const CreateSupplier = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,9 +37,6 @@ const CreateSupplier = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    
-
     const data = {
       companyName: formData.companyName,
       title: formData.title,
@@ -54,7 +53,12 @@ const CreateSupplier = () => {
       country: formData.country,
       status: formData.status,
     };
-    console.log(data);
+
+    // if (isObjectEmpty(data)) {
+    //   alert("Please fill all the fields");
+    //   return;
+    // }
+
     setIsSubmitting(true);
     try {
       const response = await createSupplier(data);
@@ -78,7 +82,7 @@ const CreateSupplier = () => {
       });
     } catch (error) {
       console.error("Error creating supplier:", error);
-      alert("Failed to create supplier. Please try again.");
+      alert("Failed to create supplier. Please try again." + error?.message);
     } finally {
       setIsSubmitting(false);
       navigate("/suppliers");

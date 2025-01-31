@@ -224,7 +224,7 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
       header: "Invoice Id",
       accessor: "id",
       cellClassName: " text-blue-20 ",
-      width: "130px",
+      width: "430px",
     },
     {
       header: (

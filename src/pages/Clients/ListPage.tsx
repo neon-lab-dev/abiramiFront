@@ -7,8 +7,11 @@ import { useEffect, useState } from "react";
 import { deleteClient, getClients } from "../../api/api";
 import Loader from "../../lib/loader";
 import UpdateModal from "./UpdateModal";
+import { useSearch } from "../../context/SearchContext";
+import { getSearchFunction } from "../../utils/searchUtils";
 
 const ListPage = () => {
+  const { searchQuery, searchResults, setSearchResults } = useSearch();
   const [clients, setClients] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
@@ -29,16 +32,16 @@ const ListPage = () => {
       try {
         const data: any[] = await getClients();
         setClients(data);
+        setSearchResults(data);
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
-    console.log(clients);
 
     fetchClients();
-  }, []);
+  }, [setSearchResults]);
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete?")) {
@@ -53,7 +56,34 @@ const ListPage = () => {
     }
   };
 
-  console.log(clients);
+  console.log(searchResults);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const searchFunction = getSearchFunction(window.location.pathname);
+
+      if (searchFunction && searchQuery.trim() !== "") {
+        try {
+          const results = await searchFunction(searchQuery);
+          setSearchResults(results);
+        } catch (error) {
+          console.error("Error fetching search data:", error);
+        }
+      } else if (searchQuery.trim() === "") {
+        setSearchResults(clients);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [clients, setSearchResults]);
+
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setSearchResults(clients);
+    }
+  }, [searchQuery]);
 
   return (
     <>
@@ -102,7 +132,7 @@ const ListPage = () => {
             />
           </div>
           <ClientTable
-            clients={clients}
+            clients={searchQuery.trim() === "" ? clients : searchResults}
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}
           />

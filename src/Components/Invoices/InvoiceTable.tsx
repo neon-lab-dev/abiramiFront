@@ -204,7 +204,7 @@ const InvoiceTable: React.FC = () => {
       header: "Invoice Id",
       accessor: "invoice_id",
       cellClassName: " text-blue-20 ",
-      width: "130px",
+      width: "430px",
     },
     {
       header: (
