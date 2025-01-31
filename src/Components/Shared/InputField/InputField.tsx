@@ -7,7 +7,7 @@ type TInputProps = {
   iconBg?: string;
   icon?: string;
   name: string; // To handle input names
-  value?: string; // Optional value prop to bind with form state
+  value?: string | number | null; // Optional value prop to bind with form state
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Unified onChange handler
   readOnly?: boolean;
 };

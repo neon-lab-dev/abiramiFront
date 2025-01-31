@@ -35,7 +35,9 @@ const CreateSupplier = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    
+    
+
     const data = {
       companyName: formData.companyName,
       title: formData.title,
@@ -52,6 +54,7 @@ const CreateSupplier = () => {
       country: formData.country,
       status: formData.status,
     };
+    console.log(data);
     setIsSubmitting(true);
     try {
       const response = await createSupplier(data);

@@ -1,26 +1,24 @@
 import { useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
+import { PurchaseFormData, PurchaseResponse } from "../../types/purchase";
+import { createPurchase } from "../../api/api";
 
 const CreatePurchase = () => {
-  const [formData, setFormData] = useState({
+  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<PurchaseFormData>({
     companyName: "",
-    invoicenumber: "",
-    gstNumber: "",
-    dateOfPurchase: "",
-    totalPurchaseAmount: "",
-    email: "",
-    address1: "",
-    address2: "",
-    address3: "",
-    city: "",
-    pinCode: "",
-    state: "",
-    country: "",
-    status: "active",
+    invoiceNumber: null,
+    date: "",
+    totalPurchaseAmt: null,
+    gstNum: null,
+    status: "ACTIVE",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -28,9 +26,21 @@ const CreatePurchase = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    setIsSubmitting(true);
+    try {
+      console.log(formData);
+      const response: PurchaseResponse = await createPurchase(formData);
+      if (response.statusText === "Created") {
+        alert("Purchase created successfully");
+      }
+    } catch (error) {
+      console.error("Create purchase error:", error);
+      alert("Failed to create purchase");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -41,62 +51,58 @@ const CreatePurchase = () => {
           <div className="flex flex-col gap-[22px]">
             <h2 className="text-xl font-semibold">Purchase Information</h2>
 
-          <div className="w-full  pb-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
-            <InputField
-              label="Company Name"
-              required={true}
-              inputBg=""
-              type="text"
-              placeholder="Enter company name"
-              name="companyName"
-              value={formData.companyName}
-              onChange={handleChange}
-            />
+            <div className="w-full pb-[22px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
+              <InputField
+                label="Company Name"
+                required={true}
+                inputBg=""
+                type="text"
+                placeholder="Enter company name"
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleChange}
+              />
 
-            <InputField
-              label="Invoice Number "
-              inputBg=""
-              type="text"
-              placeholder="Enter the invoicenumber"
-              name="invoicenumber"
-              value={formData.invoicenumber}
-              onChange={handleChange}
-            />
-            <InputField
-              label="Date Of Purchase"
-              inputBg=""
-              type="text"
-              placeholder="Enter Date Of Purchase"
-              name="dateOfPurchase"
-              value={formData.dateOfPurchase}
-              onChange={handleChange}
-            />
-            
-            <InputField
-              label="Total Purchase Amount"
-              required={true}
-              inputBg=""
-              type="text"
-              placeholder="Enter total Purchase Amount"
-              name="totalPurchaseAmount"
-              value={formData.totalPurchaseAmount}
-              onChange={handleChange}
-            />
-            <InputField
-              label="GST Number"
-              inputBg=""
-              type="text"
-              placeholder="Enter the GST number"
-              name="gstNumber"
-              value={formData.gstNumber}
-              onChange={handleChange}
-            />
+              <InputField
+                label="Invoice Number"
+                inputBg=""
+                type="number"
+                placeholder="Enter the invoice number"
+                name="invoiceNumber"
+                value={formData.invoiceNumber}
+                onChange={handleChange}
+              />
+              <InputField
+                label="Date"
+                inputBg=""
+                type="date"
+                placeholder="Enter date of purchase"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+              />
+
+              <InputField
+                label="Total Purchase Amount"
+                required={true}
+                inputBg=""
+                type="number"
+                placeholder="Enter total purchase amount"
+                name="totalPurchaseAmt"
+                value={formData.totalPurchaseAmt}
+                onChange={handleChange}
+              />
+              <InputField
+                label="GST Number"
+                inputBg=""
+                type="number"
+                placeholder="Enter the GST number"
+                name="gstNum"
+                value={formData.gstNum}
+                onChange={handleChange}
+              />
+            </div>
           </div>
-
-          </div>
-
-
-         
 
           {/* Buttons */}
           <div className="col-span-3 flex justify-end gap-4 my-8">
@@ -106,7 +112,7 @@ const CreatePurchase = () => {
               color="text-primary-10 bg-none"
             />
             <Button
-              text="Submit Form"
+              text={isSubmitting ? "Creating..." : "Submit Form"}
               type="submit"
               color="bg-primary-10 text-white"
             />

@@ -1,12 +1,21 @@
-import React, { useState } from "react";
-import { createSupplier } from "../../api/api";
+import React, { useEffect, useState } from "react";
+import { createSupplier, getSupplierById, updateSupplier } from "../../api/api";
 import Button from "../../Components/Shared/Button/Button";
 import InputField from "../../Components/Shared/InputField/InputField";
 import { ICONS } from "../../assets";
 import Loader from "../../lib/loader";
+import { Supplier, SupplierByIdResponse } from "../../types/supplier";
+import { useNavigate } from "react-router-dom";
 
-const UpdateModal = ({ editToggleModel, selectedId }) => {
+const UpdateModal = ({
+  editToggleModel,
+  selectedId,
+}: {
+  editToggleModel: () => void;
+  selectedId: string;
+}) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [supplier, setSupplier] = useState<Supplier>();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     companyName: "",
@@ -24,6 +33,7 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
     country: "",
     status: "active",
   });
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -32,6 +42,63 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
       [name]: value,
     });
   };
+
+  const clearForm = () => {
+    setFormData({
+      companyName: "",
+      title: "",
+      gstNumber: "",
+      mobileNumber: "",
+      landlineNumber: "",
+      email: "",
+      address1: "",
+      address2: "",
+      address3: "",
+      city: "",
+      pinCode: "",
+      state: "",
+      country: "",
+      status: "active",
+    });
+  };
+
+  useEffect(() => {
+    const fetchSupplierById = async () => {
+      setLoading(true);
+      try {
+        const response: SupplierByIdResponse = await getSupplierById(
+          selectedId
+        );
+        setSupplier(response.data);
+      } catch (error) {
+        console.error("Error fetching supplier by id:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSupplierById();
+  }, [selectedId]);
+
+  useEffect(() => {
+    if (supplier) {
+      setFormData({
+        companyName: supplier.companyName,
+        title: supplier.title,
+        gstNumber: supplier.GST,
+        mobileNumber: supplier.mobileNum,
+        landlineNumber: supplier.landLineNum,
+        email: supplier.email,
+        address1: supplier.addressLine1,
+        address2: supplier.addressLine2,
+        address3: supplier.addressLine3,
+        city: supplier.city,
+        pinCode: supplier.pincode.toString(),
+        state: supplier.state,
+        country: supplier.country,
+        status: supplier.status,
+      });
+    }
+  }, [supplier]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,50 +121,16 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
     };
     setIsSubmitting(true);
     try {
-      const response = await createSupplier(data);
-      console.log("Supplier created successfully:", response.data);
-      alert("Supplier created successfully!");
-      setFormData({
-        companyName: "",
-        title: "",
-        gstNumber: "",
-        mobileNumber: "",
-        landlineNumber: "",
-        email: "",
-        address1: "",
-        address2: "",
-        address3: "",
-        city: "",
-        pinCode: "",
-        state: "",
-        country: "",
-        status: "active",
-      });
+      const response = await updateSupplier(selectedId, data);
+      console.log("Supplier updated successfully:", response.data);
+      alert("Supplier updated successfully!");
     } catch (error) {
-      console.error("Error creating supplier:", error);
-      alert("Failed to create supplier. Please try again.");
+      console.error("Error updating supplier:", error);
+      alert("Failed to update supplier. Please try again.");
     } finally {
       setIsSubmitting(false);
+      navigate(0);
     }
-  };
-
-  const clearForm = () => {
-    setFormData({
-      companyName: "",
-      title: "",
-      gstNumber: "",
-      mobileNumber: "",
-      landlineNumber: "",
-      email: "",
-      address1: "",
-      address2: "",
-      address3: "",
-      city: "",
-      pinCode: "",
-      state: "",
-      country: "",
-      status: "active",
-    });
   };
 
   return (
@@ -312,7 +345,7 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                       onClick={clearForm}
                     />
                     <Button
-                      text="Submit Form"
+                      text={isSubmitting ? "Updating..." : "Submit Form"}
                       type="submit"
                       color="bg-primary-10 text-white"
                     />

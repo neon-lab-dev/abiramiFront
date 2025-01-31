@@ -975,14 +975,16 @@ const CreateInvoice = () => {
       <div className="col-span-3 flex justify-end gap-4 my-8">
         <Button
           onClick={handleSubmit}
-          text="Save"
+          text={isSubmitting ? "Submitting..." : "Save"}
           type="reset"
           color="text-primary-10 bg-none"
+          disabled={isSubmitting}
         />
         <Button
-          text="Save & Print"
+          text={isSubmitting ? "Submitting..." : "Save & Print"}
           type="submit"
           color="bg-primary-10 text-white"
+          disabled={isSubmitting}
         />
       </div>
     </div>

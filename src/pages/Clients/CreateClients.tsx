@@ -275,10 +275,10 @@ const CreateClients = () => {
         />
         <Button
           text={isSubmitting ? "Submitting..." : "Create Client"}
+          disabled={isSubmitting}
           type="submit"
           color="bg-primary-10 text-white"
           onClick={handleSubmit}
-          disabled={isSubmitting}
         />
       </div>
     </div>

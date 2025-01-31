@@ -242,31 +242,6 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
       const response = await updateInvoice(selectedId, data);
       console.log("Invoice updated successfully:", response.data);
       alert("Invoice updated successfully!");
-      // setFormData({
-      //   ClientName: "",
-      //   ivoicedate: "",
-      //   Stateandcode: "",
-      //   taxtype: "",
-      //   invoicetype: "",
-      //   ChequeNumber: "",
-      //   Chequedate: "",
-      //   BankName: "",
-      //   ChequeAmount: "",
-      //   Code: "",
-      //   email: "",
-      //   address1: "",
-      //   address2: "",
-      //   address3: "",
-      //   city: "",
-      //   pinCode: "",
-      //   state: "",
-      //   country: "",
-      //   status: "",
-      //   transport: "",
-      //   placeOfSupply: "",
-      //   PONo: "",
-      //   vehicleNumber: "",
-      // });
     } catch (error) {
       console.error("Error updating invoice:", error);
       alert("Failed to update invoice. Please try again.");
@@ -357,7 +332,6 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
       setLoading(true);
       try {
         const data: any[] = await getInvoiceById(selectedId);
-        console.log(data);
         setInvoiceData(data.data);
       } catch (err) {
         console.error(err);

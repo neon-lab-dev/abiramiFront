@@ -53,6 +53,8 @@ const ListPage = () => {
     }
   };
 
+  console.log(clients);
+
   return (
     <>
       {loading ? (

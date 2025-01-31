@@ -90,44 +90,6 @@ export const deleteClient = async (id: string) => {
   }
 };
 
-// Suppliers APIs
-export const createSupplier = async (data: any) => {
-  try {
-    const response = await axiosInstance.post(`/suppliers`, data);
-    return response.data;
-  } catch (error) {
-    console.error("Create client error:", error);
-    throw error;
-  }
-};
-export const getSuppliers = async () => {
-  try {
-    const response = await axiosInstance.get("/suppliers");
-    return response.data;
-  } catch (error) {
-    console.error("Get clients error:", error);
-    throw error;
-  }
-};
-export const getSupplierById = async (id: string) => {
-  try {
-    const response = await axiosInstance.get(`/suppliers/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Get clients error:", error);
-    throw error;
-  }
-};
-export const deleteSupplier = async (id: string) => {
-  try {
-    const response = await axiosInstance.delete(`/suppliers/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Delete client error:", error);
-    throw error;
-  }
-};
-
 // Invoices APIs
 export const createInvoices = async (data: any) => {
   try {
@@ -196,8 +158,11 @@ export const createInventories = async (data: any) => {
         formData.append(key, data[key]);
       }
     });
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
 
-    const response = await axiosInstance.post(`/inventories`, formData, {
+    const response = await axiosInstance.post(`/inventory`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -210,9 +175,49 @@ export const createInventories = async (data: any) => {
   }
 };
 
+export const createCategory = async (data: any) => {
+  try {
+    const response = await axiosInstance.post(`/inventory/category`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Create category error:", error);
+    throw error;
+  }
+};
+
+export const getInventoryData = async () => {
+  try {
+    const response = await axiosInstance.get("/inventory/items");
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
+    throw error;
+  }
+};
+
 export const getInventories = async () => {
   try {
     const response = await axiosInstance.get("/inventory");
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
+    throw error;
+  }
+};
+
+export const getInventoryById = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/inventory/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
+    throw error;
+  }
+};
+
+export const getInventoryByCategoryId = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/inventory/category/${id}`);
     return response.data;
   } catch (error) {
     console.error("Get clients error:", error);
@@ -231,8 +236,11 @@ export const updateInventories = async (id: string, data: any) => {
         formData.append(key, data[key]);
       }
     });
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
 
-    const response = await axiosInstance.put(`/inventories/${id}`, formData, {
+    const response = await axiosInstance.put(`/inventory/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -251,6 +259,112 @@ export const getCategories = async () => {
     return response.data;
   } catch (error) {
     console.error("Get clients error:", error);
+    throw error;
+  }
+};
+
+export const deleteInventory = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(`/inventory/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete inventory error:", error);
+    throw error;
+  }
+};
+
+// Suppliers APIs
+export const createSupplier = async (data: any) => {
+  try {
+    const response = await axiosInstance.post(`/suppliers`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Create client error:", error);
+    throw error;
+  }
+};
+export const getSuppliers = async () => {
+  try {
+    const response = await axiosInstance.get("/suppliers");
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
+    throw error;
+  }
+};
+export const getSupplierById = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/suppliers/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
+    throw error;
+  }
+};
+
+export const updateSupplier = async (id: string, supplierData) => {
+  try {
+    const response = await axiosInstance.put(`/suppliers/${id}`, supplierData);
+    return response.data;
+  } catch (error) {
+    console.error("Update client error:", error);
+    throw error;
+  }
+};
+
+export const deleteSupplier = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(`/suppliers/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete client error:", error);
+    throw error;
+  }
+};
+
+// Purchase APIs
+export const createPurchase = async (data: any) => {
+  try {
+    const response = await axiosInstance.post(`/purchase`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Create client error:", error);
+    throw error;
+  }
+};
+export const getPurchases = async () => {
+  try {
+    const response = await axiosInstance.get("/purchase");
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
+    throw error;
+  }
+};
+export const getPurchaseById = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/purchase/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
+    throw error;
+  }
+};
+export const updatePurchase = async (id: string, purchaseData) => {
+  try {
+    const response = await axiosInstance.put(`/purchase/${id}`, purchaseData);
+    return response.data;
+  } catch (error) {
+    console.error("Update client error:", error);
+    throw error;
+  }
+};
+export const deletePurchase = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(`/purchase/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete client error:", error);
     throw error;
   }
 };

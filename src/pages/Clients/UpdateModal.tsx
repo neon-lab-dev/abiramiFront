@@ -5,31 +5,34 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import { getClientById, updateClient } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../lib/loader";
+import { Client, CreateClient, SingleClientResponse } from "../../types/client";
 
-const UpdateModal = ({ editToggleModel, selectedId }) => {
+const UpdateModal = ({
+  editToggleModel,
+  selectedId,
+}: {
+  editToggleModel: () => void;
+  selectedId: string;
+}) => {
   const navigate = useNavigate();
-  const [client, setClient] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    CompanyName: "",
-    ContactPerson: "",
-    gstnumber: "",
-    MobileNumber: "",
-    LandlineNumber: "",
-    active: "",
-    Inactive: "",
-    Code: "",
+  const [loading, setLoading] = useState<boolean>(false);
+  const [formData, setFormData] = useState<CreateClient>({
+    companyName: "",
+    contactPerson: "",
+    GST: "",
+    mobileNum: "",
+    landLineNum: "",
     email: "",
-    address1: "",
-    address2: "",
-    address3: "",
+    addressLine1: "",
+    addressLine2: "",
+    addressLine3: "",
     city: "",
-    pinCode: "",
+    pincode: null,
     state: "",
     country: "",
     status: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -42,17 +45,17 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
   };
   const handleUpdate = async () => {
     const clientData = {
-      companyName: formData.CompanyName,
-      contactPerson: formData.ContactPerson,
-      GST: formData.gstnumber,
-      mobileNum: formData.MobileNumber,
-      landLineNum: formData.LandlineNumber,
+      companyName: formData.companyName,
+      contactPerson: formData.contactPerson,
+      GST: formData.GST,
+      mobileNum: formData.mobileNum,
+      landLineNum: formData.landLineNum,
       // email: formData.email,
-      addressLine1: formData.address1,
-      addressLine2: formData.address2,
-      addressLine3: formData.address3,
+      addressLine1: formData.addressLine1,
+      addressLine2: formData.addressLine2,
+      addressLine3: formData.addressLine3,
       city: formData.city,
-      pincode: parseInt(formData.pinCode),
+      pincode: Number(formData.pincode),
       state: formData.state,
       country: formData.country,
       status: formData.status.toUpperCase(),
@@ -62,25 +65,7 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
       const response = await updateClient(selectedId, clientData);
       console.log("Client updated successfully:", response.data);
       alert("Client updated successfully!");
-      setFormData({
-        CompanyName: "",
-        ContactPerson: "",
-        gstnumber: "",
-        MobileNumber: "",
-        LandlineNumber: "",
-        active: "",
-        Inactive: "",
-        Code: "",
-        email: "",
-        address1: "",
-        address2: "",
-        address3: "",
-        city: "",
-        pinCode: "",
-        state: "",
-        country: "",
-        status: "",
-      });
+      clearForm();
     } catch (error) {
       console.error("Error updating client:", error);
       alert("Failed to update client. Please try again.");
@@ -94,8 +79,24 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
     const fetchClient = async () => {
       setLoading(true);
       try {
-        const data: any[] = await getClientById(selectedId);
-        setClient(data.data);
+        const data: SingleClientResponse = await getClientById(selectedId);
+        console.log("Client data:", data);
+        setFormData({
+          companyName: data.data.companyName || "",
+          contactPerson: data.data.contactPerson || "",
+          GST: data.data.GST || "",
+          mobileNum: data.data.mobileNum || "",
+          landLineNum: data.data.landLineNum || "",
+          email: data.data.email || "",
+          addressLine1: data.data.addressLine1 || "",
+          addressLine2: data.data.addressLine2 || "",
+          addressLine3: data.data.addressLine3 || "",
+          city: data.data.city || "",
+          pincode: data.data.pincode || 0,
+          state: data.data.state || "",
+          country: data.data.country || "",
+          status: data.data.status || "",
+        });
       } catch (err) {
         console.error(err);
       } finally {
@@ -106,44 +107,19 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
     fetchClient();
   }, [selectedId]);
 
-  useEffect(() => {
-    setFormData({
-      CompanyName: client.companyName,
-      ContactPerson: client.contactPerson,
-      gstnumber: client.GST,
-      MobileNumber: client.mobileNum,
-      LandlineNumber: client.landLineNum,
-      active: "",
-      Inactive: "",
-      Code: "",
-      email: client.email,
-      address1: client.addressLine1,
-      address2: client.addressLine2,
-      address3: client.addressLine3,
-      city: client.city,
-      pinCode: client.pincode,
-      state: client.state,
-      country: client.country,
-      status: client.status,
-    });
-  }, [client]);
-
   const clearForm = () => {
     setFormData({
-      CompanyName: "",
-      ContactPerson: "",
-      gstnumber: "",
-      MobileNumber: "",
-      LandlineNumber: "",
-      active: "",
-      Inactive: "",
-      Code: "",
+      companyName: "",
+      contactPerson: "",
+      GST: "",
+      mobileNum: "",
+      landLineNum: "",
       email: "",
-      address1: "",
-      address2: "",
-      address3: "",
+      addressLine1: "",
+      addressLine2: "",
+      addressLine3: "",
       city: "",
-      pinCode: "",
+      pincode: 0,
       state: "",
       country: "",
       status: "",
@@ -183,8 +159,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="text"
                     placeholder="Enter Company name"
-                    name="CompanyName"
-                    value={formData.CompanyName}
+                    name="companyName"
+                    value={formData.companyName}
                     onChange={handleChange}
                   />
                   <InputField
@@ -192,8 +168,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="text"
                     placeholder="Enter contact person name"
-                    name="ContactPerson"
-                    value={formData.ContactPerson}
+                    name="contactPerson"
+                    value={formData.contactPerson}
                     onChange={handleChange}
                   />
                   <InputField
@@ -202,8 +178,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="number"
                     placeholder="Enter the GST number"
-                    name="gstnumber"
-                    value={formData.gstnumber}
+                    name="GST"
+                    value={formData.GST}
                     onChange={handleChange}
                   />
                 </div>
@@ -221,8 +197,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="number"
                     placeholder="Enter Mobile name"
-                    name="MobileNumber"
-                    value={formData.MobileNumber}
+                    name="mobileNum"
+                    value={formData.mobileNum}
                     onChange={handleChange}
                   />
                   <InputField
@@ -230,8 +206,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="text"
                     placeholder="Enter Landline number"
-                    name="LandlineNumber"
-                    value={formData.LandlineNumber}
+                    name="landLineNum"
+                    value={formData.landLineNum}
                     onChange={handleChange}
                   />
                   <InputField
@@ -256,8 +232,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="text"
                     placeholder="Enter Door Number or building number"
-                    name="address1"
-                    value={formData.address1}
+                    name="addressLine1"
+                    value={formData.addressLine1}
                     onChange={handleChange}
                   />
                   <InputField
@@ -265,8 +241,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="text"
                     placeholder="Enter apartment name or building name"
-                    name="address2"
-                    value={formData.address2}
+                    name="addressLine2"
+                    value={formData.addressLine2}
                     onChange={handleChange}
                   />
                   <InputField
@@ -274,8 +250,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="text"
                     placeholder="Enter locality or street"
-                    name="address3"
-                    value={formData.address3}
+                    name="addressLine3"
+                    value={formData.addressLine3}
                     onChange={handleChange}
                   />
                   <InputField
@@ -292,8 +268,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="number"
                     placeholder="Enter pincode"
-                    name="pinCode"
-                    value={formData.pinCode}
+                    name="pincode"
+                    value={formData.pincode}
                     onChange={handleChange}
                   />
                   <InputField
@@ -314,6 +290,31 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     value={formData.country}
                     onChange={handleChange}
                   />
+                </div>
+              </div>
+              <div className="flex flex-col gap-[22px]">
+                <h2 className="text-[14px] font-semibold">Status</h2>
+                <div className="flex items-center gap-5">
+                  <label className="flex items-center gap-4">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="active"
+                      checked={formData.status.toLowerCase() === "active"}
+                      onChange={handleChange}
+                    />
+                    <span>Active</span>
+                  </label>
+                  <label className="flex items-center gap-4">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="inactive"
+                      checked={formData.status.toLowerCase() === "inactive"}
+                      onChange={handleChange}
+                    />
+                    <span>Inactive</span>
+                  </label>
                 </div>
               </div>
               {/* Edit form fields here */}

@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { deleteClient, deleteSupplier, getSuppliers } from "../../api/api";
+import { deleteSupplier, getSuppliers } from "../../api/api";
 import ListPage from "./ListPage";
 import SuppliersCards from "./SuppliersCards";
 import SuppliersTable from "../../Components/Suppliers/SuppliersTable";
 import Loader from "../../lib/loader";
 import UpdateModal from "./UpdateModal";
 import { useNavigate } from "react-router-dom";
+import { Supplier, SupplierData, SupplierResponse } from "../../types/supplier";
 
 export default function Suppliers() {
   const [loading, setLoading] = useState<boolean>(false);
-  const [suppliers, setSuppliers] = useState<any[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [suppliersData, setSuppliersData] = useState<SupplierData>();
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string>("");
   const navigate = useNavigate();
@@ -21,8 +23,13 @@ export default function Suppliers() {
     const fetchSuppliers = async () => {
       setLoading(true);
       try {
-        const data: any[] = await getSuppliers();
-        setSuppliers(data);
+        const response: SupplierResponse = await getSuppliers();
+        setSuppliersData({
+          totalCount: response.totalCount,
+          activeCount: response.activeCount,
+          inactiveCount: response.inactiveCount,
+        });
+        setSuppliers(response.data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -34,11 +41,13 @@ export default function Suppliers() {
   }, []);
 
   const handleDelete = async (id: string) => {
+    setLoading(true);
     if (window.confirm("Are you sure you want to delete?")) {
       const response = await deleteSupplier(id);
       console.log("Item deleted!", response);
       if (response.status === 200) {
         alert("Supplier deleted Successfully!!!");
+        setLoading(false);
         navigate(0);
       }
     } else {
@@ -54,9 +63,9 @@ export default function Suppliers() {
         </div>
       ) : (
         <div className="w-full">
-          <SuppliersCards suppliers={suppliers} />
+          <SuppliersCards suppliers={suppliersData} />
           <SuppliersTable
-            suppliers={suppliers.data}
+            suppliers={suppliers}
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}
           />

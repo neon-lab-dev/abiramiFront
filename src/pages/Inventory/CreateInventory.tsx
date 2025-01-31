@@ -3,14 +3,18 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import UploadImage from "./UploadImage";
 import { ICONS } from "../../assets";
-import { getCategories } from "../../api/api";
+import { createInventories, getCategories } from "../../api/api";
+import { useNavigate } from "react-router-dom";
 
 const CreateInventory = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showDropdown2, setShowDropdown2] = useState(false);
-  const [imageFiles, setImageFiles] = useState<File[] | []>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
+  const [imageFiles, setImageFiles] = useState<File | {}>({});
+  const [imagePreviews, setImagePreviews] = useState<string | "">("");
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     refrence: "",
     category: "",
@@ -42,26 +46,39 @@ const CreateInventory = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = {
       refrence: formData.refrence,
-      categoryId: formData.category,
+      catgoryId: formData.categoryId,
       description: formData.description,
-      buyingCost: formData.buyingCost,
+      buyingCost: Number(formData.buyingCost),
       quantity: formData.quantity,
       quantityType: formData.quantityType,
-      alarm: formData.alarm,
-      sellingCost: formData.sellingCost,
-      status: "active",
-      file: imageFiles[0],
+      alarm: Number(formData.alarm),
+      sellingCost: Number(formData.sellingCost),
+      file: imageFiles,
       warehouseLocation: formData.WarehouseLocation,
     };
+    console.log(data);
+    setIsSubmitting(true);
+    try {
+      const response = await createInventories(data);
+      console.log("Inventory created successfully:", response.data);
+      alert("Inventory created successfully");
+    } catch (error) {
+      console.error("Error creating inventory:", error);
+      alert("Failed to create inventory. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+      navigate("/inventory");
+    }
   };
 
   // remove selected image
   const removeImage = (url: string) => {
-    setImagePreviews((prev) => prev.filter((preview) => preview !== url));
+    setImageFiles({});
+    setImagePreviews("");
   };
 
   // upload image
@@ -69,12 +86,13 @@ const CreateInventory = () => {
     const file = e.target.files?.[0];
 
     if (file) {
-      setImageFiles((prev) => [...prev, file]);
-      // setImageFiles(file);
+      // setImageFiles((prev) => [...prev, file]);
+      setImageFiles(file);
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreviews((prev) => [...prev, reader.result as string]);
+        // setImagePreviews((prev) => [...prev, reader.result as string]);
+        setImagePreviews(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -88,7 +106,7 @@ const CreateInventory = () => {
     }
   };
 
-  const handleStateSelect2 = (cateogry: string, catagoryId: string) => {
+  const handleStateSelect2 = (category: string, categoryId: string) => {
     setFormData((prev) => ({
       ...prev,
       category: category,
@@ -264,9 +282,11 @@ const CreateInventory = () => {
               color="text-primary-10 bg-none"
             />
             <Button
-              text="Submit Form"
+              text={isSubmitting ? "Submitting..." : "Submit Form"}
               type="submit"
+              // onClick={handleSubmit}
               color="bg-primary-10 text-white"
+              disabled={isSubmitting}
             />
           </div>
         </form>

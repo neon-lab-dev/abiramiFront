@@ -19,26 +19,28 @@ interface Column {
 interface TableProps {
   data: Array<Record<string, any>>;
   columns: Column[];
-  tableName: string;
+  tableName?: string;
   showViewAll?: boolean;
   enablePagination?: boolean;
   rowsPerPage?: number;
   tableHeight?: string;
   tableWidth?: string;
   icons?: {
-    i1: string;
-    i2: string;
-    i3: string;
+    i1?: string;
+    i2?: string;
+    i3?: string;
   };
   bg_i1?: string;
   bg_i2?: string;
   bg_i3?: string;
   onActionClick?: any;
+  editToggleModel?: (id?: string) => void;
+  handleDelete?: (id: string) => void;
 }
 
 const formatDate = (date: Date) => {
   if (!(date instanceof Date)) return date; // Return as is if not a date
-  return date.toLocaleDateString("en-US", {
+  return date?.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -72,7 +74,6 @@ const Table: React.FC<TableProps> = ({
         item?.addressLine1?.includes(searchQuery)
       );
     });
-    console.log(searchQuery);
     if (searchQuery !== "") {
       setSearchedData(filteredData);
     } else {
@@ -96,7 +97,6 @@ const Table: React.FC<TableProps> = ({
   };
   const handleNavigateToInvoiceDetails = (companyName: string) => {
     navigate(`/invoices/Detailpage`);
-    console.log(companyName);
   };
 
   const handleNextPage = () => {
@@ -131,10 +131,10 @@ const Table: React.FC<TableProps> = ({
       className={` w-full overflow-x-scroll custom-scrollbar my-5 scrollbar-hide`}
     >
       <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 mr-6 shadow-tableShadow">
-        <div className="w-[100%] flex justify-between items-center h-10">
-          <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
+        <div className="w-[100%] flex justify-between items-center">
+          {/* <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
             {tableName}
-          </div>
+          </div> */}
           {showViewAll && (
             <button className="flex items-center px-2 py-1 md:px-3 md:py-2 font-normal text-base leading-6 bg-neutral-70 transition-all rounded-xl">
               View all
@@ -150,7 +150,7 @@ const Table: React.FC<TableProps> = ({
           }  ${!enablePagination ? "overflow-y-auto " : ""} `}
           style={{ maxHeight: tableHeight, minWidth: tableWidth }}
         >
-          <table className="min-w-full text-left border-separate border-spacing-y-1">
+          <table className="min-w-full min-h-[200px] text-left border-separate border-spacing-y-1">
             <thead className="sticky top-0 bg-secondary-60 min-h-10">
               <tr className="">
                 {columns.map((col, index) => (
@@ -208,87 +208,88 @@ const Table: React.FC<TableProps> = ({
               </tr>
             </thead>
             <tbody className="bg-secondary-60 ">
-              {currentData?.map((row, rowIndex) => {
-                return (
-                  <tr
-                    key={rowIndex}
-                    className="rounded-lg border-secondary-60 border  bg-white transition-all min-h-10 "
-                  >
-                    {columns.map((col, colIndex) => {
-                      return (
-                        <td
-                          key={colIndex}
-                          className={`pr-4 pl-3 py-4 rounded-lg text-[14px] ${
-                            typeof col.cellClassName === "function"
-                              ? col.cellClassName(row)
-                              : col.cellClassName || ""
-                          }${colIndex === 0 ? "text-[#4186F3]" : ""} `}
-                          style={{ width: col.width }}
-                        >
-                          {col.cellRenderer ? (
-                            col.cellRenderer(row) // Use custom cellRenderer if defined
-                          ) : col.accessor === "status" ? (
-                            <span
-                              className={`${
-                                row.status.toUpperCase() === "ACTIVE"
-                                  ? " text-neutral-90 bg-sucess-10"
-                                  : "text-red-600 bg-red-100"
-                              } px-2 py-1 rounded-xl`}
-                            >
-                              {row[col.accessor].toUpperCase()}
-                            </span>
-                          ) : col.accessor === "companyName" ? (
-                            <span
-                              className={`${
-                                col.navigate === false
-                                  ? ""
-                                  : "text-blue-500 cursor-pointer hover:underline"
-                              }`}
-                              onClick={() => {
-                                if (col.navigate === false) {
-                                  return;
-                                } else {
-                                  handleNavigateToDetails(row.id);
+              {currentData?.length > 0 ? (
+                currentData?.map((row, rowIndex) => {
+                  return (
+                    <tr
+                      key={rowIndex}
+                      className="rounded-lg border-secondary-60 border  bg-white transition-all min-h-10 "
+                    >
+                      {columns.map((col, colIndex) => {
+                        return (
+                          <td
+                            key={colIndex}
+                            className={`pr-4 pl-3 py-4 rounded-lg text-[14px] ${
+                              typeof col.cellClassName === "function"
+                                ? col.cellClassName(row)
+                                : col.cellClassName || ""
+                            }${colIndex === 0 ? "text-[#4186F3]" : ""} `}
+                            style={{ width: col.width }}
+                          >
+                            {col.cellRenderer ? (
+                              col.cellRenderer(row) // Use custom cellRenderer if defined
+                            ) : col.accessor === "status" ? (
+                              <span
+                                className={`${
+                                  row?.status?.toUpperCase() === "ACTIVE"
+                                    ? " text-neutral-90 bg-sucess-10"
+                                    : "text-red-600 bg-red-100"
+                                } px-2 py-1 rounded-xl`}
+                              >
+                                {row[col.accessor]?.toUpperCase()}
+                              </span>
+                            ) : col.accessor === "companyName" ? (
+                              <span
+                                className={`${
+                                  col.navigate === false
+                                    ? ""
+                                    : "text-blue-500 cursor-pointer hover:underline"
+                                }`}
+                                onClick={() => {
+                                  if (col.navigate === false) {
+                                    return;
+                                  } else {
+                                    handleNavigateToDetails(row.id);
+                                  }
+                                }}
+                              >
+                                {row[col.accessor]}
+                              </span>
+                            ) : col.accessor === "invoice_id" ? (
+                              <span
+                                className="text-blue-500 cursor-pointer hover:underline"
+                                onClick={() =>
+                                  handleNavigateToInvoiceDetails(
+                                    row[col.accessor]
+                                  )
                                 }
-                              }}
-                            >
-                              {row[col.accessor]}
-                            </span>
-                          ) : col.accessor === "invoice_id" ? (
-                            <span
-                              className="text-blue-500 cursor-pointer hover:underline"
-                              onClick={() =>
-                                handleNavigateToInvoiceDetails(
-                                  row[col.accessor]
-                                )
-                              }
-                            >
-                              {row[col.accessor]}
-                            </span>
-                          ) : col.accessor === "quantity" ? (
-                            <span
-                              className={`${
-                                row.quantity === 0
-                                  ? "text-red-500 bg-red-100"
-                                  : row.quantity <= row.alarm
-                                  ? "text-yellow-500 bg-yellow-100"
-                                  : "text-black bg-gray-200"
-                              } px-2 py-1 rounded-xl text-center flex justify-center`}
-                            >
-                              {row[col.accessor]}
-                            </span>
-                          ) : typeof row[col.accessor] === "object" &&
-                            row[col.accessor] instanceof Date ? (
-                            formatDate(row[col.accessor])
-                          ) : col.type === "date" ? (
-                            formatDateWithOrdinal(row[col.accessor])
-                          ) : (
-                            row[col.accessor]
-                          )}
-                        </td>
-                      );
-                    })}
-                    {/* {icons && (
+                              >
+                                {row[col.accessor]}
+                              </span>
+                            ) : col.accessor === "quantity" ? (
+                              <span
+                                className={`${
+                                  row.quantity === 0
+                                    ? "text-red-500 bg-red-100"
+                                    : row.quantity <= row.alarm
+                                    ? "text-yellow-500 bg-yellow-100"
+                                    : "text-black bg-gray-200"
+                                } w-fit px-4 py-[5px] rounded-xl text-center flex justify-center`}
+                              >
+                                {row[col.accessor]}
+                              </span>
+                            ) : typeof row[col.accessor] === "object" &&
+                              row[col.accessor] instanceof Date ? (
+                              formatDate(row[col.accessor])
+                            ) : col.type === "date" ? (
+                              formatDateWithOrdinal(row[col.accessor])
+                            ) : (
+                              row[col.accessor]
+                            )}
+                          </td>
+                        );
+                      })}
+                      {/* {icons && (
                       <td>
                         <div className="flex px-4 space-x-2 ">
                           {row?.iconsOrder?.map((icon: string) => {
@@ -380,33 +381,45 @@ const Table: React.FC<TableProps> = ({
                         </div>
                       </td>
                     )} */}
-                    <td>
-                      <div className="flex gap-4">
-                        <button
-                          key="i1"
-                          // onClick={() => onEditClick(row.id)}
-                          className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
-                        >
-                          <img src={icons.i1} alt="Edit" className="h-4 w-4" />
-                        </button>
-                        <button
-                          key="i2"
-                          onClick={() => onEditClick(row.id)}
-                          className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i2}  `}
-                        >
-                          <img src={icons.i2} alt="Edit" className="h-4 w-4" />
-                        </button>
-                        <button
-                          key="i3"
-                          onClick={() => onDeleteClick(row.id)}
-                          className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i3}  `}
-                        >
-                          <img src={icons.i3} alt="Edit" className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
-                    <td>
-                      {/* <div className="flex px-4 space-x-2">
+                      <td>
+                        <div className="flex gap-4">
+                          <button
+                            key="i1"
+                            // onClick={() => onEditClick(row.id)}
+                            className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
+                          >
+                            <img
+                              src={icons.i1}
+                              alt="Edit"
+                              className="h-4 w-4"
+                            />
+                          </button>
+                          <button
+                            key="i2"
+                            onClick={() => onEditClick(row.id)}
+                            className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i2}  `}
+                          >
+                            <img
+                              src={icons.i2}
+                              alt="Edit"
+                              className="h-4 w-4"
+                            />
+                          </button>
+                          <button
+                            key="i3"
+                            onClick={() => onDeleteClick(row.id)}
+                            className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i3}  `}
+                          >
+                            <img
+                              src={icons.i3}
+                              alt="Edit"
+                              className="h-4 w-4"
+                            />
+                          </button>
+                        </div>
+                      </td>
+                      <td>
+                        {/* <div className="flex px-4 space-x-2">
     {currentData.map((col, colIndex) => (
       <div key={colIndex}>
         {row.iconsOrder.map((icon: string) => {
@@ -469,10 +482,20 @@ const Table: React.FC<TableProps> = ({
       </div>
     ))}
   </div> */}
-                    </td>
-                  </tr>
-                );
-              })}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td
+                    colSpan={columns.length + 1}
+                    className="text-center text-lg text-gray-500"
+                  >
+                    No data found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

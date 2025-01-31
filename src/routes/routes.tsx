@@ -75,7 +75,7 @@ export const router = createBrowserRouter([
         element: <CreateInventory />,
       },
       {
-        path: "/inventory/InventoryTable",
+        path: "/inventory/InventoryTable/:id",
         element: <InventoryTable />,
       },
     ],

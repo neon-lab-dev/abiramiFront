@@ -4,7 +4,7 @@ import { ICONS } from "../../assets";
 
 type TUploadImageProps = {
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  imagePreviews: string[];
+  imagePreviews: string;
   removeImage: (url: string) => void;
 };
 
@@ -20,7 +20,6 @@ const UploadImage: React.FC<TUploadImageProps> = ({
         <label className="flex flex-col items-center cursor-pointer">
           <input
             required
-            multiple
             type="file"
             accept="image/*"
             onChange={(e) => handleImageChange(e)}
@@ -34,22 +33,25 @@ const UploadImage: React.FC<TUploadImageProps> = ({
 
       {/* Showing image previews */}
       <div className="grid grid-cols-1 md:w-[50%] lg:grid-cols-2  items-start gap-5">
-        {imagePreviews.length > 0 &&
-          imagePreviews.map((previewUrl: any) => (
-            <div key={previewUrl} className="p-2 rounded-md border relative">
+        {
+          imagePreviews && (
+            // imagePreviews.map((previewUrl: any) => (
+            <div key={imagePreviews} className="p-2 rounded-md border relative">
               <img
-                onClick={() => removeImage(previewUrl)}
+                onClick={() => removeImage(imagePreviews)}
                 src={ICONS.cross}
                 alt="cros-icon"
                 className="size-6 cursor-pointer top-2 right-2 bg-gray-50 bg-opacity-40 rounded-full p-1 absolute"
               />
               <img
-                src={previewUrl}
+                src={imagePreviews}
                 alt="image"
                 className="h-full w-full object-cover object-center rounded-md"
               />
             </div>
-          ))}
+          )
+          // ))
+        }
       </div>
     </div>
   );
