@@ -1,25 +1,68 @@
-export interface ProductDetailRequest {
+export interface ProductDetail {
+  id?: string;
   description: string;
-  HSNno: number;
-  quantity: number;
-  rate: number;
-  discount: number;
-  amount: number;
+  HSNno: string;
+  quantity: number | null;
+  rate: number | null;
+  discount: number | null;
+  amount: number | null;
 }
 
 export interface InvoiceRequest {
   clientName: string;
   date: string;
-  GST: string;
   state: string;
-  code: number;
+  code: number | null;
   billingStatus: string;
   invoiceType: string;
   taxType: string;
-  subTotal: number;
-  pfAmount: number;
-  taxIgst: number;
-  roundOff: number;
-  total: number;
-  productDetails: ProductDetailRequest[];
+  subTotal: number | null;
+  pfAmount: number | null;
+  roundOff: number | null;
+  totalAmount: number | null;
+  taxGST: number | null;
+  bankName: string;
+  chequeNumber: string;
+  chequeAmount: number | null;
+  transport: string;
+  placeOfSupply: string;
+  poNO: string | null;
+  vehicleNo: string | null;
+  productDetails: ProductDetail[];
+}
+
+export interface InvoiceResponse {
+  id: string;
+  clientName: string;
+  date: string;
+  state: string;
+  code: number | null;
+  billingStatus: string;
+  taxType: string;
+  invoiceType: string;
+  bankName: string;
+  chequeNumber: string;
+  chequeAmount: number | null;
+  transport: string;
+  placeOfSupply: string;
+  poNO: string | null;
+  vehicleNo: string | null;
+  createdAt: string;
+  updatedAt: string;
+  totalAmount: number | null;
+  taxGST: number | null;
+  subTotal: number | null;
+  pfAmount: number | null;
+  roundOff: number | null;
+  productDetails: ProductDetail[];
+}
+
+export interface InvoicesResponse {
+  message: string;
+  status: number | null;
+  statusText: string;
+  data: InvoiceResponse[];
+  paidInvoices: number | null;
+  pendingInvoices: number | null;
+  draftInvoices: number | null;
 }

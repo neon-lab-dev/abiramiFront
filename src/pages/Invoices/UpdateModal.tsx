@@ -1,22 +1,26 @@
 import { formatNumber } from "chart.js/helpers";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  createInvoices,
-  getClientById,
-  getInvoiceById,
-  updateInvoice,
-} from "../../api/api";
+import { getInvoiceById, updateInvoice } from "../../api/api";
 import { ICONS } from "../../assets";
 import Button from "../../Components/Shared/Button/Button";
 import InputField from "../../Components/Shared/InputField/InputField";
 import { convertNumberToWords } from "../../utils";
 import Loader from "../../lib/loader";
+import { InvoiceRequest, ProductDetail } from "../../types/invoice";
+import { useNavigate } from "react-router-dom";
 
-const UpdateModal = ({ editToggleModel, selectedId }) => {
+const UpdateModal = ({
+  editToggleModel,
+  selectedId,
+}: {
+  editToggleModel: () => void;
+  selectedId: string;
+}) => {
+  const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
-  const [invoiceData, setInvoiceData] = useState({});
+  const [invoiceData, setInvoiceData] = useState<InvoiceRequest | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [subTotal, setSubTotal] = useState<number>();
@@ -26,48 +30,37 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
   const [tax, setTax] = useState<number>();
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
-
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const [formData, setFormData] = useState({
-    ClientName: "",
-    ivoicedate: "",
-    Stateandcode: "",
-    taxtype: "",
-    invoicetype: "",
-    ChequeNumber: "",
-    Chequedate: "",
-    BankName: "",
-    ChequeAmount: "",
-    Code: "",
-    email: "",
-    address1: "",
-    address2: "",
-    address3: "",
-    city: "",
-    pinCode: "",
+  const [formData, setFormData] = useState<InvoiceRequest>({
+    clientName: "",
+    date: "",
     state: "",
-    country: "",
-    status: "",
+    code: null,
+    billingStatus: "",
+    invoiceType: "",
+    taxType: "",
+    subTotal: null,
+    pfAmount: null,
+    roundOff: null,
+    totalAmount: null,
+    taxGST: null,
+    bankName: "",
+    chequeNumber: "",
+    chequeAmount: null,
     transport: "",
     placeOfSupply: "",
-    PONo: "",
-    vehicleNumber: "",
-    subTotal: 0,
-    pfamount: 0,
-    roundOff: 0,
-    tax: 0,
-    total: 0,
+    poNO: null,
+    vehicleNo: null,
+    productDetails: [],
   });
-
   const [rows, setRows] = useState([
     {
       description: "",
       HSNno: "",
-      quantity: 0,
-      rate: 0,
-      discount: 0,
-      amount: 0,
+      quantity: null,
+      rate: null,
+      discount: null,
+      amount: null,
     },
   ]);
 
@@ -84,13 +77,15 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
       },
     ]);
   };
-
-  const removeRow = (index) => {
+  const removeRow = (index: number) => {
     setRows(rows.filter((_, idx) => idx !== index));
   };
-
-  const handleInputChange = (index: number, field: string, value: number) => {
-    const updatedRows = [...rows];
+  const handleInputChange = (
+    index: number,
+    field: string,
+    value: number | string
+  ) => {
+    const updatedRows: any[] = [...rows];
     if (["quantity", "rate", "discount", "amount"].includes(field)) {
       updatedRows[index][field] = parseFloat(value) || 0;
     } else {
@@ -108,14 +103,20 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
     console.log(updatedRows);
     setRows(updatedRows);
   };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]:
+        name === "quantity" ||
+        name === "rate" ||
+        name === "discount" ||
+        name === "amount" ||
+        name === "chequeAmount"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -182,61 +183,52 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
   const handleStateSelect = (stateName: string, stateCode: string) => {
     setFormData((prev) => ({
       ...prev,
-      Stateandcode: stateName,
-      Code: stateCode,
-      taxtype: stateCode === "33" ? "CGST & SGST" : "IGST",
+      state: stateName,
+      code: Number(stateCode),
+      taxType: stateCode === "33" ? "CGST & SGST" : "IGST",
     }));
     setShowDropdown(false);
   };
   const handleStateSelect2 = (Invoicetype: string) => {
     setFormData((prev) => ({
       ...prev,
-      invoicetype: Invoicetype,
+      invoiceType: Invoicetype,
     }));
     setShowDropdown2(false);
   };
   const handleStateSelect1 = (Status: string) => {
     setFormData((prev) => ({
       ...prev,
-      status: Status,
+      billingStatus: Status,
     }));
     setShowDropdown1(false);
   };
 
   const handleSubmit = async () => {
     const data = {
-      clientName: formData.ClientName,
-      date: formData.ivoicedate,
-      state: formData.Stateandcode,
-      code: Number(formData.Code),
-      billingStatus: formData.status,
-      invoiceType: formData.invoicetype,
+      clientName: formData.clientName,
+      date: formData.date,
+      state: formData.state,
+      code: formData.code,
+      billingStatus: formData.billingStatus,
+      invoiceType: formData.invoiceType,
       totalAmount: total,
       taxGST: tax,
-      bankName: formData.BankName,
-      chequeNumber: formData.ChequeNumber,
-      chequeAmount: Number(formData.ChequeAmount),
+      bankName: formData.bankName,
+      chequeNumber: formData.chequeNumber,
+      chequeAmount: formData.chequeAmount,
       transport: formData.transport,
       placeOfSupply: formData.placeOfSupply,
-      poNo: formData.PONo,
-      vehicleNo: formData.vehicleNumber,
-      taxType: formData.taxtype,
+      poNO: formData.poNO,
+      vehicleNo: formData.vehicleNo,
+      taxType: formData.taxType,
       subTotal: subTotal,
       pfAmount: pfamount,
       roundOff: roundOff,
-
-      // chequedate: formData.Chequedate,
-      // email: formData.email,
-      // address1: formData.address1,
-      // address2: formData.address2,
-      // address3: formData.address3,
-      // city: formData.city,
-      // pinCode: formData.pinCode,
-      // country: formData.country,
       productDetails: rows,
     };
-    console.log(data);
     setIsSubmitting(true);
+    setLoading(true);
     try {
       const response = await updateInvoice(selectedId, data);
       console.log("Invoice updated successfully:", response.data);
@@ -246,6 +238,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
       alert("Failed to update invoice. Please try again.");
     } finally {
       setIsSubmitting(false);
+      setLoading(false);
+      navigate(0);
     }
   };
 
@@ -253,10 +247,10 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
     const calculateValues = () => {
       // Calculate Subtotal
       const calculatedSubTotal = rows?.reduce((sum, row) => {
-        const quantity = parseFloat(row?.quantity) || 0;
-        const rate = parseFloat(row?.rate) || 0;
-        const discount = parseFloat(row?.discount) || 0;
-        const amount = quantity * rate * (1 - discount);
+        const quantity = parseFloat(row?.quantity?.toString()) || null;
+        const rate = parseFloat(row?.rate?.toString()) || null;
+        const discount = parseFloat(row?.discount?.toString()) || null;
+        const amount = (quantity || 0) * (rate || 0) * (1 - (discount || 0));
         return sum + amount;
       }, 0);
 
@@ -281,49 +275,48 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
   }, [rows]);
 
   useEffect(() => {
-    console.log(formData.invoicetype.toLowerCase());
-    if (formData.invoicetype.toLowerCase() == "cash invoice") {
+    if (formData.invoiceType.toLowerCase() == "cash invoice") {
       setFormData({
         ...formData,
-        ChequeNumber: "",
-        ChequeAmount: "",
-        BankName: "",
+        chequeNumber: "",
+        chequeAmount: null,
+        bankName: "",
         transport: "",
         placeOfSupply: "",
-        PONo: "",
-        vehicleNumber: "",
+        poNO: null,
+        vehicleNo: null,
       });
     }
-    if (formData.invoicetype.toLowerCase() != "check invoice") {
+    if (formData.invoiceType.toLowerCase() != "cheque invoice") {
       setFormData({
         ...formData,
-        ChequeNumber: "",
-        ChequeAmount: "",
-        BankName: "",
+        chequeNumber: "",
+        chequeAmount: null,
+        bankName: "",
       });
     }
-    if (formData.invoicetype.toLowerCase() != "tax invoice") {
+    if (formData.invoiceType.toLowerCase() != "tax invoice") {
       setFormData({
         ...formData,
         transport: "",
         placeOfSupply: "",
-        PONo: "",
-        vehicleNumber: "",
+        poNO: null,
+        vehicleNo: null,
       });
     }
-    if (formData.invoicetype.toLowerCase() == "quote invoice") {
+    if (formData.invoiceType.toLowerCase() == "quote invoice") {
       setFormData({
         ...formData,
-        ChequeNumber: "",
-        ChequeAmount: "",
-        BankName: "",
+        chequeNumber: "",
+        chequeAmount: null,
+        bankName: "",
         transport: "",
         placeOfSupply: "",
-        PONo: "",
-        vehicleNumber: "",
+        poNO: null,
+        vehicleNo: null,
       });
     }
-  }, [formData.invoicetype]);
+  }, []);
 
   //   Fetch invoice by id
   useEffect(() => {
@@ -341,53 +334,47 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
 
     fetchInvoiceById();
   }, [selectedId]);
-  console.log(selectedId);
-  console.log(invoiceData);
+
   useEffect(() => {
     // Assuming `data` is fetched or passed as a prop
-    setFormData({
-      ClientName: invoiceData.clientName || "",
-      ivoicedate: invoiceData.date || "",
-      Stateandcode: `${invoiceData.state}` || "",
-      taxtype: invoiceData.taxType || "",
-      invoicetype: invoiceData.invoiceType || "",
-      ChequeNumber: invoiceData.chequeNumber || "",
-      Chequedate: "", // Cheque date is not provided in the data
-      BankName: invoiceData.bankName || "",
-      ChequeAmount: invoiceData.chequeAmount || "",
-      Code: invoiceData.code || "",
-      email: invoiceData.client?.email || "",
-      address1: invoiceData.client?.addressLine1 || "",
-      address2: invoiceData.client?.addressLine2 || "",
-      address3: invoiceData.client?.addressLine3 || "",
-      city: invoiceData.client?.city || "",
-      pinCode: invoiceData.client?.pincode || "",
-      state: invoiceData.client?.state || "",
-      country: invoiceData.client?.country || "",
-      status: invoiceData.billingStatus || "",
-      transport: invoiceData.transport || "",
-      placeOfSupply: invoiceData.placeOfSupply || "",
-      PONo: invoiceData.poNO || "",
-      vehicleNumber: invoiceData.vehicleNo || "",
-      subTotal: invoiceData.subTotal || 0,
-      pfamount: invoiceData.pfAmount || 0,
-      roundOff: invoiceData.roundOff || 0,
-      tax: invoiceData.taxGST || 0,
-      total: invoiceData.totalAmount || 0,
-    });
-    setRows(
-      invoiceData?.productDetails?.map((product) => ({
-        id: product.id || "",
-        description: product.description || "",
-        HSNno: product.HSNno || "",
-        quantity: product.quantity || 0,
-        rate: product.rate || 0,
-        discount: product.discount || 0,
-        amount: product.amount || 0,
-      }))
-    );
+    if (invoiceData) {
+      setFormData({
+        clientName: invoiceData.clientName || "",
+        date: invoiceData.date || "",
+        state: invoiceData.state || "",
+        taxType: invoiceData.taxType || "",
+        invoiceType: invoiceData.invoiceType || "",
+        chequeNumber: invoiceData.chequeNumber || "",
+        chequeAmount: invoiceData.chequeAmount || null,
+        bankName: invoiceData.bankName || "",
+        code: invoiceData.code || 0,
+        billingStatus: invoiceData.billingStatus || "",
+        transport: invoiceData.transport || "",
+        placeOfSupply: invoiceData.placeOfSupply || "",
+        poNO: invoiceData.poNO || null,
+        vehicleNo: invoiceData.vehicleNo || null,
+        subTotal: invoiceData.subTotal || 0,
+        pfAmount: invoiceData.pfAmount || 0,
+        roundOff: invoiceData.roundOff || 0,
+        taxGST: invoiceData.taxGST || 0,
+        totalAmount: invoiceData.totalAmount || 0,
+        productDetails: invoiceData.productDetails || [],
+      });
+      setRows(
+        invoiceData.productDetails.map((product: ProductDetail) => ({
+          id: product.id || "",
+          description: product.description || "",
+          HSNno: product.HSNno.toString() || "",
+          quantity: product.quantity || 0,
+          rate: product.rate || 0,
+          discount: product.discount || 0,
+          amount: product.amount || 0,
+        }))
+      );
+    }
   }, [invoiceData]);
-  console.log(rows);
+
+  console.log(formData);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
@@ -416,8 +403,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                 inputBg=""
                 type="text"
                 placeholder="Enter Client name"
-                name="ClientName"
-                value={formData.ClientName}
+                name="clientName"
+                value={formData.clientName}
                 onChange={handleChange}
               />
 
@@ -427,8 +414,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                 inputBg=""
                 type="date"
                 placeholder="dd/mm/yyyy"
-                name="ivoicedate"
-                value={formData.ivoicedate}
+                name="date"
+                value={formData.date}
                 onChange={handleChange}
               />
               <div className=" flex gap-1">
@@ -441,8 +428,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                       type="text"
                       icon={ICONS.invoicesearch}
                       placeholder="Search"
-                      name="Stateandcode"
-                      value={formData.Stateandcode}
+                      name="state"
+                      value={formData.state}
                       onChange={handleChange}
                     />
                   </div>
@@ -468,8 +455,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="number"
                     placeholder="code"
-                    name="Code"
-                    value={formData.Code}
+                    name="code"
+                    value={formData.code}
                     onChange={handleChange}
                   />
                 </div>
@@ -494,8 +481,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     type="text"
                     icon={ICONS.downArrow2}
                     placeholder="Search"
-                    name="status"
-                    value={formData.status}
+                    name="billingStatus"
+                    value={formData.billingStatus}
                     onChange={handleChange}
                   />
                 </div>
@@ -513,48 +500,14 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                   </div>
                 )}
               </div>
-              {/* {formData.invoicetype == "Cheque Invoice" && (
-            <>
-              <InputField
-                label="Bank Name"
-                required={true}
-                inputBg=""
-                type="text"
-                placeholder="Enter bank name"
-                name="BankName"
-                value={formData.BankName}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Cheque Number"
-                required={true}
-                inputBg=""
-                type="number"
-                placeholder="Enter Cheque Number"
-                name="ChequeNumber"
-                value={formData.ChequeNumber}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Cheque Amount"
-                required={true}
-                inputBg=""
-                type="text"
-                placeholder="Enter amount"
-                name="ChequeAmount"
-                value={formData.ChequeAmount}
-                onChange={handleChange}
-              />
-            </>
-          )} */}
               <InputField
                 label="Tax Type"
                 required={true}
                 inputBg=""
                 type="text"
                 placeholder="Enter Tax type"
-                name="taxtype"
-                value={formData.taxtype}
+                name="taxType"
+                value={formData.taxType}
                 readOnly={true}
               />
 
@@ -567,8 +520,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     type="text"
                     icon={ICONS.downArrow2}
                     placeholder="Search"
-                    name="invoicetype"
-                    value={formData.invoicetype}
+                    name="invoiceType"
+                    value={formData.invoiceType}
                     onChange={handleChange}
                   />
                 </div>
@@ -586,7 +539,7 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                   </div>
                 )}
               </div>
-              {formData.invoicetype == "Cheque Invoice" && (
+              {formData.invoiceType.toLocaleLowerCase() == "cheque invoice" && (
                 <>
                   <InputField
                     label="Bank Name"
@@ -594,8 +547,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="text"
                     placeholder="Enter bank name"
-                    name="BankName"
-                    value={formData.BankName}
+                    name="bankName"
+                    value={formData.bankName}
                     onChange={handleChange}
                   />
                   <InputField
@@ -604,24 +557,24 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="string"
                     placeholder="Enter Cheque Number"
-                    name="ChequeNumber"
-                    value={formData.ChequeNumber}
+                    name="chequeNumber"
+                    value={formData.chequeNumber}
                     onChange={handleChange}
                   />
                   <InputField
                     label="Cheque Amount"
                     required={true}
                     inputBg=""
-                    type="number"
+                    type="string"
                     placeholder="Enter amount"
-                    name="ChequeAmount"
-                    value={formData.ChequeAmount}
+                    name="chequeAmount"
+                    value={formData.chequeAmount}
                     onChange={handleChange}
                   />
                 </>
               )}
 
-              {formData.invoicetype == "Tax Invoice" && (
+              {formData.invoiceType.toLowerCase() == "tax invoice" && (
                 <>
                   <InputField
                     label="Transport"
@@ -649,8 +602,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="number"
                     placeholder="Enter P.O.No"
-                    name="PONo"
-                    value={formData.PONo}
+                    name="poNo"
+                    value={formData.poNO}
                     onChange={handleChange}
                   />
                   <InputField
@@ -659,8 +612,8 @@ const UpdateModal = ({ editToggleModel, selectedId }) => {
                     inputBg=""
                     type="string"
                     placeholder=" Enter Vehicle Number"
-                    name="vehicleNumber"
-                    value={formData.vehicleNumber}
+                    name="vehicleNo"
+                    value={formData.vehicleNo}
                     onChange={handleChange}
                   />{" "}
                 </>

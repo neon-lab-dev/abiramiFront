@@ -4,13 +4,14 @@ import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
 import { convertNumberToWords, formatNumber } from "../../utils";
 import { createInvoices } from "../../api/api";
+import { useNavigate } from "react-router-dom";
 
 const CreateInvoice = () => {
+  const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [subTotal, setSubTotal] = useState<number>();
   const [pfPercent, setPfPercent] = useState<number>(10);
   const [pfamount, setPfamount] = useState<number>();
@@ -220,15 +221,6 @@ const CreateInvoice = () => {
       subTotal: subTotal,
       pfAmount: pfamount,
       roundOff: roundOff,
-
-      // chequedate: formData.Chequedate,
-      // email: formData.email,
-      // address1: formData.address1,
-      // address2: formData.address2,
-      // address3: formData.address3,
-      // city: formData.city,
-      // pinCode: formData.pinCode,
-      // country: formData.country,
       productDetails: rows,
     };
     console.log(data);
@@ -237,36 +229,12 @@ const CreateInvoice = () => {
       const response = await createInvoices(data);
       console.log("Invoice created successfully:", response.data);
       alert("Invoice created successfully!");
-      // setFormData({
-      //   ClientName: "",
-      //   ivoicedate: "",
-      //   Stateandcode: "",
-      //   taxtype: "",
-      //   invoicetype: "",
-      //   ChequeNumber: "",
-      //   Chequedate: "",
-      //   BankName: "",
-      //   ChequeAmount: "",
-      //   Code: "",
-      //   email: "",
-      //   address1: "",
-      //   address2: "",
-      //   address3: "",
-      //   city: "",
-      //   pinCode: "",
-      //   state: "",
-      //   country: "",
-      //   status: "",
-      //   transport: "",
-      //   placeOfSupply: "",
-      //   PONo: "",
-      //   vehicleNumber: "",
-      // });
     } catch (error) {
       console.error("Error creating invoice:", error);
       alert("Failed to create invoice. Please try again.");
     } finally {
       setIsSubmitting(false);
+      navigate("/invoices");
     }
   };
 

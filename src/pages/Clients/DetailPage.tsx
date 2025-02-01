@@ -5,16 +5,20 @@ import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import DashboardTable from "../../Components/Dashboard/DashboardTable";
 import { useNavigate, useParams } from "react-router-dom";
 import { deleteClient, getClientById, updateClient } from "../../api/api";
-import { formatDateWithOrdinal } from "../../utils";
+import { formatDateWithOrdinal, formatNumber } from "../../utils";
 import Loader from "../../lib/loader";
-import UpdateModal from "./UpdateModal";
+import UpdateModal from "../Invoices/UpdateModal";
+import UpdateClientModal from "./UpdateModal";
 import CreateModel from "../Invoices/CreateModel";
 
 const DetailPage = () => {
   const { id } = useParams();
+  const [selectedId, setSelectedId] = useState<string>("");
+  const [selectedClientId, setSelectedClientId] = useState<string>("");
   const [client, setClient] = useState({});
   const [invoiceData, setInvoiceData] = useState([]);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isClientEditModalOpen, setClientEditModalOpen] = useState(false);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -36,11 +40,16 @@ const DetailPage = () => {
     country: "",
     status: "",
   });
-  console.log(invoiceData);
   const [loading, setLoading] = useState(false);
 
-  const editToggleModel = () => {
+  const editToggleModel = (id: string) => {
     setEditModalOpen(!isEditModalOpen);
+    setSelectedId(id);
+  };
+
+  const editToggleClientModel = (id: string) => {
+    setClientEditModalOpen(!isClientEditModalOpen);
+    setSelectedClientId(id);
   };
 
   const createToggleModel = () => {
@@ -116,7 +125,7 @@ const DetailPage = () => {
                 imgSrc={ICONS.clientediticon}
                 color="bg-secondary-155 text-[14px] text-black"
                 iconClassName=" "
-                onClick={editToggleModel}
+                onClick={editToggleClientModel}
               />
               <Button
                 text="Delete"
@@ -219,7 +228,7 @@ const DetailPage = () => {
                     Total Income
                   </span>
                   <span className="font-inter text-[12px] font-normal leading-[18px] ">
-                    ₹ {invoiceData?.totalIncome}
+                    ₹ {formatNumber(invoiceData?.totalIncome)}
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -264,11 +273,18 @@ const DetailPage = () => {
                 icon={ICONS.clienticon3}
               />
             </div>
-            <DashboardTable invoice={client.invoice} />
+            <DashboardTable
+              invoices={client.invoice}
+              editToggleModel={editToggleModel}
+              handleDelete={handleDelete}
+            />
           </div>
           {/* Modal Overlay */}
           {isEditModalOpen && (
-            <UpdateModal editToggleModel={editToggleModel} selectedId={id} />
+            <UpdateModal
+              editToggleModel={editToggleModel}
+              selectedId={selectedId}
+            />
           )}
 
           {isCreateModalOpen && (
@@ -276,6 +292,13 @@ const DetailPage = () => {
               createToggleModel={createToggleModel}
               selectedId={id}
               clientName={client.companyName}
+            />
+          )}
+
+          {isClientEditModalOpen && (
+            <UpdateClientModal
+              editToggleModel={editToggleClientModel}
+              selectedId={id}
             />
           )}
         </>

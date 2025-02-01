@@ -3,7 +3,11 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
 import { convertNumberToWords, formatNumber } from "../../utils";
-import { createInvoices, createInvoicesByClientName } from "../../api/api";
+import {
+  createInvoices,
+  createInvoicesByClientName,
+  getClientById,
+} from "../../api/api";
 import { useNavigate } from "react-router-dom";
 
 const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
@@ -19,7 +23,7 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
   const [tax, setTax] = useState<number>();
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
-
+  const [loading, setLoading] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState({
@@ -62,7 +66,6 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
       amount: null,
     },
   ]);
-
   const addRow = () => {
     setRows([
       ...rows,
@@ -76,17 +79,14 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
       },
     ]);
   };
-
   const removeRow = (index) => {
     setRows(rows.filter((_, idx) => idx !== index));
   };
-
   // const handleInputChange = (index, field, value) => {
   //   const updatedRows = [...rows];
   //   updatedRows[index][field] = value;
   //   setRows(updatedRows);
   // };
-
   const handleInputChange = (index: number, field: string, value: number) => {
     const updatedRows = [...rows];
     if (["quantity", "rate", "discount", "amount"].includes(field)) {
@@ -106,7 +106,6 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
     console.log(updatedRows);
     setRows(updatedRows);
   };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -116,7 +115,6 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
       [name]: value,
     }));
   };
-
   const states = [
     { name: "Jammu and Kashmir", code: "01" },
     { name: "Himachal Pradesh", code: "02" },
@@ -158,7 +156,6 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
     { name: "Other Territory", code: "97" },
     { name: "Centre Jurisdiction", code: "99" },
   ];
-
   const invoice = [
     { name: "Cash Invoice" },
     { name: "Cheque Invoice" },
@@ -176,7 +173,6 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
       status: "Draft/Performa Invoice",
     },
   ];
-
   const handleStateSelect = (stateName: string, stateCode: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -200,7 +196,6 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
     }));
     setShowDropdown1(false);
   };
-
   const handleSubmit = async () => {
     const data = {
       // clientName: formData.ClientName,
@@ -222,18 +217,9 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
       subTotal: subTotal,
       pfAmount: pfamount,
       roundOff: roundOff,
-
-      // chequedate: formData.Chequedate,
-      // email: formData.email,
-      // address1: formData.address1,
-      // address2: formData.address2,
-      // address3: formData.address3,
-      // city: formData.city,
-      // pinCode: formData.pinCode,
-      // country: formData.country,
       productDetails: rows,
     };
-    console.log(data);
+    setLoading(true);
     setIsSubmitting(true);
     try {
       const response = await createInvoicesByClientName(data, clientName);
@@ -244,6 +230,7 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
       alert("Failed to create invoice. Please try again.");
     } finally {
       setIsSubmitting(false);
+      setLoading(false);
       navigate(0);
     }
   };
@@ -346,8 +333,9 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
             type="text"
             placeholder="Enter Client name"
             name="ClientName"
-            value={formData.ClientName}
+            value={clientName}
             onChange={handleChange}
+            readOnly
           />
 
           <InputField

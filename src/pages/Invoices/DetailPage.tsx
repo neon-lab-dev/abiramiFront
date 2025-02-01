@@ -6,22 +6,20 @@ import { useNavigate } from "react-router-dom";
 
 const DetailPage = () => {
   const [isOpen, setIsOpen] = useState(false);
-  
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
-
   const options = [
     "Original for Recipient",
     "Duplicate for Transporter",
     "Triplicate for Supplier",
-    "Extra Copy"
+    "Extra Copy",
   ];
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const navigate = useNavigate();
-  const handleOptionSelect = (option:string) => {
+  const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
-    setIsOpen(false); // Close dropdown
+    setIsOpen(false);
   };
   const handlenavigatetocreateinvoices = () => {
     navigate("/Invoices/CreateInvoices");
@@ -35,8 +33,6 @@ const DetailPage = () => {
     "Discount",
     "Amount",
   ];
- 
-
   const rows = [
     {
       id: 1,
@@ -58,7 +54,6 @@ const DetailPage = () => {
     },
     // Add more rows as needed
   ];
-
   return (
     <div>
       <div className="flex justify-between mb-[22px] ">
@@ -161,48 +156,45 @@ const DetailPage = () => {
         </div>
       </div>
 
-    <div className="bg-secondary-60 opacity-75 w-full p-6 flex flex-col rounded-2xl my-[22px]">
-      <span className="font-Inter font-[600] text-sm">Item Description</span>
+      <div className="bg-secondary-60 opacity-75 w-full p-6 flex flex-col rounded-2xl my-[22px]">
+        <span className="font-Inter font-[600] text-sm">Item Description</span>
 
-      {/* Scrollable Table Container */}
-      <div className="overflow-x-auto">
-        <table className="w-full mt-4 border-collapse overflow-x-auto">
-          {/* Table Header */}
-          <thead className="opacity-[0.6]">
-            <tr>
-              {tableHeaders.map((header, index) => (
-                <th
-                  key={index}
-                  className="px-4 py-3 text-left text-sm font-normal"
-                >
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-
-          {/* Table Body */}
-          <tbody>
-            {rows.map((row) => (
-              <tr
-                key={row.id}
-                className="bg-white rounded-[16px] "
-              >
-                <td className="px-4 py-3 text-sm font-normal">{row.id}</td>
-                <td className="px-4 py-3 text-sm font-normal">
-                  {row.description}
-                </td>
-                <td className="px-4 py-3 text-sm font-normal">{row.code}</td>
-                <td className="px-4 py-3 text-sm font-normal">
-                  {row.quantity}
-                </td>
-                <td className="px-4 py-3 text-sm font-normal">{row.rate}</td>
-                <td className="px-4 py-3 text-sm font-normal">{row.tax}</td>
-                <td className="px-4 py-3 text-sm font-normal">{row.total}</td>
+        {/* Scrollable Table Container */}
+        <div className="overflow-x-auto">
+          <table className="w-full mt-4 border-collapse overflow-x-auto">
+            {/* Table Header */}
+            <thead className="opacity-[0.6]">
+              <tr>
+                {tableHeaders.map((header, index) => (
+                  <th
+                    key={index}
+                    className="px-4 py-3 text-left text-sm font-normal"
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            {/* Table Body */}
+            <tbody>
+              {rows.map((row) => (
+                <tr key={row.id} className="bg-white rounded-[16px] ">
+                  <td className="px-4 py-3 text-sm font-normal">{row.id}</td>
+                  <td className="px-4 py-3 text-sm font-normal">
+                    {row.description}
+                  </td>
+                  <td className="px-4 py-3 text-sm font-normal">{row.code}</td>
+                  <td className="px-4 py-3 text-sm font-normal">
+                    {row.quantity}
+                  </td>
+                  <td className="px-4 py-3 text-sm font-normal">{row.rate}</td>
+                  <td className="px-4 py-3 text-sm font-normal">{row.tax}</td>
+                  <td className="px-4 py-3 text-sm font-normal">{row.total}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <div className="flex mt-[24px] gap-6 max-md:flex-col-reverse">
           <div className="flex  justify-end items-end w-[100%] max-md:justify-start">
@@ -266,36 +258,42 @@ const DetailPage = () => {
         </div>
       </div>
 
-      <div className={`flex gap-4 justify-end py-[22px]  sticky   bg-white z-10 ${isOpen?" h-56 bottom-4 ":"bottom-0"}  `}>
-      <div className="relative">
-      {/* Dropdown Button */}
-      <button
-        id="dropdownButton"
-        type="button"
-        className="flex gap-2 justify-center items-center py-2 pr-4 pl-2 border border-secondary-145 rounded-xl text-[16px] font-normal leading-6"
-        onClick={handleToggle}
+      <div
+        className={`flex gap-4 justify-end py-[22px]  sticky   bg-white z-10 ${
+          isOpen ? " h-56 bottom-4 " : "bottom-0"
+        }  `}
       >
-        <span className="w-[186px]">{selectedOption}</span>
-        <img src={ICONS.invoicedropdown} alt="dropdown" />
-      </button>
+        <div className="relative">
+          {/* Dropdown Button */}
+          <button
+            id="dropdownButton"
+            type="button"
+            className="flex gap-2 justify-center items-center py-2 pr-4 pl-2 border border-secondary-145 rounded-xl text-[16px] font-normal leading-6"
+            onClick={handleToggle}
+          >
+            <span className="w-[186px]">{selectedOption}</span>
+            <img src={ICONS.invoicedropdown} alt="dropdown" />
+          </button>
 
-      {/* Dropdown Menu */}
-      {isOpen && (
-        <div className="absolute mt-2 w-full bg-white border border-secondary-145 rounded-xl shadow-lg z-10">
-          {options.map((option, index) => (
-            <button
-              key={index}
-              className={`block w-full text-left px-4 py-2 text-[16px] font-normal hover:bg-secondary-60 rounded-xl ${
-                option === selectedOption ? "bg-secondary-60 font-semibold" : ""
-              }`}
-              onClick={() => handleOptionSelect(option)}
-            >
-              {option}
-            </button>
-          ))}
+          {/* Dropdown Menu */}
+          {isOpen && (
+            <div className="absolute mt-2 w-full bg-white border border-secondary-145 rounded-xl shadow-lg z-10">
+              {options.map((option, index) => (
+                <button
+                  key={index}
+                  className={`block w-full text-left px-4 py-2 text-[16px] font-normal hover:bg-secondary-60 rounded-xl ${
+                    option === selectedOption
+                      ? "bg-secondary-60 font-semibold"
+                      : ""
+                  }`}
+                  onClick={() => handleOptionSelect(option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-      )}
-    </div>
         <Button
           text="Print"
           color="bg-secondary-125 text-[14px] text-white text-xs h-10"
