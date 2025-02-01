@@ -1,12 +1,21 @@
+import axios from "axios";
 import axiosInstance from "./axios";
+import { API_BASE_URL } from "../config";
+import Cookies from "js-cookie";
 
-export const login = async (email: string, password: string) => {
+export const login = async (data: { email: string; password: string }) => {
   try {
-    const response = await axiosInstance.post("/admin/login", {
-      email,
-      password,
+    const response = await axios.post(`${API_BASE_URL}/admin/login`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
     });
-    return response.data;
+    if (response.status === 200) {
+      const token = response.data.token;
+      Cookies.set("token", token);
+      return response.data;
+    }
   } catch (error) {
     console.error("Login error:", error);
     throw error;
@@ -28,6 +37,17 @@ export const signup = async (
     return response.data;
   } catch (error) {
     console.error("Signup error:", error);
+    throw error;
+  }
+};
+
+//Dashboard APIs
+export const getDashboardData = async () => {
+  try {
+    const response = await axiosInstance.get("/dashboard");
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
     throw error;
   }
 };
@@ -60,7 +80,7 @@ export const getClientById = async (id: string) => {
     throw error;
   }
 };
-export const searchClient = async (query) => {
+export const searchClient = async (query: string) => {
   try {
     const response = await axiosInstance.get(`/clients/search`, {
       params: query,

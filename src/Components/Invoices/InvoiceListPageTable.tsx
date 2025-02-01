@@ -1,23 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
 import DownloadButton from "../Shared/Table/DownloadExcelBtn";
 import Button from "../Shared/Button/Button";
+import { formatNumber } from "chart.js/helpers";
+import { Invoice } from "../../types/client";
 
 // Define a type for the row data
-interface Invoice {
-  invoice_id: string;
-  invoice_status: "PAID" | "PENDING" | "DRAFT";
-  client: string;
-  invoice_type: "Cheque Invoice" | "Quote Invoice" | "Tax invoice";
-  total_amount: number;
-  tax: number;
-  created_date: Date;
-  i1: boolean;
-  i2: boolean;
-  i3: boolean;
-  iconsOrder: string[];
-}
+// interface Invoice {
+//   invoice_id: string;
+//   invoice_status: "PAID" | "PENDING" | "DRAFT";
+//   client: string;
+//   invoice_type: "Cheque Invoice" | "Quote Invoice" | "Tax invoice";
+//   total_amount: number;
+//   tax: number;
+//   created_date: Date;
+//   i1: boolean;
+//   i2: boolean;
+//   i3: boolean;
+//   iconsOrder: string[];
+// }
 
 const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   const [dropdownOpen1, setDropdownOpen1] = useState(false);
@@ -25,31 +27,24 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [typeFilter, setTypeFilter] = useState<string>("");
 
-  const removeFilter = () => {
-    setStatusFilter("");
-    setTypeFilter("");
-  };
-
-  console.log(invoices);
-
   const formatCurrency = (value: number) => {
-    return `₹ ${value}`;
+    return `₹ ${value?.toLocaleString()}`;
   };
 
   const icons = {
     i1: ICONS.blueTick,
-    i2: ICONS.editBlack,
+    i2: ICONS.greenCross,
     i3: ICONS.deleteRed,
   };
 
-  // const data: Invoice[] = [
+  // const data: Dashboard[] = [
   //   {
   //     invoice_id: "kjsdgnbj",
   //     invoice_status: "PAID",
   //     client: "ljadbvilhb4jh345kj4n",
   //     invoice_type: "Cheque Invoice",
   //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
+  //     created_date: new Date(2024, 4, 10),
   //     tax: 985735689,
   //     i1: true,
   //     i2: true,
@@ -62,7 +57,7 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   //     client: "ljadbvilhb4jh345kj4n",
   //     invoice_type: "Cheque Invoice",
   //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
+  //     created_date: new Date(2024, 3, 10),
   //     tax: 985735689,
   //     i1: true,
   //     i2: true,
@@ -75,7 +70,7 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   //     client: "ljadbvilhb4jh345kj4n",
   //     invoice_type: "Quote Invoice",
   //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
+  //     created_date: new Date(2024, 1, 10),
   //     tax: 985735689,
   //     i1: true,
   //     i2: true,
@@ -88,7 +83,7 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   //     client: "ljadbvilhb4jh345kj4n",
   //     invoice_type: "Cheque Invoice",
   //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
+  //     created_date: new Date(2024, 8, 10),
   //     tax: 985735689,
   //     i1: true,
   //     i2: true,
@@ -114,7 +109,7 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   //     client: "ljadbvilhb4jh345kj4n",
   //     invoice_type: "Tax invoice",
   //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
+  //     created_date: new Date(2024, 6, 10),
   //     tax: 985735689,
   //     i1: true,
   //     i2: true,
@@ -127,7 +122,7 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   //     client: "ljadbvilhb4jh345kj4n",
   //     invoice_type: "Quote Invoice",
   //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
+  //     created_date: new Date(2024, 4, 10),
   //     tax: 985735689,
   //     i1: true,
   //     i2: true,
@@ -140,7 +135,7 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   //     client: "ljadbvilhb4jh345kj4n",
   //     invoice_type: "Tax invoice",
   //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
+  //     created_date: new Date(2024, 3, 10),
   //     tax: 985735689,
   //     i1: true,
   //     i2: true,
@@ -153,7 +148,7 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   //     client: "ljadbvilhb4jh345kj4n",
   //     invoice_type: "Tax invoice",
   //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
+  //     created_date: new Date(2024, 9, 10),
   //     tax: 985735689,
   //     i1: true,
   //     i2: true,
@@ -201,12 +196,12 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   //     iconsOrder: ["i1", "i2", "i3"],
   //   },
   // ];
-  const [sortedData, setSortedData] = useState(invoices); // Initial data array
 
+  const [sortedData, setSortedData] = useState(invoices);
   const handleSort = (data: Invoice[], order: "asc" | "desc"): void => {
     const sorted = [...sortedData].sort((a, b) => {
-      const dateA = new Date(a.created_date);
-      const dateB = new Date(b.created_date);
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
 
       if (order === "asc") {
         return dateA.getTime() - dateB.getTime(); // Convert dates to timestamps
@@ -224,7 +219,7 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
       header: "Invoice Id",
       accessor: "id",
       cellClassName: " text-blue-20 ",
-      width: "430px",
+      width: "300px",
     },
     {
       header: (
@@ -265,7 +260,7 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
               </button>
               <button
                 onClick={() => {
-                  setStatusFilter("DRAFT");
+                  setStatusFilter("DRAFT/PERFORMA INVOICE");
                   setDropdownOpen1(false);
                 }}
                 className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
@@ -283,20 +278,27 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
       accessor: "billingStatus",
       cellRenderer: (row: Invoice) => {
         let statusClass = "";
+        console.log(
+          row.billingStatus.toUpperCase() === "DRAFT/PERFORMA INVOICE"
+        );
 
         // Conditional coloring based on invoice_status
-        if (row.billingStatus === "PAID") {
+        if (row.billingStatus.toUpperCase() === "PAID") {
           statusClass =
             "text-neutral-90 bg-neutral-50 h-[28px] py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Green for PAID
-        } else if (row.billingStatus === "PENDING") {
+        } else if (row.billingStatus.toUpperCase() === "PENDING") {
           statusClass =
             "text-yellow-500 bg-secondary-35 h-[28px]  py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Yellow for PENDING (PENDING)
-        } else if (row.billingStatus === "DRAFT") {
+        } else if (
+          row.billingStatus.toUpperCase() === "DRAFT/PERFORMA INVOICE"
+        ) {
           statusClass =
             "text-gray-500  font-sans text-[12px] font-normal leading-[20px] text-left"; // Gray for DRAFT
         }
 
-        return <span className={statusClass}>{row.billingStatus}</span>;
+        return (
+          <span className={statusClass}>{row.billingStatus.toUpperCase()}</span>
+        );
       },
       width: "112px",
     },
@@ -305,7 +307,6 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
       header: "Client",
       accessor: "clientName",
       cellClassName: "text-black",
-      icon1: ICONS.search,
       width: "200px",
     },
     {
@@ -321,12 +322,12 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
             <div className="absolute bg-white mt-1 z-50 rounded-[6px] shadow-dropdown">
               <button
                 onClick={() => {
-                  setTypeFilter("Cash Invoice");
+                  setTypeFilter("cash invoice");
                   setDropdownOpen2(false);
                 }}
-                className={`block w-full text-left p-2  hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
-                  typeFilter === "Cheque Invoice"
-                    ? "text-white bg-customBlue-20"
+                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                  typeFilter === "cash invoice"
+                    ? "text-white bg-blue-500"
                     : "text-neutral-100"
                 }`}
               >
@@ -334,12 +335,12 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
               </button>
               <button
                 onClick={() => {
-                  setTypeFilter("Cheque Invoice");
+                  setTypeFilter("cheque invoice");
                   setDropdownOpen2(false);
                 }}
-                className={`block w-full text-left p-2  hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
-                  typeFilter === "Cheque Invoice"
-                    ? "text-white bg-customBlue-20"
+                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                  typeFilter === "cheque invoice"
+                    ? "text-white bg-blue-500"
                     : "text-neutral-100"
                 }`}
               >
@@ -347,12 +348,12 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
               </button>
               <button
                 onClick={() => {
-                  setTypeFilter("Quote Invoice");
+                  setTypeFilter("quote invoice");
                   setDropdownOpen2(false);
                 }}
-                className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
-                  typeFilter === "Quote Invoice"
-                    ? "text-white bg-customBlue-20"
+                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                  typeFilter === "quote invoice"
+                    ? "text-white bg-blue-500"
                     : "text-neutral-100"
                 }`}
               >
@@ -360,12 +361,12 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
               </button>
               <button
                 onClick={() => {
-                  setTypeFilter("Tax invoice");
+                  setTypeFilter("tax invoice");
                   setDropdownOpen2(false);
                 }}
-                className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
-                  typeFilter === "Tax invoice"
-                    ? "text-white bg-customBlue-20"
+                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                  typeFilter === "tax invoice"
+                    ? "text-white bg-blue-500"
                     : "text-neutral-100"
                 }`}
               >
@@ -378,23 +379,26 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
 
       accessor: "invoiceType",
       cellClassName: "text-black",
-      width: "175px",
+      width: "141px",
     },
     {
       header: "Total Amount",
       accessor: "totalAmount",
       cellRenderer: (row: Invoice) => {
-        return <span className="text-black">{row.totalAmount}</span>;
+        return (
+          <span className="text-black">₹ {formatNumber(row.totalAmount)}</span>
+        );
       },
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
-      width: "175px",
+      width: "141px",
     },
     {
       header: "Tax",
-      accessor: "tax",
+      accessor: "taxGST",
       cellRenderer: (row: Invoice) => {
-        return <span className="text-black">{formatCurrency(row.tax)}</span>;
+        // console.log(row.tax);
+        return <span className="text-black">₹ {formatNumber(row.taxGST)}</span>;
       },
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
@@ -404,6 +408,7 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
     {
       header: "Created Date",
       accessor: "createdAt",
+      type: "date",
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
       format: (value: Date) =>
@@ -412,19 +417,31 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
           day: "numeric",
           year: "numeric",
         }),
+      // icon1: ICONS.downArrow,
+      // onIcon1Click: () => handleSort(data, "asc"),
       icon2: ICONS.downArrow2,
       icon1: ICONS.upArrow,
-      width: "175px",
-      onIcon1Click: () => handleSort(invoices, "asc"),
-      onIcon2Click: () => handleSort(invoices, "desc"),
+      width: "143px",
+      onIcon1Click: () => handleSort(data, "asc"),
+      onIcon2Click: () => handleSort(data, "desc"),
+      // width: "141px",
     },
   ];
-
-  const filteredData = invoices?.filter(
-    (invoice) =>
-      (statusFilter === "" || invoice.invoice_status === statusFilter) &&
-      (typeFilter === "" || invoice.invoice_type === typeFilter)
+  const filteredData = sortedData?.filter(
+    (invoice: Invoice) =>
+      (statusFilter === "" ||
+        invoice.billingStatus.toLowerCase() === statusFilter.toLowerCase()) &&
+      (typeFilter === "" ||
+        invoice.invoiceType.toLowerCase() === typeFilter.toLowerCase())
   );
+  useEffect(() => {
+    console.log(typeFilter);
+  }, [typeFilter]);
+
+  const removeFilter = () => {
+    setTypeFilter("");
+    setStatusFilter("");
+  };
 
   return (
     <div>
@@ -432,15 +449,15 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
         data={filteredData}
         columns={columns}
         tableName="Recent Invoice"
-        showViewAll={false}
-        enablePagination={false}
-        rowsPerPage={5}
+        showViewAll={true}
+        enablePagination={true}
+        rowsPerPage={10}
         icons={icons}
         bg_i1="bg-customBlue-10"
-        bg_i2="bg-neutral-65"
+        bg_i2="bg-sucess-20"
         bg_i3="bg-primary-40"
-        editToggleModel={editToggleModel}
         handleDelete={handleDelete}
+        editToggleModel={editToggleModel}
       />
       <div className=" flex justify-between">
         <div className="flex justify-between md:gap-4 gap-3">

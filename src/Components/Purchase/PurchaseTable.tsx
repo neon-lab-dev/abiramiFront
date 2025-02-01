@@ -206,13 +206,13 @@ const PurchaseTable = ({
       accessor: "companyName",
       cellClassName: " text-neutral-25 ",
       icon1: ICONS.search,
-      width: "250px",
+      width: "270px",
     },
     {
       header: "Invoice Number",
       accessor: "invoiceNumber",
       cellClassName: "text-black",
-      width: "160px",
+      width: "200px",
     },
     {
       header: "GST",
@@ -257,7 +257,7 @@ const PurchaseTable = ({
     {
       header: "Status",
       accessor: "status",
-      width: "112px",
+      width: "130px",
     },
   ];
 

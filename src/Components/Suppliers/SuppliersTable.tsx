@@ -17,17 +17,20 @@ const SuppliersTable = ({ suppliers, editToggleModel, handleDelete }) => {
       accessor: "companyName",
       cellClassName: "text-black",
       navigate: false,
+      width: "200px",
     },
     {
       header: "Title/Item",
       accessor: "title",
       cellClassName: "text-black",
+      width: "200px",
     },
     {
       header: "GST",
       accessor: "GST",
       cellClassName: "text-black",
       icon1: ICONS.search,
+      width: "140px",
     },
     {
       header: "Mobile No.",
@@ -35,11 +38,13 @@ const SuppliersTable = ({ suppliers, editToggleModel, handleDelete }) => {
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
       icon1: ICONS.search,
+      width: "140px",
     },
     {
       header: "Address",
       accessor: "addressLine1",
       cellClassName: "text-black",
+      width: "200px",
     },
     {
       header: "Created Date",
@@ -53,10 +58,12 @@ const SuppliersTable = ({ suppliers, editToggleModel, handleDelete }) => {
           day: "numeric",
           year: "numeric",
         }),
+      width: "160px",
     },
     {
       header: "Status",
       accessor: "status",
+      width: "200px",
     },
   ];
 

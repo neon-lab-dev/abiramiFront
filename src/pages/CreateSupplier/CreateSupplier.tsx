@@ -1,88 +1,60 @@
 import { useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
-import axiosInstance from "../../api/axios";
 import { createSupplier } from "../../api/api";
-import { Navigate, useNavigate } from "react-router-dom";
-import { isObject } from "chart.js/helpers";
-import { isObjectEmpty } from "../../utils";
+import { useNavigate } from "react-router-dom";
+import { SupplierRequest } from "../../types/supplier";
 
 const CreateSupplier = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SupplierRequest>({
     companyName: "",
     title: "",
-    gstNumber: "",
-    mobileNumber: "",
-    landlineNumber: "",
+    GST: "",
+    mobileNum: "",
+    landLineNum: "",
     email: "",
-    address1: "",
-    address2: "",
-    address3: "",
+    addressLine1: "",
+    addressLine2: "",
+    addressLine3: "",
     city: "",
-    pinCode: "",
+    pincode: null as number | null,
     state: "",
     country: "",
-    status: "active",
+    status: "ACTIVE",
   });
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: name === "pincode" ? Number(value) : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = {
-      companyName: formData.companyName,
-      title: formData.title,
-      GST: formData.gstNumber,
-      mobileNum: formData.mobileNumber,
-      landLineNum: formData.landlineNumber,
-      email: formData.email,
-      addressLine1: formData.address1,
-      addressLine2: formData.address2,
-      addressLine3: formData.address3,
-      city: formData.city,
-      pincode: parseInt(formData.pinCode),
-      state: formData.state,
-      country: formData.country,
-      status: formData.status,
+      ...formData,
     };
-
-    // if (isObjectEmpty(data)) {
-    //   alert("Please fill all the fields");
-    //   return;
-    // }
 
     setIsSubmitting(true);
     try {
       const response = await createSupplier(data);
       console.log("Supplier created successfully:", response.data);
       alert("Supplier created successfully!");
-      setFormData({
-        companyName: "",
-        title: "",
-        gstNumber: "",
-        mobileNumber: "",
-        landlineNumber: "",
-        email: "",
-        address1: "",
-        address2: "",
-        address3: "",
-        city: "",
-        pinCode: "",
-        state: "",
-        country: "",
-        status: "active",
-      });
     } catch (error) {
-      console.error("Error creating supplier:", error);
-      alert("Failed to create supplier. Please try again." + error?.message);
+      if (error.response && error.response.status === 400) {
+        alert(
+          "Failed to create client. Please ensure all required fields are filled."
+        );
+      } else {
+        console.error("Error creating client:", error);
+        alert("Failed to create client. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
       navigate("/suppliers");
@@ -93,18 +65,18 @@ const CreateSupplier = () => {
     setFormData({
       companyName: "",
       title: "",
-      gstNumber: "",
-      mobileNumber: "",
-      landlineNumber: "",
+      GST: "",
+      mobileNum: "",
+      landLineNum: "",
       email: "",
-      address1: "",
-      address2: "",
-      address3: "",
+      addressLine1: "",
+      addressLine2: "",
+      addressLine3: "",
       city: "",
-      pinCode: "",
+      pincode: null,
       state: "",
       country: "",
-      status: "active",
+      status: "ACTIVE",
     });
   };
 
@@ -143,8 +115,8 @@ const CreateSupplier = () => {
             inputBg=""
             type="text"
             placeholder="Enter the GST number"
-            name="gstNumber"
-            value={formData.gstNumber}
+            name="GST"
+            value={formData.GST}
             onChange={handleChange}
           />
         </div>
@@ -160,8 +132,8 @@ const CreateSupplier = () => {
             inputBg=""
             type="text"
             placeholder="Enter mobile number"
-            name="mobileNumber"
-            value={formData.mobileNumber}
+            name="mobileNum"
+            value={formData.mobileNum}
             onChange={handleChange}
           />
 
@@ -170,8 +142,8 @@ const CreateSupplier = () => {
             inputBg=""
             type="text"
             placeholder="Enter landline number"
-            name="landlineNumber"
-            value={formData.landlineNumber}
+            name="landLineNum"
+            value={formData.landLineNum}
             onChange={handleChange}
           />
 
@@ -197,8 +169,8 @@ const CreateSupplier = () => {
             inputBg=""
             type="text"
             placeholder="Enter Door Number or building number"
-            name="address1"
-            value={formData.address1}
+            name="addressLine1"
+            value={formData.addressLine1}
             onChange={handleChange}
           />
 
@@ -207,8 +179,8 @@ const CreateSupplier = () => {
             inputBg=""
             type="text"
             placeholder="Enter apartment name or building name"
-            name="address2"
-            value={formData.address2}
+            name="addressLine2"
+            value={formData.addressLine2}
             onChange={handleChange}
           />
 
@@ -217,8 +189,8 @@ const CreateSupplier = () => {
             inputBg=""
             type="text"
             placeholder="Enter locality or street"
-            name="address3"
-            value={formData.address3}
+            name="addressLine3"
+            value={formData.addressLine3}
             onChange={handleChange}
           />
 
@@ -233,12 +205,12 @@ const CreateSupplier = () => {
           />
 
           <InputField
-            label="pinCode"
+            label="Pincode"
             inputBg=""
-            type="text"
-            placeholder="Enter pinCode"
-            name="pinCode"
-            value={formData.pinCode}
+            type="number"
+            placeholder="Enter pincode"
+            name="pincode"
+            value={formData.pincode}
             onChange={handleChange}
           />
 
@@ -271,8 +243,8 @@ const CreateSupplier = () => {
               <input
                 type="radio"
                 name="status"
-                value="active"
-                checked={formData.status === "active"}
+                value="ACTIVE"
+                checked={formData.status.trim().toLowerCase() === "active"}
                 onChange={handleChange}
               />
               <span className="ml-2">Active</span>
@@ -281,8 +253,8 @@ const CreateSupplier = () => {
               <input
                 type="radio"
                 name="status"
-                value="inactive"
-                checked={formData.status === "inactive"}
+                value="INACTIVE"
+                checked={formData.status.trim().toLowerCase() === "inactive"}
                 onChange={handleChange}
               />
               <span className="ml-2">Inactive</span>

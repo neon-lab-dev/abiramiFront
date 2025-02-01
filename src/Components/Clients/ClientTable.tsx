@@ -213,8 +213,6 @@ const ClientTable = ({
     setSortedData(clients.data);
   }, [clients]);
 
-  console.log(sortedData);
-
   const columns = [
     {
       header: "Company Name",

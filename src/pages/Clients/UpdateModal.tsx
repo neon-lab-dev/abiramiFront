@@ -14,6 +14,7 @@ const UpdateModal = ({
   editToggleModel: () => void;
   selectedId: string;
 }) => {
+  console.log(selectedId);
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<CreateClient>({
@@ -37,10 +38,9 @@ const UpdateModal = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: name === "pincode" ? Number(value) : value,
     }));
   };
   const handleUpdate = async () => {
@@ -67,8 +67,14 @@ const UpdateModal = ({
       alert("Client updated successfully!");
       clearForm();
     } catch (error) {
-      console.error("Error updating client:", error);
-      alert("Failed to update client. Please try again.");
+      if (error.response && error.response.status === 400) {
+        alert(
+          "Failed to create client. Please ensure all required fields are filled."
+        );
+      } else {
+        console.error("Error creating client:", error);
+        alert("Failed to create client. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
       navigate(0);
@@ -176,7 +182,7 @@ const UpdateModal = ({
                     label="GST Number"
                     required={true}
                     inputBg=""
-                    type="number"
+                    type="string"
                     placeholder="Enter the GST number"
                     name="GST"
                     value={formData.GST}

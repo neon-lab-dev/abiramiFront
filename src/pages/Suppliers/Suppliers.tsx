@@ -47,7 +47,6 @@ export default function Suppliers() {
       console.log("Item deleted!", response);
       if (response.status === 200) {
         alert("Supplier deleted Successfully!!!");
-        setLoading(false);
         navigate(0);
       }
     } else {

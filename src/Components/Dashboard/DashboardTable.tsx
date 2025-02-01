@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
 import { formatNumber } from "../../utils";
+import { Invoice } from "../../types/client";
 
 // Define a type for the row data
 interface Dashboard {
@@ -16,9 +17,19 @@ interface Dashboard {
   i2: boolean;
   i3: boolean;
   iconsOrder: string[];
+  editToggleModel: () => void;
+  handleDelete: () => void;
 }
 
-const DashboardTable = ({ invoice, editToggleModel, handleDelete }) => {
+const DashboardTable = ({
+  invoices,
+  editToggleModel,
+  handleDelete,
+}: {
+  invoices: any[];
+  editToggleModel: () => void;
+  handleDelete: () => void;
+}) => {
   const [dropdownOpen1, setDropdownOpen1] = useState(false);
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("");
@@ -34,167 +45,167 @@ const DashboardTable = ({ invoice, editToggleModel, handleDelete }) => {
     i3: ICONS.deleteRed,
   };
 
-  const data: Dashboard[] = [
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PAID",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Cheque Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 4, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PENDING",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Cheque Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 3, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PAID",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Quote Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 1, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PAID",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Cheque Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 8, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PENDING",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Tax invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PENDING",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Tax invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 6, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PENDING",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Quote Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 4, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PENDING",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Tax invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 3, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "DRAFT",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Tax invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 9, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "DRAFT",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Quote Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
+  // const data: Dashboard[] = [
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "PAID",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Cheque Invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 4, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "PENDING",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Cheque Invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 3, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "PAID",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Quote Invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 1, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "PAID",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Cheque Invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 8, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "PENDING",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Tax invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 2, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "PENDING",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Tax invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 6, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "PENDING",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Quote Invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 4, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "PENDING",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Tax invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 3, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "DRAFT",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Tax invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 9, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "DRAFT",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Quote Invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 2, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
 
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "DRAFT",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Quote Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "DRAFT",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Quote Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-  ];
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "DRAFT",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Quote Invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 2, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
+  //   {
+  //     invoice_id: "kjsdgnbj",
+  //     invoice_status: "DRAFT",
+  //     client: "ljadbvilhb4jh345kj4n",
+  //     invoice_type: "Quote Invoice",
+  //     total_amount: 985735689,
+  //     created_date: new Date(2024, 2, 10),
+  //     tax: 985735689,
+  //     i1: true,
+  //     i2: true,
+  //     i3: true,
+  //     iconsOrder: ["i1", "i2", "i3"],
+  //   },
+  // ];
 
-  const [sortedData, setSortedData] = useState(invoice);
+  const [sortedData, setSortedData] = useState(invoices);
   const handleSort = (data: Dashboard[], order: "asc" | "desc"): void => {
     const sorted = [...sortedData].sort((a, b) => {
       const dateA = new Date(a.createdAt);
@@ -216,7 +227,7 @@ const DashboardTable = ({ invoice, editToggleModel, handleDelete }) => {
       header: "Invoice Id",
       accessor: "id",
       cellClassName: " text-blue-20 ",
-      width: "130px",
+      width: "300px",
     },
     {
       header: (
@@ -273,7 +284,7 @@ const DashboardTable = ({ invoice, editToggleModel, handleDelete }) => {
         </div>
       ),
       accessor: "billingStatus",
-      cellRenderer: (row: Dashboard) => {
+      cellRenderer: (row: Invoice) => {
         let statusClass = "";
         console.log(
           row.billingStatus.toUpperCase() === "DRAFT/PERFORMA INVOICE"
@@ -381,7 +392,7 @@ const DashboardTable = ({ invoice, editToggleModel, handleDelete }) => {
     {
       header: "Total Amount",
       accessor: "totalAmount",
-      cellRenderer: (row: Dashboard) => {
+      cellRenderer: (row: Invoice) => {
         return (
           <span className="text-black">₹ {formatNumber(row.totalAmount)}</span>
         );
@@ -393,7 +404,7 @@ const DashboardTable = ({ invoice, editToggleModel, handleDelete }) => {
     {
       header: "Tax",
       accessor: "taxGST",
-      cellRenderer: (row: Dashboard) => {
+      cellRenderer: (row: Invoice) => {
         // console.log(row.tax);
         return <span className="text-black">₹ {formatNumber(row.taxGST)}</span>;
       },

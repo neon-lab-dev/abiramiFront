@@ -41,7 +41,7 @@ const ListPage = () => {
     };
 
     fetchClients();
-  }, [setSearchResults]);
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete?")) {
@@ -56,11 +56,8 @@ const ListPage = () => {
     }
   };
 
-  console.log(searchResults);
-
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       const searchFunction = getSearchFunction(window.location.pathname);
 
       if (searchFunction && searchQuery.trim() !== "") {
@@ -73,11 +70,11 @@ const ListPage = () => {
       } else if (searchQuery.trim() === "") {
         setSearchResults(clients);
       }
-      setLoading(false);
     };
 
     fetchData();
   }, [clients, setSearchResults]);
+  console.log(loading);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {

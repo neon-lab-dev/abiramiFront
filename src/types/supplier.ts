@@ -40,3 +40,20 @@ export interface SupplierData {
   activeCount: number;
   inactiveCount: number;
 }
+
+export interface SupplierRequest {
+  companyName: string;
+  title: string;
+  GST: string;
+  mobileNum: string;
+  landLineNum: string;
+  email: string;
+  addressLine1: string;
+  addressLine2: string;
+  addressLine3: string;
+  city: string;
+  pincode: number | null;
+  state: string;
+  country: string;
+  status: string;
+}

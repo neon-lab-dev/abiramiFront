@@ -76,7 +76,6 @@ const ListPage = () => {
     };
   }, []);
 
-
   return (
     <>
       {loading ? (
@@ -173,13 +172,8 @@ const ListPage = () => {
             />
           </div>
           <div className="my-[22px]">
-            {/* <InvoiceListPageTable
-              invoices={invoices.data}
-              editToggleModel={editToggleModel}
-              handleDelete={handleDelete}
-            /> */}
-            <DashboardTable
-              invoice={invoices.data}
+            <InvoiceListPageTable
+              invoices={invoices?.data}
               editToggleModel={editToggleModel}
               handleDelete={handleDelete}
             />

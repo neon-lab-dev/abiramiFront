@@ -15,6 +15,7 @@ import CreateClients from "../pages/Clients/CreateClients";
 import Inventory from "../pages/Inventory/ListPage";
 import CreateInventory from "../pages/Inventory/CreateInventory";
 import InventoryTable from "../pages/Inventory/InventoryListPageTable";
+import Login from "../pages/Login/Login";
 
 export const router = createBrowserRouter([
   {
@@ -79,5 +80,10 @@ export const router = createBrowserRouter([
         element: <InventoryTable />,
       },
     ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
+    errorElement: <ErrorPage />,
   },
 ]);

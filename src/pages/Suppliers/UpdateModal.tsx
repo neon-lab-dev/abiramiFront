@@ -4,7 +4,11 @@ import Button from "../../Components/Shared/Button/Button";
 import InputField from "../../Components/Shared/InputField/InputField";
 import { ICONS } from "../../assets";
 import Loader from "../../lib/loader";
-import { Supplier, SupplierByIdResponse } from "../../types/supplier";
+import {
+  Supplier,
+  SupplierByIdResponse,
+  SupplierRequest,
+} from "../../types/supplier";
 import { useNavigate } from "react-router-dom";
 
 const UpdateModal = ({
@@ -17,48 +21,50 @@ const UpdateModal = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [supplier, setSupplier] = useState<Supplier>();
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SupplierRequest>({
     companyName: "",
     title: "",
-    gstNumber: "",
-    mobileNumber: "",
-    landlineNumber: "",
+    GST: "",
+    mobileNum: "",
+    landLineNum: "",
     email: "",
-    address1: "",
-    address2: "",
-    address3: "",
+    addressLine1: "",
+    addressLine2: "",
+    addressLine3: "",
     city: "",
-    pinCode: "",
+    pincode: null as number | null,
     state: "",
     country: "",
-    status: "active",
+    status: "ACTIVE",
   });
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: name === "pincode" ? Number(value) : value,
+    }));
   };
 
   const clearForm = () => {
     setFormData({
       companyName: "",
       title: "",
-      gstNumber: "",
-      mobileNumber: "",
-      landlineNumber: "",
+      GST: "",
+      mobileNum: "",
+      landLineNum: "",
       email: "",
-      address1: "",
-      address2: "",
-      address3: "",
+      addressLine1: "",
+      addressLine2: "",
+      addressLine3: "",
       city: "",
-      pinCode: "",
+      pincode: null as number | null,
       state: "",
       country: "",
-      status: "active",
+      status: "ACTIVE",
     });
   };
 
@@ -84,15 +90,15 @@ const UpdateModal = ({
       setFormData({
         companyName: supplier.companyName,
         title: supplier.title,
-        gstNumber: supplier.GST,
-        mobileNumber: supplier.mobileNum,
-        landlineNumber: supplier.landLineNum,
+        GST: supplier.GST,
+        mobileNum: supplier.mobileNum,
+        landLineNum: supplier.landLineNum,
         email: supplier.email,
-        address1: supplier.addressLine1,
-        address2: supplier.addressLine2,
-        address3: supplier.addressLine3,
+        addressLine1: supplier.addressLine1,
+        addressLine2: supplier.addressLine2,
+        addressLine3: supplier.addressLine3,
         city: supplier.city,
-        pinCode: supplier.pincode.toString(),
+        pincode: supplier.pincode,
         state: supplier.state,
         country: supplier.country,
         status: supplier.status,
@@ -104,20 +110,7 @@ const UpdateModal = ({
     e.preventDefault();
     console.log(formData);
     const data = {
-      companyName: formData.companyName,
-      title: formData.title,
-      GST: formData.gstNumber,
-      mobileNum: formData.mobileNumber,
-      landLineNum: formData.landlineNumber,
-      email: formData.email,
-      addressLine1: formData.address1,
-      addressLine2: formData.address2,
-      addressLine3: formData.address3,
-      city: formData.city,
-      pincode: parseInt(formData.pinCode),
-      state: formData.state,
-      country: formData.country,
-      status: formData.status,
+      ...formData,
     };
     setIsSubmitting(true);
     try {
@@ -185,8 +178,8 @@ const UpdateModal = ({
                       inputBg=""
                       type="text"
                       placeholder="Enter the GST number"
-                      name="gstNumber"
-                      value={formData.gstNumber}
+                      name="GST"
+                      value={formData.GST}
                       onChange={handleChange}
                     />
                   </div>
@@ -204,8 +197,8 @@ const UpdateModal = ({
                       inputBg=""
                       type="text"
                       placeholder="Enter mobile number"
-                      name="mobileNumber"
-                      value={formData.mobileNumber}
+                      name="mobileNum"
+                      value={formData.mobileNum}
                       onChange={handleChange}
                     />
 
@@ -214,8 +207,8 @@ const UpdateModal = ({
                       inputBg=""
                       type="text"
                       placeholder="Enter landline number"
-                      name="landlineNumber"
-                      value={formData.landlineNumber}
+                      name="landLineNum"
+                      value={formData.landLineNum}
                       onChange={handleChange}
                     />
 
@@ -243,8 +236,8 @@ const UpdateModal = ({
                       inputBg=""
                       type="text"
                       placeholder="Enter Door Number or building number"
-                      name="address1"
-                      value={formData.address1}
+                      name="addressLine1"
+                      value={formData.addressLine1}
                       onChange={handleChange}
                     />
 
@@ -253,8 +246,8 @@ const UpdateModal = ({
                       inputBg=""
                       type="text"
                       placeholder="Enter apartment name or building name"
-                      name="address2"
-                      value={formData.address2}
+                      name="addressLine2"
+                      value={formData.addressLine2}
                       onChange={handleChange}
                     />
 
@@ -263,8 +256,8 @@ const UpdateModal = ({
                       inputBg=""
                       type="text"
                       placeholder="Enter locality or street"
-                      name="address3"
-                      value={formData.address3}
+                      name="addressLine3"
+                      value={formData.addressLine3}
                       onChange={handleChange}
                     />
 
@@ -279,12 +272,12 @@ const UpdateModal = ({
                     />
 
                     <InputField
-                      label="pinCode"
+                      label="Pincode"
                       inputBg=""
                       type="text"
-                      placeholder="Enter pinCode"
-                      name="pinCode"
-                      value={formData.pinCode}
+                      placeholder="Enter pincode"
+                      name="pincode"
+                      value={formData.pincode?.toString() || ""}
                       onChange={handleChange}
                     />
 
@@ -318,7 +311,9 @@ const UpdateModal = ({
                           type="radio"
                           name="status"
                           value="active"
-                          checked={formData.status === "active"}
+                          checked={
+                            formData.status.trim().toUpperCase() === "ACTIVE"
+                          }
                           onChange={handleChange}
                         />
                         <span className="ml-2">Active</span>
@@ -328,7 +323,9 @@ const UpdateModal = ({
                           type="radio"
                           name="status"
                           value="inactive"
-                          checked={formData.status === "inactive"}
+                          checked={
+                            formData.status.trim().toUpperCase() === "INACTIVE"
+                          }
                           onChange={handleChange}
                         />
                         <span className="ml-2">Inactive</span>

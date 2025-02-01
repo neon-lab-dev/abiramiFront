@@ -239,31 +239,6 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
       const response = await createInvoicesByClientName(data, clientName);
       console.log("Invoice created successfully:", response.data);
       alert("Invoice created successfully!");
-      // setFormData({
-      //   ClientName: "",
-      //   ivoicedate: "",
-      //   Stateandcode: "",
-      //   taxtype: "",
-      //   invoicetype: "",
-      //   ChequeNumber: "",
-      //   Chequedate: "",
-      //   BankName: "",
-      //   ChequeAmount: "",
-      //   Code: "",
-      //   email: "",
-      //   address1: "",
-      //   address2: "",
-      //   address3: "",
-      //   city: "",
-      //   pinCode: "",
-      //   state: "",
-      //   country: "",
-      //   status: "",
-      //   transport: "",
-      //   placeOfSupply: "",
-      //   PONo: "",
-      //   vehicleNumber: "",
-      // });
     } catch (error) {
       console.error("Error creating invoice:", error);
       alert("Failed to create invoice. Please try again.");
@@ -995,12 +970,12 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
         <div className="col-span-3 flex justify-end gap-4 my-8">
           <Button
             onClick={handleSubmit}
-            text="Save"
+            text={isSubmitting ? "Submitting..." : "Save"}
             type="reset"
             color="text-primary-10 bg-none"
           />
           <Button
-            text="Save & Print"
+            text={isSubmitting ? "Submitting..." : "Save & Print"}
             type="submit"
             color="bg-primary-10 text-white"
           />
