@@ -430,8 +430,8 @@ const DashboardTable = ({
       icon2: ICONS.downArrow2,
       icon1: ICONS.upArrow,
       width: "143px",
-      onIcon1Click: () => handleSort(data, "asc"),
-      onIcon2Click: () => handleSort(data, "desc"),
+      onIcon1Click: () => handleSort(invoices, "asc"),
+      onIcon2Click: () => handleSort(invoices, "desc"),
       // width: "141px",
     },
   ];
