@@ -19,7 +19,6 @@ const Dashboard = () => {
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
-
   useEffect(() => {
     try {
       const fetchDashboardData = async () => {

@@ -278,26 +278,25 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
       accessor: "billingStatus",
       cellRenderer: (row: Invoice) => {
         let statusClass = "";
-        console.log(
-          row.billingStatus.toUpperCase() === "DRAFT/PERFORMA INVOICE"
-        );
 
         // Conditional coloring based on invoice_status
-        if (row.billingStatus.toUpperCase() === "PAID") {
+        if (row.billingStatus?.toUpperCase() === "PAID") {
           statusClass =
             "text-neutral-90 bg-neutral-50 h-[28px] py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Green for PAID
-        } else if (row.billingStatus.toUpperCase() === "PENDING") {
+        } else if (row.billingStatus?.toUpperCase() === "PENDING") {
           statusClass =
             "text-yellow-500 bg-secondary-35 h-[28px]  py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Yellow for PENDING (PENDING)
         } else if (
-          row.billingStatus.toUpperCase() === "DRAFT/PERFORMA INVOICE"
+          row.billingStatus?.toUpperCase() === "DRAFT/PERFORMA INVOICE"
         ) {
           statusClass =
             "text-gray-500  font-sans text-[12px] font-normal leading-[20px] text-left"; // Gray for DRAFT
         }
 
         return (
-          <span className={statusClass}>{row.billingStatus.toUpperCase()}</span>
+          <span className={statusClass}>
+            {row.billingStatus?.toUpperCase()}
+          </span>
         );
       },
       width: "112px",
@@ -442,6 +441,10 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
     setTypeFilter("");
     setStatusFilter("");
   };
+
+  useEffect(() => {
+    setSortedData(invoices);
+  }, [invoices]);
 
   return (
     <div>

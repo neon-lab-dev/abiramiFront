@@ -74,7 +74,6 @@ const ListPage = () => {
 
     fetchData();
   }, [clients, setSearchResults]);
-  console.log(loading);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {

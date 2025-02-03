@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
 import DownloadButton from "../Shared/Table/DownloadExcelBtn";
@@ -219,7 +219,7 @@ const PurchaseTable = ({
       accessor: "gstNum",
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
-      icon1: ICONS.search,
+      // icon1: ICONS.search,
       width: "164px",
     },
     {
@@ -260,6 +260,10 @@ const PurchaseTable = ({
       width: "130px",
     },
   ];
+
+  useEffect(() => {
+    setSortedData(purchases);
+  }, [purchases]);
 
   return (
     <div>

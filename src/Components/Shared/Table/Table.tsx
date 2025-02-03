@@ -95,8 +95,8 @@ const Table: React.FC<TableProps> = ({
   const handleNavigateToDetails = (id: string) => {
     navigate(`/clients/Detailpage/${id}`);
   };
-  const handleNavigateToInvoiceDetails = (companyName: string) => {
-    navigate(`/invoices/Detailpage`);
+  const handleNavigateToInvoiceDetails = (id: string) => {
+    navigate(`/invoices/Detailpage/${id}`);
   };
 
   const handleNextPage = () => {
@@ -255,7 +255,7 @@ const Table: React.FC<TableProps> = ({
                               >
                                 {row[col.accessor]}
                               </span>
-                            ) : col.accessor === "invoice_id" ? (
+                            ) : col.accessor === "id" ? (
                               <span
                                 className="text-blue-500 cursor-pointer hover:underline"
                                 onClick={() =>

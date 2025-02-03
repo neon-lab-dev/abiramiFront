@@ -15,10 +15,11 @@ import { Category, CategoryResponse } from "../../types/category";
 import UpdateModel from "./UpdateModel";
 import Loader from "../../lib/loader";
 import { handleSort } from "../../utils";
+import { useSearch } from "../../context/SearchContext";
 
-const InventoryListPageTable: React.FC = () => {
+const InventoryListPageTable = () => {
   const { id } = useParams();
-
+  const { searchQuery, searchResults } = useSearch();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isInventoryLogsOpen, setInventoryLogsOpen] = useState(false);
 
@@ -297,6 +298,7 @@ const InventoryListPageTable: React.FC = () => {
       header: "Refrences",
       accessor: "refrence",
       cellClassName: " text-black ",
+      icon1: ICONS.search,
       width: "160px",
     },
     // {
@@ -310,7 +312,7 @@ const InventoryListPageTable: React.FC = () => {
       header: "Description",
       accessor: "description",
       cellClassName: "text-customBlue-20",
-      icon1: ICONS.search,
+      // icon1: ICONS.search,
       width: "160px",
     },
 
@@ -409,7 +411,6 @@ const InventoryListPageTable: React.FC = () => {
       setLoading(true);
       try {
         const data = await getInventoryByCategoryId(id);
-        console.log(data);
         setInventory(data.data.inventory);
         setCategory(data.data);
       } catch (err) {
@@ -438,8 +439,6 @@ const InventoryListPageTable: React.FC = () => {
     }
   };
 
-  console.log(inventory);
-
   return (
     <>
       {loading ? (
@@ -449,7 +448,12 @@ const InventoryListPageTable: React.FC = () => {
       ) : (
         <div>
           <Table
-            data={sortedData}
+            // data={sortedData}
+            data={
+              searchQuery.trim() === "" || searchResults.length === 0
+                ? sortedData
+                : searchResults?.data
+            }
             columns={columns}
             tableName="Recent Invoice"
             showViewAll={false}

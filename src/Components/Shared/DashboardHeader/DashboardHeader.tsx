@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { ICONS } from "../../../assets";
 import { useSearch } from "../../../context/SearchContext";
 import { getSearchFunction } from "../../../utils/searchUtils";
+import { useEffect } from "react";
 
 interface DashboardHeaderProps {
   HandleSidebar: (data: boolean) => void;
@@ -15,6 +16,10 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   const location = useLocation();
   const { searchQuery, setSearchQuery, setSearchResults } = useSearch();
 
+  useEffect(() => {
+    setSearchQuery("");
+    setSearchResults([]);
+  }, [location]);
   // Split the pathname by "/" and filter out empty strings
   const pathSegments = location.pathname.split("/").filter(Boolean);
 
@@ -24,16 +29,24 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       if (searchFunction) {
         try {
           const results = await searchFunction(searchQuery);
+          if (results.data.length === 0) {
+            alert("No data found!!!");
+            return;
+          }
           setSearchResults(results);
         } catch (error) {
-          console.error("Search API error:", error);
+          if (error.status === 404) {
+            alert("Data not found!!!");
+            return;
+          } else {
+            console.error("Search API error:", error);
+          }
         }
       } else {
         console.warn("No search function available for this route.");
       }
     }
   };
-  console.log(searchQuery);
 
   return (
     <div className="bg-white mb-6 py-5 px-0 md:px-7 border-b flex justify-between items-center">

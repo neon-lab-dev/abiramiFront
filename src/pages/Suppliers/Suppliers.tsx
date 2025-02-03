@@ -7,8 +7,10 @@ import Loader from "../../lib/loader";
 import UpdateModal from "./UpdateModal";
 import { useNavigate } from "react-router-dom";
 import { Supplier, SupplierData, SupplierResponse } from "../../types/supplier";
+import { useSearch } from "../../context/SearchContext";
 
 export default function Suppliers() {
+  const { searchQuery, searchResults } = useSearch();
   const [loading, setLoading] = useState<boolean>(false);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [suppliersData, setSuppliersData] = useState<SupplierData>();
@@ -54,6 +56,9 @@ export default function Suppliers() {
     }
   };
 
+  console.log(suppliers);
+  console.log(searchResults);
+
   return (
     <>
       {loading ? (
@@ -64,7 +69,11 @@ export default function Suppliers() {
         <div className="w-full">
           <SuppliersCards suppliers={suppliersData} />
           <SuppliersTable
-            suppliers={suppliers}
+            suppliers={
+              searchQuery.trim() === "" || searchResults.length === 0
+                ? suppliers
+                : searchResults?.data
+            }
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}
           />

@@ -41,7 +41,7 @@ export interface Client {
   status: string;
   createdAt: string;
   updatedAt: string;
-  invoice: Invoice[];
+  invoice?: Invoice[];
 }
 
 export interface ClientResponse {

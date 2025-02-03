@@ -169,6 +169,9 @@ const UpdateModel = ({
       catgoryId: formData.categoryId,
       file: imageFiles ? imageFiles : undefined,
       image: !imageFiles ? inventory?.image : undefined,
+      TRType: formData.TRType || "",
+      transactionUnits: formData.transactionUnits || "",
+      comment: formData.comment || "",
     };
     try {
       console.log("Updated Data:", updatedData);

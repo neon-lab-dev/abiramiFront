@@ -4,16 +4,24 @@ import Button from "../../Components/Shared/Button/Button";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import { ICONS } from "../../assets";
 import { useNavigate } from "react-router-dom";
-import { deleteClient, deleteInvoice, getInvoices } from "../../api/api";
+import { deleteInvoice, getInvoices } from "../../api/api";
 import UpdateModal from "./UpdateModal";
 import Loader from "../../lib/loader";
-import DashboardTable from "../../Components/Dashboard/DashboardTable";
+import { useSearch } from "../../context/SearchContext";
+import { InvoicesResponse } from "../../types/invoice";
+
+// interface InvoiceSearchContextType {
+//   searchQuery: string;
+//   searchResults: InvoiceResponse[] | undefined;
+//   setSearchResults: (results: InvoiceResponse[]) => void;
+// }
 
 const ListPage = () => {
+  const { searchQuery, searchResults } = useSearch();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const [invoices, setInvoices] = useState<any[]>([]);
+  const [invoices, setInvoices] = useState<InvoicesResponse>();
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -47,8 +55,9 @@ const ListPage = () => {
     const fetchInvoices = async () => {
       setLoading(true);
       try {
-        const data: any[] = await getInvoices();
+        const data: InvoicesResponse = await getInvoices();
         setInvoices(data);
+        // setSearchResults(data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -75,6 +84,10 @@ const ListPage = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // useEffect(() => {
+  //   setSearchResults([]);
+  // }, [searchQuery, setSearchResults]);
 
   return (
     <>
@@ -150,7 +163,7 @@ const ListPage = () => {
               cardBg="bg-secondary-10"
               iconBg="bg-secondary-65"
               title="Paid Invoices"
-              value={invoices.paidInvoices}
+              value={invoices?.paidInvoices}
               cardWidth="w-[416px]"
               icon={ICONS.invoices}
             />
@@ -158,7 +171,7 @@ const ListPage = () => {
               cardBg="bg-secondary-30"
               iconBg="bg-secondary-70"
               title="Pending Amount"
-              value={invoices.pendingInvoices}
+              value={invoices?.pendingInvoices}
               cardWidth="w-[416px]"
               icon={ICONS.invoices2}
             />
@@ -166,14 +179,18 @@ const ListPage = () => {
               cardBg="bg-secondary-40"
               iconBg="bg-secondary-85"
               title="Draft Invoices"
-              value={invoices.draftInvoices}
+              value={invoices?.draftInvoices}
               cardWidth="w-[416px]"
               icon={ICONS.invoices3}
             />
           </div>
           <div className="my-[22px]">
             <InvoiceListPageTable
-              invoices={invoices?.data}
+              invoices={
+                searchQuery.trim() === "" || searchResults.length === 0
+                  ? invoices?.data
+                  : searchResults?.data
+              }
               editToggleModel={editToggleModel}
               handleDelete={handleDelete}
             />

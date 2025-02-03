@@ -10,8 +10,10 @@ import Loader from "../../lib/loader";
 import UpdateModal from "../Invoices/UpdateModal";
 import UpdateClientModal from "./UpdateModal";
 import CreateModel from "../Invoices/CreateModel";
+import { useSearch } from "../../context/SearchContext";
 
 const DetailPage = () => {
+  const { searchQuery, searchResults } = useSearch();
   const { id } = useParams();
   const [selectedId, setSelectedId] = useState<string>("");
   const [selectedClientId, setSelectedClientId] = useState<string>("");

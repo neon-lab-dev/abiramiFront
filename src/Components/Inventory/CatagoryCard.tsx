@@ -8,6 +8,7 @@ const CatagoryCard = ({
   onClick?: (id: string) => void;
   category: Category;
 }) => {
+
   return (
     <div
       onClick={() => onClick && onClick(category.id)}

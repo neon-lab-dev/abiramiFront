@@ -230,7 +230,6 @@ const ClientTable = ({
       header: "GST",
       accessor: "GST",
       cellClassName: "text-black",
-      icon1: ICONS.search,
       width: "160px",
     },
     {
@@ -245,6 +244,7 @@ const ClientTable = ({
       header: "Address",
       accessor: "addressLine1",
       cellClassName: "text-black",
+      icon1: ICONS.search,
       width: "220px",
     },
     {

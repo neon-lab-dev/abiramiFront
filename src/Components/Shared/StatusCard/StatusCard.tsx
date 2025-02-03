@@ -3,7 +3,7 @@ type TStatusCardProps = {
   iconBg: string;
   title: string;
   cardWidth?: string;
-  value?: string | number;
+  value?: string | number | undefined | null;
   icon: string | undefined;
 };
 

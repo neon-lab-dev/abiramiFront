@@ -14,9 +14,16 @@ export const login = async (data: { email: string; password: string }) => {
     if (response.status === 200) {
       const token = response.data.token;
       Cookies.set("token", token);
+      localStorage.setItem("admin", JSON.stringify(response.data.data));
       return response.data;
+    } else {
+      Cookies.remove("token");
+      localStorage.removeItem("admin");
+      alert("Invalid Credentials!!!");
     }
   } catch (error) {
+    Cookies.remove("token");
+    localStorage.removeItem("admin");
     console.error("Login error:", error);
     throw error;
   }
@@ -37,6 +44,21 @@ export const signup = async (
     return response.data;
   } catch (error) {
     console.error("Signup error:", error);
+    throw error;
+  }
+};
+
+export const verifyAdminByToken = async (token: string) => {
+  try {
+    const response = await axiosInstance.get(`/verify`, {
+      params: { token },
+    });
+    if (response.data.status === 200) {
+      localStorage.setItem("admin", JSON.stringify(response.data.data));
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Verify admin error:", error);
     throw error;
   }
 };
@@ -81,10 +103,11 @@ export const getClientById = async (id: string) => {
   }
 };
 export const searchClient = async (query: string) => {
+  const isNumber = !isNaN(Number(query));
+  const params = isNumber ? { mobileNum: query } : { address: query };
+  console.log(params);
   try {
-    const response = await axiosInstance.get(`/clients/search`, {
-      params: query,
-    });
+    const response = await axiosInstance.get(`/clients/search`, { params });
     return response.data;
   } catch (error) {
     console.error("Search client error:", error);
@@ -120,7 +143,10 @@ export const createInvoices = async (data: any) => {
     throw error;
   }
 };
-export const createInvoicesByClientName = async (data: any, clientName) => {
+export const createInvoicesByClientName = async (
+  data: any,
+  clientName: string
+) => {
   try {
     const response = await axiosInstance.post(`/invoices/${clientName}`, data);
     return response.data;

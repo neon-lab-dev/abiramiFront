@@ -6,8 +6,10 @@ import InputField from "../Shared/InputField/InputField";
 import { ICONS } from "../../assets";
 import { createCategory, getCategories } from "../../api/api";
 import Loader from "../../lib/loader";
+import { useSearch } from "../../context/SearchContext";
 
 const CatagoryList = () => {
+  const { searchQuery, searchResults } = useSearch();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [formData, setFormData] = useState({ Catagory: "", inventory: [] });
   const [loading, setLoading] = useState(false);
@@ -97,10 +99,27 @@ const CatagoryList = () => {
 
           {/* Category Cards Section */}
           <div className="py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {categories?.length > 0 &&
-              categories?.map((category) => (
-                <CatagoryCard onClick={handleCardClick} category={category} />
-              ))}
+            {searchQuery.trim() === "" || searchResults.length === 0 ? (
+              <>
+                {categories?.length > 0 &&
+                  categories?.map((category) => (
+                    <CatagoryCard
+                      onClick={handleCardClick}
+                      category={category}
+                    />
+                  ))}
+              </>
+            ) : (
+              <>
+                {searchResults?.data?.length > 0 &&
+                  searchResults?.data?.map((category) => (
+                    <CatagoryCard
+                      onClick={handleCardClick}
+                      category={category}
+                    />
+                  ))}
+              </>
+            )}
           </div>
 
           {/* Edit Modal */}

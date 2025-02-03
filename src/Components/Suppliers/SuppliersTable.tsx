@@ -5,6 +5,7 @@ import { getClients, getSuppliers } from "../../api/api";
 import Loader from "../../lib/loader";
 
 const SuppliersTable = ({ suppliers, editToggleModel, handleDelete }) => {
+  const [sortedData, setSortedData] = useState(suppliers);
   const icons = {
     i1: ICONS.blueTick,
     i2: ICONS.editBlack,
@@ -29,7 +30,6 @@ const SuppliersTable = ({ suppliers, editToggleModel, handleDelete }) => {
       header: "GST",
       accessor: "GST",
       cellClassName: "text-black",
-      icon1: ICONS.search,
       width: "140px",
     },
     {
@@ -44,6 +44,7 @@ const SuppliersTable = ({ suppliers, editToggleModel, handleDelete }) => {
       header: "Address",
       accessor: "addressLine1",
       cellClassName: "text-black",
+      icon1: ICONS.search,
       width: "200px",
     },
     {
@@ -67,11 +68,15 @@ const SuppliersTable = ({ suppliers, editToggleModel, handleDelete }) => {
     },
   ];
 
+  useEffect(() => {
+    setSortedData(suppliers);
+  }, [suppliers]);
+
   return (
     <>
       <div>
         <Table
-          data={suppliers}
+          data={sortedData}
           columns={columns}
           tableName="Recent Invoice"
           showViewAll={false}

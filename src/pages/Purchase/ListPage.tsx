@@ -8,11 +8,14 @@ import { deletePurchase, getPurchases } from "../../api/api";
 import { Purchase, PurchaseData, PurchaseResponse } from "../../types/purchase";
 import Loader from "../../lib/loader";
 import UpdateModal from "./UpdateModal";
+import { useSearch } from "../../context/SearchContext";
+import { getSearchFunction } from "../../utils/searchUtils";
 
 const ListPage = () => {
+  const { searchQuery, searchResults, setSearchResults } = useSearch();
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string>("");
-  const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [purchases, setPurchases] = useState<PurchaseResponse>();
   const [purchaseData, setPurchaseData] = useState<PurchaseData>({
     totalClients: 0,
     activeClients: 0,
@@ -39,7 +42,7 @@ const ListPage = () => {
           activeClients: response.activeClients,
           inactiveClinets: response.inactiveClinets,
         });
-        setPurchases(response.data);
+        setPurchases(response);
       } catch (error) {
         console.error("Get clients error:", error);
         throw error;
@@ -116,7 +119,9 @@ const ListPage = () => {
             />
           </div>
           <PurchaseTable
-            purchases={purchases}
+            purchases={
+              searchQuery.trim() === ""|| searchResults.length === 0 ? purchases?.data : searchResults?.data
+            }
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}
           />
