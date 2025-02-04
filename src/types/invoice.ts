@@ -66,7 +66,9 @@ export interface InvoicesResponse {
   data: InvoiceResponse[];
   paidInvoices: number | null;
   pendingInvoices: number | null;
-  draftInvoices: number | null;
+  draftInvoices?: number | null;
+  totalInvoices?: number | null;
+  totalIncome?: number | null;
 }
 
 export interface InvoiceData {

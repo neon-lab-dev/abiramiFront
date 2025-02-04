@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
+import { ClientResponse } from "../../types/client";
 
 // Define a type for the row data
 interface Client {
@@ -17,186 +18,23 @@ interface Client {
   iconsOrder: string[];
 }
 
-const ClientTable = ({
-  clients,
-  editToggleModel,
-  handleDelete,
-}: {
-  clients: [];
-  editToggleModel: any;
-}) => {
+const ClientTable: React.FC<{
+  clients: ClientResponse | object;
+  editToggleModel?: (clientId: string) => void;
+  handleDelete?: (clientId: string) => void;
+}> = ({ clients, editToggleModel, handleDelete }) => {
   const icons = {
     i1: ICONS.blueTick,
     i2: ICONS.editBlack,
     i3: ICONS.deleteRed,
   };
 
-  const data: Client[] = [
-    {
-      company_name: "Apollo Electrical Text 2",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Apollo Electrical Text 2",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      company_name: "Apollo Electrical ",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Chennai Wires and Spares",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      company_name: "Apollo Electrical ",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Chennai Wires and Spares",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      company_name: "Apollo Electrical ",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Chennai Wires and Spares",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      company_name: "Apollo Electrical ",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Chennai Wires and Spares",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      company_name: "Apollo Electrical ",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Chennai Wires and Spares",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      company_name: "Apollo Electrical ",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Chennai Wires and Spares",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      company_name: "Apollo Electrical ",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Chennai Wires and Spares",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      company_name: "Apollo Electrical ",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Chennai Wires and Spares",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      company_name: "Apollo Electrical ",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Chennai Wires and Spares",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-
-    {
-      company_name: "Apollo Electrical ",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Chennai Wires and Spares",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      company_name: "Apollo Electrical ",
-      contact_person: "some text",
-      gst: "GAAAJDU09847",
-      mobile_no: "+91 78654 76534",
-      address: "Chennai Wires and Spares",
-      created_date: new Date(2024, 2, 10),
-      status: "Active",
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-  ];
-
-  const [sortedData, setSortedData] = useState(clients.data); // Initial data array
+  const [sortedData, setSortedData] = useState<Client[]>(clients?.data);
 
   const handleSort = (data: Client[], order: "asc" | "desc"): void => {
     const sorted = [...sortedData].sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
+      const dateA = new Date(a.created_date);
+      const dateB = new Date(b.created_date);
 
       if (order === "asc") {
         return dateA.getTime() - dateB.getTime(); // Convert dates to timestamps
@@ -210,7 +48,7 @@ const ClientTable = ({
   };
 
   useEffect(() => {
-    setSortedData(clients.data);
+    setSortedData(clients?.data);
   }, [clients]);
 
   const columns = [

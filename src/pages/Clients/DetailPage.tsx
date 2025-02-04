@@ -4,46 +4,27 @@ import { ICONS } from "../../assets";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import DashboardTable from "../../Components/Dashboard/DashboardTable";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteClient, getClientById, updateClient } from "../../api/api";
+import { deleteClient, getClientById } from "../../api/api";
 import { formatDateWithOrdinal, formatNumber } from "../../utils";
 import Loader from "../../lib/loader";
 import UpdateModal from "../Invoices/UpdateModal";
 import UpdateClientModal from "./UpdateModal";
 import CreateModel from "../Invoices/CreateModel";
-import { useSearch } from "../../context/SearchContext";
+import { Client, SingleClientResponse } from "../../types/client";
 
 const DetailPage = () => {
-  const { searchQuery, searchResults } = useSearch();
   const { id } = useParams();
+  const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState<string>("");
   const [selectedClientId, setSelectedClientId] = useState<string>("");
-  const [client, setClient] = useState({});
-  const [invoiceData, setInvoiceData] = useState([]);
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [isClientEditModalOpen, setClientEditModalOpen] = useState(false);
-  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    CompanyName: "",
-    ContactPerson: "",
-    gstnumber: "",
-    MobileNumber: "",
-    LandlineNumber: "",
-    active: "",
-    Inactive: "",
-    Code: "",
-    email: "",
-    address1: "",
-    address2: "",
-    address3: "",
-    city: "",
-    pinCode: "",
-    state: "",
-    country: "",
-    status: "",
-  });
-  const [loading, setLoading] = useState(false);
+  const [client, setClient] = useState<Client>();
+  const [invoiceData, setInvoiceData] = useState<SingleClientResponse>();
+  const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [isClientEditModalOpen, setClientEditModalOpen] =
+    useState<boolean>(false);
+  const [isCreateModalOpen, setCreateModalOpen] = useState<boolean>(false);
 
+  const [loading, setLoading] = useState(false);
   const editToggleModel = (id: string) => {
     setEditModalOpen(!isEditModalOpen);
     setSelectedId(id);
@@ -62,9 +43,12 @@ const DetailPage = () => {
     const fetchClient = async () => {
       setLoading(true);
       try {
-        const data: any[] = await getClientById(id);
-        setInvoiceData(data);
-        setClient(data.data);
+        if (id) {
+          const data: SingleClientResponse = await getClientById(id);
+          console.log(data);
+          setInvoiceData(data);
+          setClient(data?.data);
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -73,10 +57,11 @@ const DetailPage = () => {
     };
 
     fetchClient();
-  }, []);
+  }, [id]);
+
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete?")) {
-      const response = await deleteClient(id);
+      const response = await deleteClient(id || "");
       console.log("Item deleted!", response);
       if (response.status === 200) {
         alert("Client deleted Successfully!!!");
@@ -86,28 +71,6 @@ const DetailPage = () => {
       console.log("Delete action canceled.");
     }
   };
-
-  useEffect(() => {
-    setFormData({
-      CompanyName: client.companyName,
-      ContactPerson: client.contactPerson,
-      gstnumber: client.GST,
-      MobileNumber: client.mobileNum,
-      LandlineNumber: client.landLineNum,
-      active: "",
-      Inactive: "",
-      Code: "",
-      email: client.email,
-      address1: client.addressLine1,
-      address2: client.addressLine2,
-      address3: client.addressLine3,
-      city: client.city,
-      pinCode: client.pincode,
-      state: client.state,
-      country: client.country,
-      status: client.status,
-    });
-  }, [client]);
 
   return (
     <React.Fragment>
@@ -127,7 +90,7 @@ const DetailPage = () => {
                 imgSrc={ICONS.clientediticon}
                 color="bg-secondary-155 text-[14px] text-black"
                 iconClassName=" "
-                onClick={editToggleClientModel}
+                onClick={() => editToggleClientModel(id || "")}
               />
               <Button
                 text="Delete"
@@ -154,10 +117,10 @@ const DetailPage = () => {
                       className="font-inter text-[18px] font-medium leading-[36px]
               "
                     >
-                      {client.companyName}
+                      {client?.companyName}
                     </span>
                     <span className="bg-secondary-165 py-1 px-3 text-primary-50 rounded-[12px] w-[67px] h-7 flex items-center justify-center">
-                      {client.status}
+                      {client?.status}
                     </span>
                   </div>
                   <div className="flex flex-col mt-4">
@@ -166,7 +129,7 @@ const DetailPage = () => {
                         GST
                       </span>
                       <span className="font-inter text-[12px] font-normal leading-[18px] w-[109px] ">
-                        {client.GST}
+                        {client?.GST}
                       </span>
                     </div>
                     <div className="flex gap-2">
@@ -175,7 +138,7 @@ const DetailPage = () => {
                       </span>
                       <span className="font-inter text-[12px] font-normal leading-[18px] w-[150px] ">
                         {/* 08th September, 2024 */}
-                        {formatDateWithOrdinal(client.createdAt)}
+                        {formatDateWithOrdinal(client?.createdAt || "")}
                       </span>
                     </div>
                   </div>
@@ -202,7 +165,7 @@ const DetailPage = () => {
                     Contact Person
                   </span>
                   <span className="font-inter text-[12px] font-normal leading-[18px] ">
-                    {client.contactPerson}
+                    {client?.contactPerson}
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -210,7 +173,7 @@ const DetailPage = () => {
                     Mobile
                   </span>
                   <span className="font-inter text-[12px] font-normal leading-[18px]">
-                    {client.mobileNum}
+                    {client?.mobileNum}
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -222,7 +185,7 @@ const DetailPage = () => {
                     {/* Plot No. 21, KIADB Industrial Area, Phase 2, Peenya
                     Industrial Estate, Tumkur Road, Bangalore - 560058,
                     Karnataka, India */}
-                    {client.addressLine1}
+                    {client?.addressLine1}
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -276,7 +239,7 @@ const DetailPage = () => {
               />
             </div>
             <DashboardTable
-              invoices={client.invoice}
+              invoices={client?.invoice || []}
               editToggleModel={editToggleModel}
               handleDelete={handleDelete}
             />
@@ -293,14 +256,14 @@ const DetailPage = () => {
             <CreateModel
               createToggleModel={createToggleModel}
               selectedId={id}
-              clientName={client.companyName}
+              clientName={client?.companyName}
             />
           )}
 
           {isClientEditModalOpen && (
             <UpdateClientModal
               editToggleModel={editToggleClientModel}
-              selectedId={id}
+              selectedId={selectedClientId}
             />
           )}
         </>

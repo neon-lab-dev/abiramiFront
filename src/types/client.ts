@@ -62,6 +62,7 @@ export interface SingleClientResponse {
   totalInvoices: number;
   paidInvoices: number;
   pendingInvoices: number;
+  totalIncome?: number;
 }
 
 export interface CreateClient {
@@ -70,7 +71,7 @@ export interface CreateClient {
   GST: string;
   mobileNum: string;
   landLineNum: string;
-  email: string;
+  email?: string;
   addressLine1: string;
   addressLine2: string;
   addressLine3: string;

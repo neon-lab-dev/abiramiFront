@@ -13,8 +13,8 @@ const UpdateModal = ({
   editToggleModel,
   selectedId,
 }: {
-  editToggleModel: () => void;
-  selectedId: string;
+  editToggleModel?: (id: string) => void;
+  selectedId?: string;
 }) => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);

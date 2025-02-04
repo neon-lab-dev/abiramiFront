@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { verifyAdminByToken } from "../api/api";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext({
   admin: localStorage.getItem("admin") || null,
@@ -22,7 +21,6 @@ export const AuthProvider = ({ children }) => {
         } // If no token, skip API call
 
         const { data } = await verifyAdminByToken(token);
-        console.log(data);
         setAdmin(data);
 
         // Store the admin data in localStorage for future use

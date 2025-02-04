@@ -17,8 +17,8 @@ interface Dashboard {
   i2: boolean;
   i3: boolean;
   iconsOrder: string[];
-  editToggleModel: () => void;
-  handleDelete: () => void;
+  editToggleModel?: () => void;
+  handleDelete?: () => void;
 }
 
 const DashboardTable = ({
@@ -27,7 +27,7 @@ const DashboardTable = ({
   handleDelete,
 }: {
   invoices: any[];
-  editToggleModel: () => void;
+  editToggleModel: (id: string) => void;
   handleDelete: () => void;
 }) => {
   const [dropdownOpen1, setDropdownOpen1] = useState(false);

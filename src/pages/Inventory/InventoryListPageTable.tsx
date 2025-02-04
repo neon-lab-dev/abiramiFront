@@ -4,17 +4,13 @@ import { ICONS } from "../../assets/index";
 import DownloadButton from "../../Components/Shared/Table/DownloadExcelBtn";
 import Button from "../../Components/Shared/Button/Button";
 import InventoryLogsTable from "../../Components/Inventory/InventoryLogsTable";
-import {
-  deleteClient,
-  deleteInventory,
-  getInventoryByCategoryId,
-} from "../../api/api";
+import { deleteInventory, getInventoryByCategoryId } from "../../api/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { InventoryItem } from "../../types/inventory";
-import { Category, CategoryResponse } from "../../types/category";
+import { Category } from "../../types/category";
 import UpdateModel from "./UpdateModel";
 import Loader from "../../lib/loader";
-import { handleSort } from "../../utils";
+
 import { useSearch } from "../../context/SearchContext";
 
 const InventoryListPageTable = () => {

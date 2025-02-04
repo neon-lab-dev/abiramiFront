@@ -8,11 +8,11 @@ import { deleteClient, getClients } from "../../api/api";
 import Loader from "../../lib/loader";
 import UpdateModal from "./UpdateModal";
 import { useSearch } from "../../context/SearchContext";
-import { getSearchFunction } from "../../utils/searchUtils";
+import { ClientResponse } from "../../types/client";
 
 const ListPage = () => {
-  const { searchQuery, searchResults, setSearchResults } = useSearch();
-  const [clients, setClients] = useState<any[]>([]);
+  const { searchQuery, searchResults } = useSearch();
+  const [clients, setClients] = useState<ClientResponse>();
   const [loading, setLoading] = useState<boolean>(false);
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string>("");
@@ -30,9 +30,8 @@ const ListPage = () => {
     const fetchClients = async () => {
       setLoading(true);
       try {
-        const data: any[] = await getClients();
+        const data: ClientResponse = await getClients();
         setClients(data);
-        setSearchResults(data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -55,31 +54,6 @@ const ListPage = () => {
       console.log("Delete action canceled.");
     }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const searchFunction = getSearchFunction(window.location.pathname);
-
-      if (searchFunction && searchQuery.trim() !== "") {
-        try {
-          const results = await searchFunction(searchQuery);
-          setSearchResults(results);
-        } catch (error) {
-          console.error("Error fetching search data:", error);
-        }
-      } else if (searchQuery.trim() === "") {
-        setSearchResults(clients);
-      }
-    };
-
-    fetchData();
-  }, [clients, setSearchResults]);
-
-  useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setSearchResults(clients);
-    }
-  }, [searchQuery]);
 
   return (
     <>
@@ -106,7 +80,7 @@ const ListPage = () => {
               cardBg="bg-secondary-10"
               iconBg="bg-secondary-65"
               title="Total Clients"
-              value={clients.totalCount}
+              value={clients?.totalCount}
               cardWidth="w-[416px]"
               icon={ICONS.clienticon}
             />
@@ -114,7 +88,7 @@ const ListPage = () => {
               cardBg="bg-secondary-30"
               iconBg="bg-secondary-70"
               title="Active Clients"
-              value={clients.activeCount}
+              value={clients?.activeCount}
               cardWidth="w-[416px]"
               icon={ICONS.clienticon2}
             />
@@ -122,13 +96,17 @@ const ListPage = () => {
               cardBg="bg-secondary-40"
               iconBg="bg-secondary-85"
               title="Inactive Clients"
-              value={clients.inactiveCount}
+              value={clients?.inactiveCount}
               cardWidth="w-[416px]"
               icon={ICONS.clienticon3}
             />
           </div>
           <ClientTable
-            clients={searchQuery.trim() === "" ? clients : searchResults}
+            clients={
+              (searchQuery?.trim() === "" || searchResults?.length === 0
+                ? clients
+                : searchResults) || {}
+            }
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}
           />

@@ -5,14 +5,14 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import { getClientById, updateClient } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../lib/loader";
-import { Client, CreateClient, SingleClientResponse } from "../../types/client";
+import { CreateClient, SingleClientResponse } from "../../types/client";
 
 const UpdateModal = ({
   editToggleModel,
   selectedId,
 }: {
-  editToggleModel: () => void;
-  selectedId: string;
+  editToggleModel?: (id: string) => void;
+  selectedId?: string;
 }) => {
   console.log(selectedId);
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const UpdateModal = ({
     }));
   };
   const handleUpdate = async () => {
-    const clientData = {
+    const clientData: CreateClient = {
       companyName: formData.companyName,
       contactPerson: formData.contactPerson,
       GST: formData.GST,
@@ -62,12 +62,18 @@ const UpdateModal = ({
     };
     setIsSubmitting(true);
     try {
-      const response = await updateClient(selectedId, clientData);
+      const response = await updateClient(clientData, selectedId);
       console.log("Client updated successfully:", response.data);
       alert("Client updated successfully!");
       clearForm();
     } catch (error) {
-      if (error.response && error.response.status === 400) {
+      type ErrorResponse = {
+        response?: {
+          status: number;
+        };
+      };
+      const err = error as ErrorResponse;
+      if (err.response && err.response.status === 400) {
         alert(
           "Failed to create client. Please ensure all required fields are filled."
         );
@@ -148,7 +154,9 @@ const UpdateModal = ({
                 <img
                   src={ICONS.close}
                   alt=""
-                  onClick={editToggleModel}
+                  onClick={() =>
+                    editToggleModel && editToggleModel(selectedId || "")
+                  }
                   className=" cursor-pointer"
                 />
               </div>

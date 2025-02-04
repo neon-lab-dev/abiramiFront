@@ -2,6 +2,7 @@ import axios from "axios";
 import axiosInstance from "./axios";
 import { API_BASE_URL } from "../config";
 import Cookies from "js-cookie";
+import { CreateClient } from "../types/client";
 
 export const login = async (data: { email: string; password: string }) => {
   try {
@@ -93,7 +94,7 @@ export const getClients = async () => {
     throw error;
   }
 };
-export const getClientById = async (id: string) => {
+export const getClientById = async (id?: string) => {
   try {
     const response = await axiosInstance.get(`/clients/${id}`);
     return response.data;
@@ -114,7 +115,7 @@ export const searchClient = async (query: string) => {
     throw error;
   }
 };
-export const updateClient = async (id: string, clientData) => {
+export const updateClient = async (clientData: CreateClient, id?: string) => {
   try {
     const response = await axiosInstance.put(`/clients/${id}`, clientData);
     return response.data;
@@ -123,7 +124,7 @@ export const updateClient = async (id: string, clientData) => {
     throw error;
   }
 };
-export const deleteClient = async (id: string) => {
+export const deleteClient = async (id: string | "") => {
   try {
     const response = await axiosInstance.delete(`/clients/${id}`);
     return response.data;

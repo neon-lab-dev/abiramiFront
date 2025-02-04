@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { createClient } from "../../api/api";
@@ -48,8 +48,14 @@ const CreateClients = () => {
       alert("Client created successfully!");
       clearForm();
       navigate("/clients");
-    } catch (error: any) {
-      if (error.response && error.response.status === 400) {
+        } catch (error: unknown) {
+      type ErrorResponse = {
+        response?: {
+          status: number;
+        };
+      };
+      const err = error as ErrorResponse;
+      if (err.response?.status === 400) {
         alert(
           "Failed to create client. Please ensure all required fields are filled."
         );
