@@ -1,16 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
 import { convertNumberToWords, formatNumber } from "../../utils";
-import {
-  createInvoices,
-  createInvoicesByClientName,
-  getClientById,
-} from "../../api/api";
+import { createInvoicesByClientName } from "../../api/api";
 import { useNavigate } from "react-router-dom";
+import { ProductDetail } from "../../types/invoice";
 
-const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
+interface CreateModelProps {
+  createToggleModel: () => void;
+  clientName?: string;
+}
+
+const CreateModel: React.FC<CreateModelProps> = ({
+  createToggleModel,
+  clientName,
+}) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
@@ -56,7 +62,8 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
     tax: 0,
     total: 0,
   });
-  const [rows, setRows] = useState([
+
+  const [rows, setRows] = useState<ProductDetail[]>([
     {
       description: "",
       HSNno: "",
@@ -72,40 +79,73 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
       {
         description: "",
         HSNno: "",
-        quantity: "",
-        rate: "",
-        discount: "",
-        amount: "",
+        quantity: null,
+        discount: null,
+        amount: null,
+        rate: null,
       },
     ]);
   };
-  const removeRow = (index) => {
+  const removeRow = (index: number) => {
     setRows(rows.filter((_, idx) => idx !== index));
   };
-  // const handleInputChange = (index, field, value) => {
-  //   const updatedRows = [...rows];
-  //   updatedRows[index][field] = value;
+  // const handleInputChange = (
+  //   index: number,
+  //   field: keyof ProductDetail,
+  //   value: number
+  // ) => {
+  //   const updatedRows: ProductDetail[] = [...rows];
+  //   if (["quantity", "rate", "discount", "amount"].includes(field)) {
+  //     updatedRows[index][field] = parseFloat(value.toString()) || 0;
+  //   } else {
+  //     updatedRows[index][field] = value;
+  //   }
+
+  //   // Automatically calculate the amount if relevant fields are updated
+  //   if (["quantity", "rate", "discount"].includes(field)) {
+  //     const quantity = updatedRows[index].quantity || 0;
+  //     const rate = updatedRows[index].rate || 0;
+  //     const discount = updatedRows[index].discount || 0;
+
+  //     updatedRows[index].amount = quantity * rate * (1 - discount);
+  //   }
+  //   console.log(updatedRows);
   //   setRows(updatedRows);
   // };
-  const handleInputChange = (index: number, field: string, value: number) => {
-    const updatedRows = [...rows];
-    if (["quantity", "rate", "discount", "amount"].includes(field)) {
-      updatedRows[index][field] = parseFloat(value) || 0;
-    } else {
-      updatedRows[index][field] = value;
-    }
 
-    // Automatically calculate the amount if relevant fields are updated
-    if (["quantity", "rate", "discount"].includes(field)) {
-      const quantity = updatedRows[index].quantity || 0;
-      const rate = updatedRows[index].rate || 0;
-      const discount = updatedRows[index].discount || 0;
+  const handleInputChange = (
+    index: number,
+    field: keyof ProductDetail,
+    value: string | number
+  ) => {
+    console.log(field);
+    setRows((prevRows) =>
+      prevRows.map((row, i) => {
+        if (i !== index) return row;
 
-      updatedRows[index].amount = quantity * rate * (1 - discount);
-    }
-    console.log(updatedRows);
-    setRows(updatedRows);
+        const updatedRow = { ...row };
+
+        const parsedValue =
+          typeof value === "number" ? value : parseFloat(value) || 0;
+
+        if (["quantity", "rate", "discount", "amount"].includes(field)) {
+          updatedRow[field] = parsedValue as never;
+        } else {
+          updatedRow[field] = value as never;
+        }
+
+        if (["quantity", "rate", "discount"].includes(field)) {
+          const quantity = updatedRow.quantity || 0;
+          const rate = updatedRow.rate || 0;
+          const discount = updatedRow.discount || 0;
+          updatedRow.amount = quantity * rate * (1 - discount);
+        }
+
+        return updatedRow;
+      })
+    );
   };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -222,29 +262,34 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
     setLoading(true);
     setIsSubmitting(true);
     try {
-      const response = await createInvoicesByClientName(data, clientName);
-      console.log("Invoice created successfully:", response.data);
+      if (clientName) {
+        const response = await createInvoicesByClientName(data, clientName);
+        console.log("Invoice created successfully:", response.data);
+      }
       alert("Invoice created successfully!");
+      navigate(0);
     } catch (error) {
       console.error("Error creating invoice:", error);
       alert("Failed to create invoice. Please try again.");
     } finally {
       setIsSubmitting(false);
       setLoading(false);
-      navigate(0);
     }
   };
 
   useEffect(() => {
     const calculateValues = () => {
       // Calculate Subtotal
-      const calculatedSubTotal = rows.reduce((sum, row) => {
-        const quantity = parseFloat(row.quantity) || 0;
-        const rate = parseFloat(row.rate) || 0;
-        const discount = parseFloat(row.discount) || 0;
-        const amount = quantity * rate * (1 - discount);
-        return sum + amount;
-      }, 0);
+      const calculatedSubTotal = rows.reduce(
+        (sum: number, row: ProductDetail) => {
+          const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
+          const rate = parseFloat(row?.rate?.toString() || "0") || 0;
+          const discount = parseFloat(row?.discount?.toString() || "0") || 0;
+          const amount = quantity * rate * (1 - discount);
+          return sum + amount;
+        },
+        0
+      );
 
       setSubTotal(calculatedSubTotal);
 
@@ -389,17 +434,6 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
               />
             </div>
           </div>
-
-          {/* <InputField
-          label="Status"
-          required={true}
-          inputBg=""
-          type="text"
-          placeholder="Enter Status"
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-        /> */}
           <div className="flex-2 relative" ref={dropdownRef}>
             <div className="" onClick={() => setShowDropdown1(true)}>
               <InputField
@@ -428,40 +462,6 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
               </div>
             )}
           </div>
-          {/* {formData.invoicetype == "Cheque Invoice" && (
-          <>
-            <InputField
-              label="Bank Name"
-              required={true}
-              inputBg=""
-              type="text"
-              placeholder="Enter bank name"
-              name="BankName"
-              value={formData.BankName}
-              onChange={handleChange}
-            />
-            <InputField
-              label="Cheque Number"
-              required={true}
-              inputBg=""
-              type="number"
-              placeholder="Enter Cheque Number"
-              name="ChequeNumber"
-              value={formData.ChequeNumber}
-              onChange={handleChange}
-            />
-            <InputField
-              label="Cheque Amount"
-              required={true}
-              inputBg=""
-              type="text"
-              placeholder="Enter amount"
-              name="ChequeAmount"
-              value={formData.ChequeAmount}
-              onChange={handleChange}
-            />
-          </>
-        )} */}
           <InputField
             label="Tax Type"
             required={true}
@@ -648,7 +648,7 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
                       <input
                         type="number"
                         placeholder="Enter quantity"
-                        value={row.quantity}
+                        value={row?.quantity ?? ""}
                         onChange={(e) =>
                           handleInputChange(index, "quantity", e.target.value)
                         }
@@ -659,7 +659,7 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
                       <input
                         type="number"
                         placeholder="Enter rate"
-                        value={row.rate}
+                        value={row.rate ?? ""}
                         onChange={(e) =>
                           handleInputChange(index, "rate", e.target.value)
                         }
@@ -669,8 +669,11 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
                     <td className=" px-4 py-2">
                       <input
                         type="number"
+                        min={0}
+                        step={0.01}
+                        max={1}
                         placeholder="Enter discount"
-                        value={row.discount}
+                        value={row.discount ?? ""}
                         onChange={(e) =>
                           handleInputChange(index, "discount", e.target.value)
                         }
@@ -681,7 +684,7 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
                       <input
                         type="number"
                         placeholder="Enter amount"
-                        value={row?.amount}
+                        value={row.amount ?? ""}
                         onChange={(e) =>
                           handleInputChange(index, "amount", e.target.value)
                         }
@@ -745,7 +748,7 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
                     <input
                       type="number"
                       placeholder="Enter quantity"
-                      value={row.quantity}
+                      value={row.quantity ?? ""}
                       onChange={(e) =>
                         handleInputChange(index, "quantity", e.target.value)
                       }
@@ -757,7 +760,7 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
                     <input
                       type="number"
                       placeholder="Enter rate"
-                      value={row.rate}
+                      value={row.rate ?? ""}
                       onChange={(e) =>
                         handleInputChange(index, "rate", e.target.value)
                       }
@@ -768,8 +771,11 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
                     <label>Discount</label>
                     <input
                       type="number"
+                      min={0}
+                      step={0.01}
+                      max={1}
                       placeholder="Enter discount"
-                      value={row.discount}
+                      value={row.discount ?? ""}
                       onChange={(e) =>
                         handleInputChange(index, "discount", e.target.value)
                       }
@@ -781,7 +787,7 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
                     <input
                       type="number"
                       placeholder="Enter amount"
-                      value={row.amount}
+                      value={row.amount ?? ""}
                       onChange={(e) =>
                         handleInputChange(index, "amount", e.target.value)
                       }
@@ -838,7 +844,7 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
                   Total (in words)
                 </h3>
                 <p className="text-sm leading-5 font-inter font-[600]">
-                  {convertNumberToWords(total)}
+                  {convertNumberToWords(total ?? 0)}
                 </p>
               </div>
             </div>
@@ -929,7 +935,7 @@ const CreateModel = ({ createToggleModel, selectedId, clientName }) => {
               <div className="flex justify-between font-bold text-lg mt-8">
                 <span className="text-sm font-[600]">Total</span>
                 <span className="text-sm font-[600]">
-                  ₹ {formatNumber(total)}
+                  ₹ {formatNumber(total ?? 0)}
                 </span>
               </div>
             </div>

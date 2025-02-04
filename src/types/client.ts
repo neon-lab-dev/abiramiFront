@@ -23,6 +23,8 @@ export interface Invoice {
   roundOff: number | null;
 }
 
+import { InvoiceResponse } from "./invoice";
+
 export interface Client {
   id: string;
   companyName: string;
@@ -41,7 +43,7 @@ export interface Client {
   status: string;
   createdAt: string;
   updatedAt: string;
-  invoice?: Invoice[];
+  invoice?: InvoiceResponse[];
 }
 
 export interface ClientResponse {

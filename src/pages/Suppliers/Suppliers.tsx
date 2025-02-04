@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { deleteSupplier, getSuppliers } from "../../api/api";
-import ListPage from "./ListPage";
 import SuppliersCards from "./SuppliersCards";
 import SuppliersTable from "../../Components/Suppliers/SuppliersTable";
 import Loader from "../../lib/loader";
@@ -13,12 +12,16 @@ export default function Suppliers() {
   const { searchQuery, searchResults } = useSearch();
   const [loading, setLoading] = useState<boolean>(false);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [suppliersData, setSuppliersData] = useState<SupplierData>();
+  const [suppliersData, setSuppliersData] = useState<SupplierData>({
+    totalCount: 0,
+    activeCount: 0,
+    inactiveCount: 0,
+  });
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string>("");
   const navigate = useNavigate();
-  const editToggleModel = (id: string) => {
-    setSelectedId(id);
+  const editToggleModel = (id?: string) => {
+    setSelectedId(id || "");
     setEditModalOpen(!isEditModalOpen);
   };
   useEffect(() => {
@@ -42,10 +45,10 @@ export default function Suppliers() {
     fetchSuppliers();
   }, []);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id?: string) => {
     setLoading(true);
     if (window.confirm("Are you sure you want to delete?")) {
-      const response = await deleteSupplier(id);
+      const response = await deleteSupplier(id ?? "");
       console.log("Item deleted!", response);
       if (response.status === 200) {
         alert("Supplier deleted Successfully!!!");
@@ -55,9 +58,6 @@ export default function Suppliers() {
       console.log("Delete action canceled.");
     }
   };
-
-  console.log(suppliers);
-  console.log(searchResults);
 
   return (
     <>

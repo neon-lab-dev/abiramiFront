@@ -11,8 +11,8 @@ const PurchaseTable = ({
   handleDelete,
 }: {
   purchases: Purchase[];
-  editToggleModel;
-  handleDelete;
+  editToggleModel?: (id?: string) => void;
+  handleDelete?: (id: string) => void;
 }) => {
   const formatCurrency = (value: number) => {
     return `₹ ${value?.toLocaleString()}`;

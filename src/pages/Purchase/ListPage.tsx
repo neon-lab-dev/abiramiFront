@@ -5,20 +5,19 @@ import { useNavigate } from "react-router-dom";
 import { ICONS } from "../../assets";
 import { useEffect, useState } from "react";
 import { deletePurchase, getPurchases } from "../../api/api";
-import { Purchase, PurchaseData, PurchaseResponse } from "../../types/purchase";
+import { PurchaseData, PurchaseResponse } from "../../types/purchase";
 import Loader from "../../lib/loader";
 import UpdateModal from "./UpdateModal";
 import { useSearch } from "../../context/SearchContext";
-import { getSearchFunction } from "../../utils/searchUtils";
 
 const ListPage = () => {
-  const { searchQuery, searchResults, setSearchResults } = useSearch();
+  const { searchQuery, searchResults } = useSearch();
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string>("");
   const [purchases, setPurchases] = useState<PurchaseResponse>();
   const [purchaseData, setPurchaseData] = useState<PurchaseData>({
-    totalClients: 0,
-    activeClients: 0,
+    totalPurchases: 0,
+    activePurchases: 0,
     inactiveClinets: 0,
   });
   const [loading, setLoading] = useState(false);
@@ -27,8 +26,10 @@ const ListPage = () => {
   const handleNavigateToCreatePurchase = () => {
     navigate("/Purchase/CreatePurchase");
   };
-  const editToggleModel = (id: string) => {
-    setSelectedId(id);
+  const editToggleModel = (id?: string) => {
+    if (id) {
+      setSelectedId(id);
+    }
     setEditModalOpen(!isEditModalOpen);
   };
 
@@ -38,8 +39,8 @@ const ListPage = () => {
       try {
         const response: PurchaseResponse = await getPurchases();
         setPurchaseData({
-          totalClients: response.totalClients,
-          activeClients: response.activeClients,
+          totalPurchases: response.totalPurchases,
+          activePurchases: response.activePurchases,
           inactiveClinets: response.inactiveClinets,
         });
         setPurchases(response);
@@ -97,7 +98,7 @@ const ListPage = () => {
               cardBg="bg-secondary-10"
               iconBg="bg-secondary-65"
               title="Total Clients"
-              value={purchaseData.totalClients}
+              value={purchaseData.totalPurchases}
               cardWidth="w-[416px]"
               icon={ICONS.clienticon}
             />
@@ -105,7 +106,7 @@ const ListPage = () => {
               cardBg="bg-secondary-30"
               iconBg="bg-secondary-70"
               title="Active Clients"
-              value={purchaseData.activeClients}
+              value={purchaseData.activePurchases}
               cardWidth="w-[416px]"
               icon={ICONS.clienticon2}
             />
@@ -120,7 +121,9 @@ const ListPage = () => {
           </div>
           <PurchaseTable
             purchases={
-              searchQuery.trim() === ""|| searchResults.length === 0 ? purchases?.data : searchResults?.data
+              searchQuery.trim() === "" || searchResults.length === 0
+                ? purchases?.data
+                : searchResults?.data
             }
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}

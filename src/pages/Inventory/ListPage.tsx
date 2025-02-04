@@ -4,34 +4,34 @@ import { useNavigate } from "react-router-dom";
 import { ICONS } from "../../assets";
 import CatagoryList from "../../Components/Inventory/CatagoryList";
 import { useEffect, useState } from "react";
-import { getClients, getInventories, getInventoryData } from "../../api/api";
+import { getInventoryData } from "../../api/api";
 import Loader from "../../lib/loader";
 import { InventoryData, InventoryResponse } from "../../types/inventory";
 
 const ListPage = () => {
   const navigate = useNavigate();
-  const [inventories, setInventories] = useState([]);
+  // const [inventories, setInventories] = useState<InventoryResponse>();
   const [inventoryData, setInventoryData] = useState<InventoryData>();
   const [loading, setLoading] = useState(false);
   const handleNavigateToCreateInventory = () => {
     navigate("/inventory/createInventory");
   };
 
-  useEffect(() => {
-    const fetchInventories = async () => {
-      setLoading(true);
-      try {
-        const data: any[] = await getInventories();
-        setInventories(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchInventories = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const data: InventoryResponse = await getInventories();
+  //       setInventories(data);
+  //     } catch (err) {
+  //       console.error(err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchInventories();
-  }, []);
+  //   fetchInventories();
+  // }, []);
 
   useEffect(() => {
     const fetchInventoryData = async () => {

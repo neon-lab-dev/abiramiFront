@@ -44,7 +44,7 @@ const InputField: React.FC<TInputProps> = ({
           className="w-full px-4 py-2 rounded-md border bg-transparent outline-none"
           placeholder={placeholder}
           name={name} // Set the name prop
-          value={value} // Bind value from form state
+          value={value !== null ? value : undefined} // Bind value from form state
           onChange={onChange} // Trigger the onChange function when input changes
           readOnly={readOnly}
           autoComplete="off"

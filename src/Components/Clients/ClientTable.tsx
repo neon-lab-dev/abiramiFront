@@ -1,26 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
-import { ClientResponse } from "../../types/client";
+import { Client, ClientResponse } from "../../types/client";
 
 // Define a type for the row data
-interface Client {
-  company_name: string;
-  contact_person: string;
-  gst: string;
-  mobile_no: string;
-  address: string;
-  created_date: Date; // Change to Date type
-  status: "Active" | "Inactive";
-  i1: boolean;
-  i2: boolean;
-  i3: boolean;
-  iconsOrder: string[];
-}
 
 const ClientTable: React.FC<{
-  clients: ClientResponse | object;
-  editToggleModel?: (clientId: string) => void;
+  clients: ClientResponse;
+  editToggleModel?: (clientId?: string) => void;
   handleDelete?: (clientId: string) => void;
 }> = ({ clients, editToggleModel, handleDelete }) => {
   const icons = {
@@ -31,10 +18,10 @@ const ClientTable: React.FC<{
 
   const [sortedData, setSortedData] = useState<Client[]>(clients?.data);
 
-  const handleSort = (data: Client[], order: "asc" | "desc"): void => {
+  const handleSort = (order: "asc" | "desc"): void => {
     const sorted = [...sortedData].sort((a, b) => {
-      const dateA = new Date(a.created_date);
-      const dateB = new Date(b.created_date);
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
 
       if (order === "asc") {
         return dateA.getTime() - dateB.getTime(); // Convert dates to timestamps
@@ -100,8 +87,8 @@ const ClientTable: React.FC<{
       icon2: ICONS.downArrow2,
       icon1: ICONS.upArrow,
       width: "160px",
-      onIcon1Click: () => handleSort(data, "asc"),
-      onIcon2Click: () => handleSort(data, "desc"),
+      onIcon1Click: () => handleSort("asc"),
+      onIcon2Click: () => handleSort("desc"),
     },
     {
       header: "Status",

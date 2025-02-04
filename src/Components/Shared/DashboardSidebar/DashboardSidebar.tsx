@@ -86,7 +86,6 @@ const DashboardSidebar: React.FC<DashboardHeaderProps> = ({
         },
       ],
     },
-    { icon: ICONS.SettingsIcon, text: "Settings", path: "/settings" },
   ];
 
   return (

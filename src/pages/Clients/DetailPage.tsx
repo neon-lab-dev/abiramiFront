@@ -25,9 +25,9 @@ const DetailPage = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState<boolean>(false);
 
   const [loading, setLoading] = useState(false);
-  const editToggleModel = (id: string) => {
+  const editToggleModel = (id?: string) => {
     setEditModalOpen(!isEditModalOpen);
-    setSelectedId(id);
+    setSelectedId(id ?? "");
   };
 
   const editToggleClientModel = (id: string) => {
@@ -71,6 +71,8 @@ const DetailPage = () => {
       console.log("Delete action canceled.");
     }
   };
+
+  console.log(client);
 
   return (
     <React.Fragment>
@@ -193,7 +195,7 @@ const DetailPage = () => {
                     Total Income
                   </span>
                   <span className="font-inter text-[12px] font-normal leading-[18px] ">
-                    ₹ {formatNumber(invoiceData?.totalIncome)}
+                    ₹ {formatNumber(invoiceData?.totalIncome ?? 0)}
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -239,7 +241,7 @@ const DetailPage = () => {
               />
             </div>
             <DashboardTable
-              invoices={client?.invoice || []}
+              invoices={client?.invoice}
               editToggleModel={editToggleModel}
               handleDelete={handleDelete}
             />
@@ -255,7 +257,6 @@ const DetailPage = () => {
           {isCreateModalOpen && (
             <CreateModel
               createToggleModel={createToggleModel}
-              selectedId={id}
               clientName={client?.companyName}
             />
           )}

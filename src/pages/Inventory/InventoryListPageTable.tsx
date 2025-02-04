@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react";
 import Table from "../../Components/Shared/Table/Table";
 import { ICONS } from "../../assets/index";
@@ -13,26 +14,32 @@ import Loader from "../../lib/loader";
 
 import { useSearch } from "../../context/SearchContext";
 
+interface ISearch {
+  searchQuery: string;
+  searchResults: { data: InventoryItem[] };
+}
+
 const InventoryListPageTable = () => {
   const { id } = useParams();
-  const { searchQuery, searchResults } = useSearch();
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [isInventoryLogsOpen, setInventoryLogsOpen] = useState(false);
-
+  const { searchQuery, searchResults }: ISearch = useSearch();
+  const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [isInventoryLogsOpen, setInventoryLogsOpen] = useState<boolean>(false);
   const [category, setCategory] = useState<Category>();
-  const [inventory, setInventory] = useState([]);
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string>("");
+  const [selectedLogId, setSelectedLogId] = useState<string>("");
   const navigate = useNavigate();
 
   const editToggleModel = (id?: string) => {
     setEditModalOpen(!isEditModalOpen);
-    setSelectedId(id);
+    setSelectedId(id || "");
   };
-  const LogToggleModel = () => {
+  const LogToggleModel = (id?: string) => {
     setInventoryLogsOpen(!isInventoryLogsOpen);
+    setSelectedLogId(id || "");
   };
-  const handleActionClick = (actionType: string, item: InventoryItem) => {
+  const handleActionClick = (actionType: string) => {
     switch (actionType) {
       case "i1":
         setInventoryLogsOpen(!isInventoryLogsOpen);
@@ -255,11 +262,11 @@ const InventoryListPageTable = () => {
   // ];
   const [sortedData, setSortedData] = useState(inventory); // Initial data array
 
-  const handleSort = (inventory, order: "asc" | "desc"): void => {
+  const handleSort = (order: "asc" | "desc"): void => {
     const sorted = [...sortedData].sort(
       (a: InventoryItem, b: InventoryItem) => {
-        const dateA = new Date(a.updatedAt);
-        const dateB = new Date(b.updatedAt);
+        const dateA = new Date(a.updatedAt || 0);
+        const dateB = new Date(b.updatedAt || 0);
 
         if (order === "asc") {
           return dateA.getTime() - dateB.getTime(); // Convert dates to timestamps
@@ -273,10 +280,7 @@ const InventoryListPageTable = () => {
     setSortedData(sorted);
   };
 
-  const handleQuantitySort = (
-    data: Inventory[],
-    order: "asc" | "desc"
-  ): void => {
+  const handleQuantitySort = (order: "asc" | "desc"): void => {
     const sorted = [...sortedData].sort((a, b) => {
       if (order === "asc") {
         return a.quantity - b.quantity;
@@ -320,8 +324,8 @@ const InventoryListPageTable = () => {
       icon2: ICONS.downArrow2,
       icon1: ICONS.upArrow,
       width: "120px",
-      onIcon1Click: () => handleQuantitySort(inventory, "asc"),
-      onIcon2Click: () => handleQuantitySort(inventory, "desc"),
+      onIcon1Click: () => handleQuantitySort("asc"),
+      onIcon2Click: () => handleQuantitySort("desc"),
     },
 
     {
@@ -397,8 +401,8 @@ const InventoryListPageTable = () => {
       icon1: ICONS.upArrow,
       icon2: ICONS.downArrow2,
       width: "180px",
-      onIcon1Click: () => handleSort(inventory, "asc"),
-      onIcon2Click: () => handleSort(inventory, "desc"),
+      onIcon1Click: () => handleSort("asc"),
+      onIcon2Click: () => handleSort("desc"),
     },
   ];
 
@@ -406,9 +410,11 @@ const InventoryListPageTable = () => {
     const fetchInventory = async () => {
       setLoading(true);
       try {
-        const data = await getInventoryByCategoryId(id);
-        setInventory(data.data.inventory);
-        setCategory(data.data);
+        if (id) {
+          const data = await getInventoryByCategoryId(id);
+          setInventory(data.data.inventory);
+          setCategory(data.data);
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -435,6 +441,8 @@ const InventoryListPageTable = () => {
     }
   };
 
+  console.log(searchResults);
+
   return (
     <>
       {loading ? (
@@ -446,9 +454,9 @@ const InventoryListPageTable = () => {
           <Table
             // data={sortedData}
             data={
-              searchQuery.trim() === "" || searchResults.length === 0
+              searchQuery.trim() === "" || searchResults?.data?.length < 1
                 ? sortedData
-                : searchResults?.data
+                : searchResults.data
             }
             columns={columns}
             tableName="Recent Invoice"
@@ -462,6 +470,7 @@ const InventoryListPageTable = () => {
             onActionClick={handleActionClick}
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}
+            LogToggleModel={LogToggleModel}
           />
           <div className=" flex justify-between">
             <div className="flex justify-between md:gap-4 gap-3">
@@ -709,7 +718,7 @@ const InventoryListPageTable = () => {
                   <img
                     src={ICONS.close}
                     alt=""
-                    onClick={LogToggleModel}
+                    onClick={() => LogToggleModel("")}
                     className=" cursor-pointer"
                   />
                 </div>

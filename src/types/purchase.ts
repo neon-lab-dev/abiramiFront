@@ -24,14 +24,14 @@ export interface PurchaseResponse {
   status: number;
   statusText: string;
   data: Purchase[];
-  totalClients: number;
-  activeClients: number;
+  totalPurchases: number;
+  activePurchases: number;
   inactiveClinets: number;
 }
 
 export interface PurchaseData {
-  totalClients: number;
-  activeClients: number;
+  totalPurchases: number;
+  activePurchases: number;
   inactiveClinets: number;
 }
 

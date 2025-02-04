@@ -34,8 +34,12 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             return;
           }
           setSearchResults(results);
-        } catch (error) {
-          if (error.status === 404) {
+        } catch (error: unknown) {
+          type ErrorResponse = {
+            status: number;
+          };
+          const err = error as ErrorResponse;
+          if (err.status === 404) {
             alert("Data not found!!!");
             return;
           } else {

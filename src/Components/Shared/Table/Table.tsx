@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState } from "react";
 import { ICONS } from "../../../assets";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { formatDateWithOrdinal } from "../../../utils";
-import { useSearch } from "../../../context/SearchContext";
 
 interface Column {
   header: string | JSX.Element;
   accessor: string;
   width?: string;
+  navigate?: boolean;
+  type?: string;
   cellClassName?: string | ((row: any) => string);
   cellRenderer?: (row: any) => JSX.Element;
   icon1?: string;
@@ -36,6 +39,7 @@ interface TableProps {
   onActionClick?: any;
   editToggleModel?: (id?: string) => void;
   handleDelete?: (id: string) => void;
+  LogToggleModel?: (id: string) => void;
 }
 
 const formatDate = (date: Date) => {
@@ -62,24 +66,10 @@ const Table: React.FC<TableProps> = ({
   bg_i3 = "bg-red-500",
   editToggleModel,
   handleDelete,
+  LogToggleModel,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  // const { searchQuery } = useSearch();
-  // const [searchedData, setSearchedData] = useState([]);
-  // useEffect(() => {
-  //   const filteredData = data?.filter((item) => {
-  //     return (
-  //       item?.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //       item?.mobileNum?.includes(searchQuery) ||
-  //       item?.addressLine1?.includes(searchQuery)
-  //     );
-  //   });
-  //   if (searchQuery !== "") {
-  //     setSearchedData(filteredData);
-  //   } else {
-  //     setSearchedData(data);
-  //   }
-  // }, [searchQuery, data]);
+  const location = useLocation();
 
   const totalPages = enablePagination
     ? Math.ceil(data?.length / rowsPerPage)
@@ -107,23 +97,22 @@ const Table: React.FC<TableProps> = ({
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  const i3CustomClass = (i1: boolean, i2: boolean, i3: boolean) => {
-    if (i1 && i2 && i3) return;
-    if (i1 && i2) return;
-    if (i1 && i3) return "w-[54px] justify-between";
-  };
-  const i1CustomClass = (i1: boolean, i2: boolean, i3: boolean) => {
-    if (i1 && i2 && i3) return;
-    if (i1 && i2) return;
-    if (i1 && i3) return "w-[55px]";
-  };
-
   const onEditClick = (id: string) => {
-    editToggleModel(id);
+    if (editToggleModel) {
+      editToggleModel(id);
+    }
   };
 
   const onDeleteClick = (id: string) => {
-    handleDelete(id);
+    if (handleDelete) {
+      handleDelete(id);
+    }
+  };
+
+  const onTickClick = (id: string) => {
+    if (LogToggleModel) {
+      LogToggleModel(id);
+    }
   };
 
   return (
@@ -215,7 +204,7 @@ const Table: React.FC<TableProps> = ({
                       key={rowIndex}
                       className="rounded-lg border-secondary-60 border  bg-white transition-all min-h-10 "
                     >
-                      {columns.map((col, colIndex) => {
+                      {columns?.map((col, colIndex) => {
                         return (
                           <td
                             key={colIndex}
@@ -238,7 +227,8 @@ const Table: React.FC<TableProps> = ({
                               >
                                 {row[col.accessor]?.toUpperCase()}
                               </span>
-                            ) : col.accessor === "companyName" ? (
+                            ) : col.accessor === "companyName" &&
+                              !location.pathname.includes("/purchase") ? (
                               <span
                                 className={`${
                                   col.navigate === false
@@ -249,7 +239,7 @@ const Table: React.FC<TableProps> = ({
                                   if (col.navigate === false) {
                                     return;
                                   } else {
-                                    handleNavigateToDetails(row.id);
+                                    handleNavigateToDetails(row?.id);
                                   }
                                 }}
                               >
@@ -385,11 +375,11 @@ const Table: React.FC<TableProps> = ({
                         <div className="flex gap-4">
                           <button
                             key="i1"
-                            // onClick={() => onEditClick(row.id)}
+                            onClick={() => onTickClick(row?.id)}
                             className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
                           >
                             <img
-                              src={icons.i1}
+                              src={icons?.i1}
                               alt="Edit"
                               className="h-4 w-4"
                             />
@@ -400,7 +390,7 @@ const Table: React.FC<TableProps> = ({
                             className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i2}  `}
                           >
                             <img
-                              src={icons.i2}
+                              src={icons?.i2}
                               alt="Edit"
                               className="h-4 w-4"
                             />
@@ -411,7 +401,7 @@ const Table: React.FC<TableProps> = ({
                             className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i3}  `}
                           >
                             <img
-                              src={icons.i3}
+                              src={icons?.i3}
                               alt="Edit"
                               className="h-4 w-4"
                             />

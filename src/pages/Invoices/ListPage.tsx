@@ -29,13 +29,13 @@ const ListPage = () => {
     navigate("/Invoices/CreateInvoices");
   };
 
-  const editToggleModel = (id: string) => {
-    setSelectedId(id);
+  const editToggleModel = (id?: string) => {
+    setSelectedId(id ?? "");
     setEditModalOpen(!isEditModalOpen);
   };
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete?")) {
+  const handleDelete = async (id?: string) => {
+    if (id && window.confirm("Are you sure you want to delete?")) {
       const response = await deleteInvoice(id);
       console.log("Item deleted!", response);
       if (response.status === 200) {

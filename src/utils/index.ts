@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function formatDateWithOrdinal(dateString: string): string {
   const date = new Date(dateString);
 
@@ -38,20 +39,7 @@ export const handleSort = <T>(
   });
 };
 
-// export const formatNumber = (num) => {
-//   const numStr = num?.toString();
-//   const lastThree = numStr?.slice(-3);
-//   const otherNumbers = numStr?.slice(0, -3);
-
-//   if (otherNumbers) {
-//     return (
-//       otherNumbers?.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + "," + lastThree
-//     );
-//   } else {
-//     return lastThree;
-//   }
-// };
-export const formatNumber = (num) => {
+export const formatNumber = (num: number) => {
   if (num == null) return ""; // Handle null or undefined
 
   const [integerPart, decimalPart] = num.toString().split(".");
@@ -67,7 +55,7 @@ export const formatNumber = (num) => {
   return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
 };
 
-export const convertNumberToWords = (num) => {
+export const convertNumberToWords = (num: number) => {
   const a = [
     "",
     "One ",
@@ -102,31 +90,31 @@ export const convertNumberToWords = (num) => {
     "Eighty",
     "Ninety",
   ];
-  if ((num = num?.toString())?.length > 9) return "overflow";
-  let n: string = "";
+  if (num?.toString().length > 9) return "overflow";
+  let n: any = "";
   n = ("000000000" + num)
     ?.slice(-9)
     ?.match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
   if (!n) return;
   let str = "";
   str +=
-    n[1] != 0
+    Number(n[1]) != 0
       ? (a[Number(n[1])] || b[n[1][0]] + " " + a[n[1][1]]) + "Crore "
       : "";
   str +=
-    n[2] != 0
+    Number(n[2]) != 0
       ? (a[Number(n[2])] || b[n[2][0]] + " " + a[n[2][1]]) + "Lakh "
       : "";
   str +=
-    n[3] != 0
+    Number(n[3]) != 0
       ? (a[Number(n[3])] || b[n[3][0]] + " " + a[n[3][1]]) + "Thousand "
       : "";
   str +=
-    n[4] != 0
+    Number(n[4]) != 0
       ? (a[Number(n[4])] || b[n[4][0]] + " " + a[n[4][1]]) + "Hundred "
       : "";
   str +=
-    n[5] != 0
+    Number(n[5]) != 0
       ? (str != "" ? "and " : "") +
         (a[Number(n[5])] || b[n[5][0]] + " " + a[n[5][1]])
       : "";

@@ -7,7 +7,9 @@ export const AuthContext = createContext({
   loading: true,
 });
 
-export const AuthProvider = ({ children }) => {
+import { ReactNode } from "react";
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [admin, setAdmin] = useState(localStorage.getItem("admin") || null);
   const [loading, setLoading] = useState(true);
 

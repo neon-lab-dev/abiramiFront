@@ -3,8 +3,9 @@ import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
 import DownloadButton from "../Shared/Table/DownloadExcelBtn";
 import Button from "../Shared/Button/Button";
-import { formatNumber } from "chart.js/helpers";
 import { Invoice } from "../../types/client";
+import { formatNumber } from "../../utils";
+import { InvoiceResponse } from "../../types/invoice";
 
 // Define a type for the row data
 // interface Invoice {
@@ -21,15 +22,19 @@ import { Invoice } from "../../types/client";
 //   iconsOrder: string[];
 // }
 
-const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
-  const [dropdownOpen1, setDropdownOpen1] = useState(false);
-  const [dropdownOpen2, setDropdownOpen2] = useState(false);
+const InvoiceListPageTable = ({
+  invoices,
+  editToggleModel,
+  handleDelete,
+}: {
+  invoices: InvoiceResponse[];
+  editToggleModel?: (id?: string) => void;
+  handleDelete?: (id?: string) => void;
+}) => {
+  const [dropdownOpen1, setDropdownOpen1] = useState<boolean>(false);
+  const [dropdownOpen2, setDropdownOpen2] = useState<boolean>(false);
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [typeFilter, setTypeFilter] = useState<string>("");
-
-  const formatCurrency = (value: number) => {
-    return `₹ ${value?.toLocaleString()}`;
-  };
 
   const icons = {
     i1: ICONS.blueTick,
@@ -197,8 +202,8 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
   //   },
   // ];
 
-  const [sortedData, setSortedData] = useState(invoices);
-  const handleSort = (data: Invoice[], order: "asc" | "desc"): void => {
+  const [sortedData, setSortedData] = useState<InvoiceResponse[]>(invoices);
+  const handleSort = (order: "asc" | "desc"): void => {
     const sorted = [...sortedData].sort((a, b) => {
       const dateA = new Date(a.createdAt);
       const dateB = new Date(b.createdAt);
@@ -421,13 +426,13 @@ const InvoiceListPageTable = ({ invoices, editToggleModel, handleDelete }) => {
       icon2: ICONS.downArrow2,
       icon1: ICONS.upArrow,
       width: "143px",
-      onIcon1Click: () => handleSort(invoices, "asc"),
-      onIcon2Click: () => handleSort(invoices, "desc"),
+      onIcon1Click: () => handleSort("asc"),
+      onIcon2Click: () => handleSort("desc"),
       // width: "141px",
     },
   ];
   const filteredData = sortedData?.filter(
-    (invoice: Invoice) =>
+    (invoice: InvoiceResponse) =>
       (statusFilter === "" ||
         invoice.billingStatus.toLowerCase() === statusFilter.toLowerCase()) &&
       (typeFilter === "" ||

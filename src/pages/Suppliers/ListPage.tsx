@@ -1,9 +1,13 @@
-import SuppliersTable from '../../Components/Suppliers/SuppliersTable'
-
 const ListPage = () => {
   return (
-    <SuppliersTable/>
-  )
-}
+    <>
+      {/* <SuppliersTable
+        suppliers={undefined}
+        editToggleModel={undefined}
+        handleDelete={undefined}
+      /> */}
+    </>
+  );
+};
 
-export default ListPage
+export default ListPage;

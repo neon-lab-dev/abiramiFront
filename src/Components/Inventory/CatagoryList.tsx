@@ -7,13 +7,14 @@ import { ICONS } from "../../assets";
 import { createCategory, getCategories } from "../../api/api";
 import Loader from "../../lib/loader";
 import { useSearch } from "../../context/SearchContext";
+import { Category, CategoryResponse } from "../../types/category";
 
 const CatagoryList = () => {
   const { searchQuery, searchResults } = useSearch();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [formData, setFormData] = useState({ Catagory: "", inventory: [] });
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
@@ -56,7 +57,7 @@ const CatagoryList = () => {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const data: any[] = await getCategories();
+        const data: CategoryResponse = await getCategories();
         setCategories(data.data);
       } catch (err) {
         console.error(err);
@@ -101,9 +102,11 @@ const CatagoryList = () => {
           <div className="py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {searchQuery.trim() === "" || searchResults.length === 0 ? (
               <>
-                {categories?.length > 0 &&
-                  categories?.map((category) => (
+                {categories &&
+                  categories?.length > 0 &&
+                  categories?.map((category: Category, index) => (
                     <CatagoryCard
+                      key={index}
                       onClick={handleCardClick}
                       category={category}
                     />
@@ -112,12 +115,15 @@ const CatagoryList = () => {
             ) : (
               <>
                 {searchResults?.data?.length > 0 &&
-                  searchResults?.data?.map((category) => (
-                    <CatagoryCard
-                      onClick={handleCardClick}
-                      category={category}
-                    />
-                  ))}
+                  searchResults?.data?.map(
+                    (category: Category, index: number) => (
+                      <CatagoryCard
+                        key={index}
+                        onClick={handleCardClick}
+                        category={category}
+                      />
+                    )
+                  )}
               </>
             )}
           </div>

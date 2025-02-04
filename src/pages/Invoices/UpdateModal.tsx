@@ -1,12 +1,17 @@
-import { formatNumber } from "chart.js/helpers";
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
 import { getInvoiceById, updateInvoice } from "../../api/api";
 import { ICONS } from "../../assets";
 import Button from "../../Components/Shared/Button/Button";
 import InputField from "../../Components/Shared/InputField/InputField";
-import { convertNumberToWords } from "../../utils";
+import { convertNumberToWords, formatNumber } from "../../utils";
 import Loader from "../../lib/loader";
-import { InvoiceRequest, ProductDetail } from "../../types/invoice";
+import {
+  InvoiceData,
+  InvoiceRequest,
+  InvoiceResponseWithClient,
+  ProductDetail,
+} from "../../types/invoice";
 import { useNavigate } from "react-router-dom";
 
 const UpdateModal = ({
@@ -20,7 +25,7 @@ const UpdateModal = ({
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
-  const [invoiceData, setInvoiceData] = useState<InvoiceRequest | null>(null);
+  const [invoiceData, setInvoiceData] = useState<InvoiceData>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [subTotal, setSubTotal] = useState<number>();
@@ -53,7 +58,7 @@ const UpdateModal = ({
     vehicleNo: null,
     productDetails: [],
   });
-  const [rows, setRows] = useState([
+  const [rows, setRows] = useState<ProductDetail[]>([
     {
       description: "",
       HSNno: "",
@@ -70,39 +75,73 @@ const UpdateModal = ({
       {
         description: "",
         HSNno: "",
-        quantity: "",
-        rate: "",
-        discount: "",
-        amount: "",
+        quantity: null,
+        discount: null,
+        amount: null,
+        rate: null,
       },
     ]);
   };
   const removeRow = (index: number) => {
     setRows(rows.filter((_, idx) => idx !== index));
   };
+  // const handleInputChange = (
+  //   index: number,
+  //   field: string,
+  //   value: number | string
+  // ) => {
+  //   const updatedRows: any[] = [...rows];
+  //   if (["quantity", "rate", "discount", "amount"].includes(field)) {
+  //     updatedRows[index][field] = parseFloat(value) || 0;
+  //   } else {
+  //     updatedRows[index][field] = value;
+  //   }
+
+  //   // Automatically calculate the amount if relevant fields are updated
+  //   if (["quantity", "rate", "discount"].includes(field)) {
+  //     const quantity = updatedRows[index].quantity || 0;
+  //     const rate = updatedRows[index].rate || 0;
+  //     const discount = updatedRows[index].discount || 0;
+
+  //     updatedRows[index].amount = quantity * rate * (1 - discount);
+  //   }
+  //   console.log(updatedRows);
+  //   setRows(updatedRows);
+  // };
+
   const handleInputChange = (
     index: number,
-    field: string,
-    value: number | string
+    field: keyof ProductDetail,
+    value: string | number
   ) => {
-    const updatedRows: any[] = [...rows];
-    if (["quantity", "rate", "discount", "amount"].includes(field)) {
-      updatedRows[index][field] = parseFloat(value) || 0;
-    } else {
-      updatedRows[index][field] = value;
-    }
+    console.log(field);
+    setRows((prevRows) =>
+      prevRows.map((row, i) => {
+        if (i !== index) return row;
 
-    // Automatically calculate the amount if relevant fields are updated
-    if (["quantity", "rate", "discount"].includes(field)) {
-      const quantity = updatedRows[index].quantity || 0;
-      const rate = updatedRows[index].rate || 0;
-      const discount = updatedRows[index].discount || 0;
+        const updatedRow = { ...row };
 
-      updatedRows[index].amount = quantity * rate * (1 - discount);
-    }
-    console.log(updatedRows);
-    setRows(updatedRows);
+        const parsedValue =
+          typeof value === "number" ? value : parseFloat(value) || 0;
+
+        if (["quantity", "rate", "discount", "amount"].includes(field)) {
+          updatedRow[field] = parsedValue as never;
+        } else {
+          updatedRow[field] = value as never;
+        }
+
+        if (["quantity", "rate", "discount"].includes(field)) {
+          const quantity = updatedRow.quantity || 0;
+          const rate = updatedRow.rate || 0;
+          const discount = updatedRow.discount || 0;
+          updatedRow.amount = quantity * rate * (1 - discount);
+        }
+
+        return updatedRow;
+      })
+    );
   };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -230,9 +269,14 @@ const UpdateModal = ({
     setIsSubmitting(true);
     setLoading(true);
     try {
-      const response = await updateInvoice(selectedId, data);
-      console.log("Invoice updated successfully:", response.data);
-      alert("Invoice updated successfully!");
+      if (selectedId) {
+        const response = await updateInvoice(selectedId, data);
+        console.log("Invoice updated successfully:", response.data);
+        alert("Invoice updated successfully!");
+      } else {
+        console.error("No selected ID provided.");
+        alert("Failed to update invoice. No selected ID provided.");
+      }
     } catch (error) {
       console.error("Error updating invoice:", error);
       alert("Failed to update invoice. Please try again.");
@@ -246,13 +290,16 @@ const UpdateModal = ({
   useEffect(() => {
     const calculateValues = () => {
       // Calculate Subtotal
-      const calculatedSubTotal = rows?.reduce((sum, row) => {
-        const quantity = parseFloat(row?.quantity?.toString()) || null;
-        const rate = parseFloat(row?.rate?.toString()) || null;
-        const discount = parseFloat(row?.discount?.toString()) || null;
-        const amount = (quantity || 0) * (rate || 0) * (1 - (discount || 0));
-        return sum + amount;
-      }, 0);
+      const calculatedSubTotal = rows?.reduce(
+        (sum: number, row: ProductDetail) => {
+          const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
+          const rate = parseFloat(row?.rate?.toString() || "0") || 0;
+          const discount = parseFloat(row?.discount?.toString() || "0") || 0;
+          const amount = quantity * rate * (1 - discount);
+          return sum + amount;
+        },
+        0
+      );
 
       setSubTotal(calculatedSubTotal);
 
@@ -323,8 +370,12 @@ const UpdateModal = ({
     const fetchInvoiceById = async () => {
       setLoading(true);
       try {
-        const data: any[] = await getInvoiceById(selectedId);
-        setInvoiceData(data.data);
+        if (selectedId) {
+          const data: InvoiceResponseWithClient = await getInvoiceById(
+            selectedId
+          );
+          setInvoiceData(data.data);
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -374,8 +425,6 @@ const UpdateModal = ({
     }
   }, [invoiceData]);
 
-  console.log(formData);
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
       <div className="bg-white rounded-3xl p-6 w-[70%] h-[550px] shadow-lg overflow-y-scroll custom-scrollbar scroll-none">
@@ -392,7 +441,7 @@ const UpdateModal = ({
               <img
                 src={ICONS.close}
                 alt=""
-                onClick={editToggleModel}
+                onClick={() => editToggleModel && editToggleModel("")}
                 className=" cursor-pointer"
               />
             </div>
@@ -688,7 +737,7 @@ const UpdateModal = ({
                           <input
                             type="number"
                             placeholder="Enter quantity"
-                            value={row.quantity}
+                            value={row.quantity ?? ""}
                             onChange={(e) =>
                               handleInputChange(
                                 index,
@@ -703,7 +752,7 @@ const UpdateModal = ({
                           <input
                             type="number"
                             placeholder="Enter rate"
-                            value={row.rate}
+                            value={row.rate ?? ""}
                             onChange={(e) =>
                               handleInputChange(index, "rate", e.target.value)
                             }
@@ -714,7 +763,10 @@ const UpdateModal = ({
                           <input
                             type="number"
                             placeholder="Enter discount"
-                            value={row.discount}
+                            min={0}
+                            step={0.01}
+                            max={1}
+                            value={row.discount ?? ""}
                             onChange={(e) =>
                               handleInputChange(
                                 index,
@@ -729,7 +781,7 @@ const UpdateModal = ({
                           <input
                             type="number"
                             placeholder="Enter amount"
-                            value={row?.amount}
+                            value={row?.amount ?? ""}
                             onChange={(e) =>
                               handleInputChange(index, "amount", e.target.value)
                             }
@@ -797,7 +849,7 @@ const UpdateModal = ({
                         <input
                           type="number"
                           placeholder="Enter quantity"
-                          value={row.quantity}
+                          value={row.quantity ?? ""}
                           onChange={(e) =>
                             handleInputChange(index, "quantity", e.target.value)
                           }
@@ -809,7 +861,7 @@ const UpdateModal = ({
                         <input
                           type="number"
                           placeholder="Enter rate"
-                          value={row.rate}
+                          value={row.rate ?? ""}
                           onChange={(e) =>
                             handleInputChange(index, "rate", e.target.value)
                           }
@@ -821,7 +873,10 @@ const UpdateModal = ({
                         <input
                           type="number"
                           placeholder="Enter discount"
-                          value={row.discount}
+                          min={0}
+                          step={0.01}
+                          max={1}
+                          value={row.discount ?? ""}
                           onChange={(e) =>
                             handleInputChange(index, "discount", e.target.value)
                           }
@@ -833,7 +888,7 @@ const UpdateModal = ({
                         <input
                           type="number"
                           placeholder="Enter amount"
-                          value={row.amount}
+                          value={row.amount ?? ""}
                           onChange={(e) =>
                             handleInputChange(index, "amount", e.target.value)
                           }
@@ -890,7 +945,7 @@ const UpdateModal = ({
                       Total (in words)
                     </h3>
                     <p className="text-sm leading-5 font-inter font-[600]">
-                      {convertNumberToWords(total)}
+                      {convertNumberToWords(total ?? 0)}
                     </p>
                   </div>
                 </div>
@@ -946,7 +1001,7 @@ const UpdateModal = ({
                   </div>
                   <div className="flex justify-between items-center  py-2">
                     <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
-                      {formData.Code == "33"
+                      {formData.code?.toString() === "33"
                         ? "Tax | CGST @ 9% & SGST @ 9%"
                         : " Tax | IGST @ 18%"}
                     </span>
@@ -981,7 +1036,7 @@ const UpdateModal = ({
                   <div className="flex justify-between font-bold text-lg mt-8">
                     <span className="text-sm font-[600]">Total</span>
                     <span className="text-sm font-[600]">
-                      ₹ {formatNumber(total)}
+                      ₹ {formatNumber(total ?? 0)}
                     </span>
                   </div>
                 </div>

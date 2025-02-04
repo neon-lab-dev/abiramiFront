@@ -18,8 +18,8 @@ const ListPage = () => {
   const [selectedId, setSelectedId] = useState<string>("");
   const navigate = useNavigate();
 
-  const editToggleModel = (id: string) => {
-    setSelectedId(id);
+  const editToggleModel = (id?: string) => {
+    setSelectedId(id ?? "");
     setEditModalOpen(!isEditModalOpen);
   };
   const handlenavigatetocreatesupplier = () => {

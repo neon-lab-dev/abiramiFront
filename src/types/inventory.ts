@@ -7,7 +7,7 @@ export interface Image {
 }
 
 export interface InventoryItem {
-  id: string;
+  id?: string;
   refrence: string;
   buyingCost: number;
   quantity: number;
@@ -17,8 +17,8 @@ export interface InventoryItem {
   quantityType: string;
   alarm: number;
   image: Image;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
   catgoryId: string;
 }
 
@@ -33,4 +33,19 @@ export interface InventoryData {
   lowStock: number;
   outOfStock: number;
   totalQuantity: number;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  inventory: InventoryItem[];
+}
+
+export interface InventoryListResponse {
+  message: string;
+  status: number;
+  statusText: string;
+  data: Category[];
 }

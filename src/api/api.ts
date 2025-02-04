@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import axiosInstance from "./axios";
 import { API_BASE_URL } from "../config";
@@ -174,7 +175,7 @@ export const getInvoiceById = async (id: string) => {
     throw error;
   }
 };
-export const updateInvoice = async (id: string, invoiceData) => {
+export const updateInvoice = async (id: string, invoiceData: any) => {
   try {
     const response = await axiosInstance.put(`/invoices/${id}`, invoiceData);
     return response.data;
@@ -349,7 +350,7 @@ export const getSupplierById = async (id: string) => {
   }
 };
 
-export const updateSupplier = async (id: string, supplierData) => {
+export const updateSupplier = async (id: string, supplierData: any) => {
   try {
     const response = await axiosInstance.put(`/suppliers/${id}`, supplierData);
     return response.data;
@@ -397,7 +398,7 @@ export const getPurchaseById = async (id: string) => {
     throw error;
   }
 };
-export const updatePurchase = async (id: string, purchaseData) => {
+export const updatePurchase = async (id: string, purchaseData: any) => {
   try {
     const response = await axiosInstance.put(`/purchase/${id}`, purchaseData);
     return response.data;

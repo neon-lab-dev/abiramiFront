@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { createSupplier, getSupplierById, updateSupplier } from "../../api/api";
+import { getSupplierById, updateSupplier } from "../../api/api";
 import Button from "../../Components/Shared/Button/Button";
 import InputField from "../../Components/Shared/InputField/InputField";
 import { ICONS } from "../../assets";
@@ -15,7 +15,7 @@ const UpdateModal = ({
   editToggleModel,
   selectedId,
 }: {
-  editToggleModel: () => void;
+  editToggleModel?: (id?: string) => void;
   selectedId: string;
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -146,7 +146,7 @@ const UpdateModal = ({
                     <img
                       src={ICONS.close}
                       alt=""
-                      onClick={editToggleModel}
+                      onClick={() => editToggleModel && editToggleModel()}
                       className=" cursor-pointer"
                     />
                   </div>

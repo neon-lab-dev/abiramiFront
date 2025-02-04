@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useRef, useEffect } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
@@ -5,11 +6,12 @@ import UploadImage from "./UploadImage";
 import { ICONS } from "../../assets";
 import { createInventories, getCategories } from "../../api/api";
 import { useNavigate } from "react-router-dom";
+import { Category, InventoryListResponse } from "../../types/inventory";
 
 const CreateInventory = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showDropdown2, setShowDropdown2] = useState(false);
-  const [imageFiles, setImageFiles] = useState<File | {}>({});
+  const [imageFiles, setImageFiles] = useState<File | object>({});
   const [imagePreviews, setImagePreviews] = useState<string | "">("");
   const [loading, setLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,7 +36,7 @@ const CreateInventory = () => {
     image: imageFiles,
     WarehouseLocation: "",
   });
-  const [categories, setCategories] = useState<string[]>();
+  const [categories, setCategories] = useState<Category[]>();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -76,7 +78,7 @@ const CreateInventory = () => {
   };
 
   // remove selected image
-  const removeImage = (url: string) => {
+  const removeImage = () => {
     setImageFiles({});
     setImagePreviews("");
   };
@@ -132,7 +134,8 @@ const CreateInventory = () => {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const data: any[] = await getCategories();
+        const data: InventoryListResponse = await getCategories();
+        console.log(data);
         setCategories(data.data);
       } catch (err) {
         console.error(err);

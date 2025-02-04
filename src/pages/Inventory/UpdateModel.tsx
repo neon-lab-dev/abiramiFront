@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import React, { useEffect, useRef, useState } from "react";
 import { ICONS } from "../../assets";
 import Button from "../../Components/Shared/Button/Button";
@@ -5,7 +6,6 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import UploadImage from "./UploadImage";
 import {
   getCategories,
-  getInventoryByCategoryId,
   getInventoryById,
   updateInventories,
 } from "../../api/api";
@@ -98,7 +98,7 @@ const UpdateModel = ({
       reader.readAsDataURL(file);
     }
   };
-  const removeImage = (url: string) => {
+  const removeImage = () => {
     setImagePreviews("");
   };
 

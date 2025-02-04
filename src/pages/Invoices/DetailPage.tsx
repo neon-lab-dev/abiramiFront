@@ -11,6 +11,8 @@ import {
   formatNumber,
 } from "../../utils";
 import Loader from "../../lib/loader";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { InvoicePDF } from "../../utils/pdfGenerator";
 
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -45,27 +47,6 @@ const DetailPage = () => {
     "Discount",
     "Amount",
   ];
-  const rows = [
-    {
-      id: 1,
-      description: "Apollo Electrical Services",
-      code: "HSGFFD7564",
-      quantity: "1,00,000",
-      rate: "₹ 75.00",
-      tax: "₹ 10,075.00",
-      total: "₹ 75,00,000.00",
-    },
-    {
-      id: 2,
-      description: "Beta Plumbing Co.",
-      code: "BETA5678",
-      quantity: "50,000",
-      rate: "₹ 50.00",
-      tax: "₹ 5,000.00",
-      total: "₹ 25,00,000.00",
-    },
-    // Add more rows as needed
-  ];
 
   useEffect(() => {
     const fetchInvoiceById = async () => {
@@ -83,7 +64,7 @@ const DetailPage = () => {
     };
     fetchInvoiceById();
   }, [id]);
-
+  console.log(invoiceData);
   return (
     <>
       {loading ? (
@@ -264,7 +245,7 @@ const DetailPage = () => {
                   </span>
                   <div className="h-[0.5px] bg-secondary-140 w-full my-3"></div>
                   <span className="text-sm font-[600]">
-                    {convertNumberToWords(invoiceData?.totalAmount)}
+                    {convertNumberToWords(invoiceData?.totalAmount ?? 0)}
                   </span>
                 </div>
               </div>
@@ -274,7 +255,7 @@ const DetailPage = () => {
                     Sub Total
                   </span>
                   <span className="text-right font-sans font-medium text-[12px] leading-[1.32] tracking-[0.06px] w-[109px]">
-                    ₹ {formatNumber(invoiceData?.subTotal)}
+                    ₹ {formatNumber(invoiceData?.subTotal ?? 0)}
                   </span>
                 </div>
                 <div className="flex">
@@ -282,7 +263,7 @@ const DetailPage = () => {
                     PF Amount
                   </span>
                   <span className="text-right font-sans font-medium text-[12px] leading-[1.32] tracking-[0.06px] w-[109px]">
-                    ₹ {formatNumber(invoiceData?.pfAmount)}
+                    ₹ {formatNumber(invoiceData?.pfAmount ?? 0)}
                   </span>
                 </div>
                 {invoiceData?.taxType === "CGST" && (
@@ -291,7 +272,7 @@ const DetailPage = () => {
                       CGST | @ 9%
                     </span>
                     <span className="text-right font-sans font-medium text-[12px] leading-[1.32] tracking-[0.06px] w-[109px]">
-                      ₹ {formatNumber(invoiceData?.taxGST)}
+                      ₹ {formatNumber(invoiceData?.taxGST ?? 0)}
                     </span>
                   </div>
                 )}
@@ -301,7 +282,7 @@ const DetailPage = () => {
                       SGST | @ 9%
                     </span>
                     <span className="text-right font-sans font-medium text-[12px] leading-[1.32] tracking-[0.06px] w-[109px]">
-                      ₹ {formatNumber(invoiceData?.taxGST)}
+                      ₹ {formatNumber(invoiceData?.taxGST ?? 0)}
                     </span>
                   </div>
                 )}
@@ -319,7 +300,7 @@ const DetailPage = () => {
                 <div className="flex ">
                   <span className="text-sm font-[600]  w-[115px]">Total </span>
                   <span className="text-sm font-[600] w-[115px]  ">
-                    ₹ {formatNumber(invoiceData?.totalAmount)}
+                    ₹ {formatNumber(invoiceData?.totalAmount ?? 0)}
                   </span>
                 </div>
               </div>
@@ -362,11 +343,18 @@ const DetailPage = () => {
                 </div>
               )}
             </div>
-            <Button
-              text="Print"
-              color="bg-secondary-125 text-[14px] text-white text-xs h-10"
-              iconClassName="h-[24px] w-[31px] "
-            />
+            {invoiceData && (
+              <PDFDownloadLink
+                document={<InvoicePDF invoiceData={invoiceData} />}
+                fileName="invoice.pdf"
+              >
+                <Button
+                  text="Print"
+                  color="bg-secondary-125 text-[14px] text-white text-xs h-10"
+                  iconClassName="h-[24px] w-[31px] "
+                />
+              </PDFDownloadLink>
+            )}
           </div>
         </div>
       )}

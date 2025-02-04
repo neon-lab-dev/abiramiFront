@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
-import { getClients, getSuppliers } from "../../api/api";
-import Loader from "../../lib/loader";
+import { Supplier } from "../../types/supplier";
 
-const SuppliersTable = ({ suppliers, editToggleModel, handleDelete }) => {
+const SuppliersTable = ({
+  suppliers,
+  editToggleModel,
+  handleDelete,
+}: {
+  suppliers: Supplier[];
+  editToggleModel?: (id?: string) => void;
+  handleDelete?: (id?: string) => void;
+}) => {
   const [sortedData, setSortedData] = useState(suppliers);
   const icons = {
     i1: ICONS.blueTick,

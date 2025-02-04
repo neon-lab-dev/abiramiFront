@@ -3,10 +3,12 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { PurchaseFormData, PurchaseResponse } from "../../types/purchase";
 import { createPurchase } from "../../api/api";
+import { useNavigate } from "react-router-dom";
 
 const CreatePurchase = () => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<PurchaseFormData>({
     companyName: "",
     invoiceNumber: null,
@@ -22,7 +24,12 @@ const CreatePurchase = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]:
+        name === "invoiceNumber" ||
+        name === "totalPurchaseAmt" ||
+        name === "gstNum"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -34,6 +41,7 @@ const CreatePurchase = () => {
       const response: PurchaseResponse = await createPurchase(formData);
       if (response.statusText === "Created") {
         alert("Purchase created successfully");
+        navigate("/purchase");
       }
     } catch (error) {
       console.error("Create purchase error:", error);
@@ -41,6 +49,17 @@ const CreatePurchase = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const clearForm = () => {
+    setFormData({
+      companyName: "",
+      invoiceNumber: null,
+      date: "",
+      totalPurchaseAmt: null,
+      gstNum: null,
+      status: "ACTIVE",
+    });
   };
 
   return (
@@ -108,6 +127,7 @@ const CreatePurchase = () => {
           <div className="col-span-3 flex justify-end gap-4 my-8">
             <Button
               text="Clear Form"
+              onClick={clearForm}
               type="reset"
               color="text-primary-10 bg-none"
             />

@@ -46,8 +46,14 @@ const CreateSupplier = () => {
       const response = await createSupplier(data);
       console.log("Supplier created successfully:", response.data);
       alert("Supplier created successfully!");
-    } catch (error) {
-      if (error.response && error.response.status === 400) {
+    } catch (error: unknown) {
+      type ErrorResponse = {
+        response?: {
+          status: number;
+        };
+      };
+      const err = error as ErrorResponse;
+      if (err.response && err.response.status === 400) {
         alert(
           "Failed to create client. Please ensure all required fields are filled."
         );

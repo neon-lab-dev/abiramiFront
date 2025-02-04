@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {
   createContext,
   useState,
@@ -9,7 +10,7 @@ import React, {
 interface SearchContextType {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  searchResults: any[];
+  searchResults: any;
   setSearchResults: (results: any[]) => void;
 }
 

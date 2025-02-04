@@ -2,8 +2,14 @@ import { Link } from "react-router-dom";
 import { ICONS } from "../../assets";
 import Button from "../../Components/Shared/Button/Button";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
+import { SupplierData } from "../../types/supplier";
 
-export default function SuppliersCards({ suppliers }) {
+export default function SuppliersCards({
+  suppliers,
+}: {
+  suppliers: SupplierData;
+}) {
+  console.log(suppliers);
   return (
     <div className="w-full ">
       <div className="w-full py-2 mb-2 flex justify-between items-center">
