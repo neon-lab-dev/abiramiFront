@@ -8,9 +8,11 @@ import { createCategory, getCategories } from "../../api/api";
 import Loader from "../../lib/loader";
 import { useSearch } from "../../context/SearchContext";
 import { Category, CategoryResponse } from "../../types/category";
+import { getSearchFunction } from "../../utils/searchUtils";
 
 const CatagoryList = () => {
-  const { searchQuery, searchResults } = useSearch();
+  const { searchQuery, setSearchQuery, searchResults, setSearchResults } =
+    useSearch();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [formData, setFormData] = useState({ Catagory: "", inventory: [] });
   const [loading, setLoading] = useState(false);
@@ -68,6 +70,39 @@ const CatagoryList = () => {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    setSearchQuery("");
+    setSearchResults([]);
+  }, [location]);
+
+  const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim() !== "") {
+      const searchFunction = getSearchFunction(location.pathname);
+      if (searchFunction) {
+        try {
+          const results = await searchFunction(searchQuery);
+          if (results.data.length === 0) {
+            alert("No data found!!!");
+            return;
+          }
+          setSearchResults(results);
+        } catch (error: unknown) {
+          type ErrorResponse = {
+            status: number;
+          };
+          const err = error as ErrorResponse;
+          if (err.status === 404) {
+            alert("Data not found!!!");
+            return;
+          } else {
+            console.error("Search API error:", error);
+          }
+        }
+      } else {
+        console.warn("No search function available for this route.");
+      }
+    }
+  };
   return (
     <>
       {loading ? (
@@ -85,6 +120,9 @@ const CatagoryList = () => {
                 <input
                   type="search"
                   placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearch}
                   className="border-0 hidden md:block outline-0 md:w-[170px] lg:w-[200px] bg-transparent text-black placeholder:text-black"
                 />
               </div>

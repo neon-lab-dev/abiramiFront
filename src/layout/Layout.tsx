@@ -1,11 +1,10 @@
 import DashboardSidebar from "../Components/Shared/DashboardSidebar/DashboardSidebar";
 import DashboardHeader from "../Components/Shared/DashboardHeader/DashboardHeader";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext,  useState } from "react";
 import Cookies from "js-cookie";
 import { AuthContext } from "../context/AuthContext";
 import Loader from "../lib/loader";
-import { verifyAdminByToken } from "../api/api";
 const Layout = () => {
   const { admin, loading } = useContext(AuthContext);
   // const [loading, setLoading] = useState<boolean>(true);
