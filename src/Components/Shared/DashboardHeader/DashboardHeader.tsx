@@ -1,8 +1,10 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ICONS } from "../../../assets";
 import { useSearch } from "../../../context/SearchContext";
 import { getSearchFunction } from "../../../utils/searchUtils";
 import { useEffect } from "react";
+import Button from "../Button/Button";
+import Cookies from "js-cookie";
 
 interface DashboardHeaderProps {
   HandleSidebar: (data: boolean) => void;
@@ -15,6 +17,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 }) => {
   const location = useLocation();
   const { searchQuery, setSearchQuery, setSearchResults } = useSearch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSearchQuery("");
@@ -50,6 +53,12 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         console.warn("No search function available for this route.");
       }
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("admin");
+    Cookies.remove("token");
+    navigate("/login");
   };
 
   return (
@@ -103,6 +112,11 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           />
         </div>
         <img src={ICONS.bell} alt="bell-icon" className="cursor-pointer" />
+        <Button
+          text="Logout"
+          color="bg-primary-10 text-white "
+          onClick={handleLogout}
+        />
       </div>
     </div>
   );

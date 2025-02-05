@@ -132,12 +132,15 @@ const DetailPage = () => {
                 <span className="w-[118px] px-1 font-sans text-xs font-normal leading-[15px]">
                   Invoice ID
                 </span>
-                <div className="flex items-center">
+                <div className="flex items-center gap-2">
                   <span className="flex-1 font-sans text-xs font-[600] ">
                     {invoiceData?.id}
                   </span>
-                  <span className="flex-1 w-[53px] h-[15px] p-1 border border-secondary-130 rounded-[2px] custom-gradient bg-secondary-35 text-[10px] text-secondary-75 flex items-center ">
-                    {invoiceData?.billingStatus.toUpperCase()}
+                  <span className=" w-fit  h-[15px] p-1 border border-secondary-130 rounded-[2px] custom-gradient bg-secondary-35 text-[10px] text-secondary-75 flex items-center ">
+                    {invoiceData?.billingStatus.toUpperCase() ===
+                    "DRAFT/PERFORMA INVOICE"
+                      ? "DRAFT"
+                      : invoiceData?.billingStatus.toUpperCase()}
                   </span>
                 </div>
               </div>

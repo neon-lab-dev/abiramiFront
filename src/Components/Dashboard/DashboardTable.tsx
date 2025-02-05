@@ -125,7 +125,11 @@ const DashboardTable = ({
         }
 
         return (
-          <span className={statusClass}>{row.billingStatus.toUpperCase()}</span>
+          <span className={statusClass}>
+            {row.billingStatus?.toUpperCase() === "DRAFT/PERFORMA INVOICE"
+              ? "DRAFT"
+              : row.billingStatus?.toUpperCase()}
+          </span>
         );
       },
       width: "112px",
