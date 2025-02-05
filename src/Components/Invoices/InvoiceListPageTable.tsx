@@ -290,7 +290,7 @@ const InvoiceListPageTable = ({
             "text-neutral-90 bg-neutral-50 h-[28px] py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Green for PAID
         } else if (row.billingStatus?.toUpperCase() === "PENDING") {
           statusClass =
-            "text-yellow-500 bg-secondary-35 h-[28px]  py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Yellow for PENDING (PENDING)
+            "text-yellow-500 bg-secondary-35 h-[28px] py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Yellow for PENDING (PENDING)
         } else if (
           row.billingStatus?.toUpperCase() === "DRAFT/PERFORMA INVOICE"
         ) {
@@ -300,7 +300,9 @@ const InvoiceListPageTable = ({
 
         return (
           <span className={statusClass}>
-            {row.billingStatus?.toUpperCase()}
+            {row.billingStatus?.toUpperCase() === "DRAFT/PERFORMA INVOICE"
+              ? "DRAFT"
+              : row.billingStatus?.toUpperCase()}
           </span>
         );
       },
