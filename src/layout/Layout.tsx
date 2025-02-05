@@ -2,7 +2,6 @@ import DashboardSidebar from "../Components/Shared/DashboardSidebar/DashboardSid
 import DashboardHeader from "../Components/Shared/DashboardHeader/DashboardHeader";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import { AuthContext } from "../context/AuthContext";
 import Loader from "../lib/loader";
 import { verifyAdminByToken } from "../api/api";
@@ -12,7 +11,6 @@ const Layout = () => {
   const [callNav, setCallNav] = useState(false);
   // const [isLogged, setIsLogged] = useState(false);
   const navigate = useNavigate();
-  const token = Cookies.get("token");
   const HandleSidebar = (data: boolean) => {
     setCallNav(data);
   };
@@ -23,7 +21,7 @@ const Layout = () => {
         <Loader />
       </div>
     );
-  if (!admin || !token) {
+  if (!admin ) {
     navigate("/login");
   }
 

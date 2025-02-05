@@ -14,6 +14,8 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    'no-console': 'off', // Example of disabling the no-console rule
+    'no-console': 'off',
+    '@typescript-eslint/no-unused-vars': ['warn'], 
   },
+  
 };
