@@ -47,7 +47,6 @@ const DetailPage = () => {
     "Discount",
     "Amount",
   ];
-
   useEffect(() => {
     const fetchInvoiceById = async () => {
       setLoading(true);
@@ -64,7 +63,6 @@ const DetailPage = () => {
     };
     fetchInvoiceById();
   }, [id]);
-  console.log(invoiceData);
   return (
     <>
       {loading ? (
