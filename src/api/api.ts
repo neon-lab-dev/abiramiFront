@@ -301,6 +301,18 @@ export const updateInventories = async (id: string, data: any) => {
   }
 };
 
+export const getInventoryLogsById = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/inventory/${id}/logs`);
+    console.log(response.data)
+    return response.data;
+
+  } catch (error) {
+    console.error("Get inventory logs error:", error);
+    throw error;
+  }
+};
+
 export const getCategories = async () => {
   try {
     const response = await axiosInstance.get("/inventory/category");

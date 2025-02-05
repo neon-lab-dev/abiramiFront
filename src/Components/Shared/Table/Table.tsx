@@ -371,7 +371,7 @@ const Table: React.FC<TableProps> = ({
                         </div>
                       </td>
                     )} */}
-                      <td>
+                     {icons &&( <td>
                         <div className="flex gap-4">
                           <button
                             key="i1"
@@ -407,7 +407,7 @@ const Table: React.FC<TableProps> = ({
                             />
                           </button>
                         </div>
-                      </td>
+                      </td>)}
                       <td>
                         {/* <div className="flex px-4 space-x-2">
     {currentData.map((col, colIndex) => (
