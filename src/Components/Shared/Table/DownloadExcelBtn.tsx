@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import * as XLSX from 'xlsx';
-import { ICONS } from '../../../assets';
+import React from "react";
+import * as XLSX from "xlsx";
+import { ICONS } from "../../../assets";
 
-interface DownloadButtonProps {
-  data: Array<Record<string, any>>;
-}
-
-const DownloadButton: React.FC<DownloadButtonProps> = ({ data }) => {
+const DownloadButton = ({ data }: { data: any[] }) => {
   const downloadExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
@@ -21,7 +17,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ data }) => {
       disabled={false}
       onClick={downloadExcel}
     >
-      <img src={ICONS.download} alt="" className='w-6 h-6'/>
+      <img src={ICONS.download} alt="" className="w-6 h-6" />
       Download Excel
     </button>
   );

@@ -1,5 +1,8 @@
 import { useLocation } from "react-router-dom";
 import { ICONS } from "../../../assets";
+import { useSearch } from "../../../context/SearchContext";
+import { getSearchFunction } from "../../../utils/searchUtils";
+import { useEffect } from "react";
 
 interface DashboardHeaderProps {
   HandleSidebar: (data: boolean) => void;
@@ -11,9 +14,43 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   callNav,
 }) => {
   const location = useLocation();
+  const { searchQuery, setSearchQuery, setSearchResults } = useSearch();
 
+  useEffect(() => {
+    setSearchQuery("");
+    setSearchResults([]);
+  }, [location]);
   // Split the pathname by "/" and filter out empty strings
   const pathSegments = location.pathname.split("/").filter(Boolean);
+
+  const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim() !== "") {
+      const searchFunction = getSearchFunction(location.pathname);
+      if (searchFunction) {
+        try {
+          const results = await searchFunction(searchQuery);
+          if (results.data.length === 0) {
+            alert("No data found!!!");
+            return;
+          }
+          setSearchResults(results);
+        } catch (error: unknown) {
+          type ErrorResponse = {
+            status: number;
+          };
+          const err = error as ErrorResponse;
+          if (err.status === 404) {
+            alert("Data not found!!!");
+            return;
+          } else {
+            console.error("Search API error:", error);
+          }
+        }
+      } else {
+        console.warn("No search function available for this route.");
+      }
+    }
+  };
 
   return (
     <div className="bg-white mb-6 py-5 px-0 md:px-7 border-b flex justify-between items-center">
@@ -59,6 +96,9 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           <input
             type="search"
             placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearch}
             className="border-0 hidden md:block outline-0 md:w-[170px] lg:w-[200px] bg-transparent text-secondary-110 placeholder:text-secondary-110"
           />
         </div>

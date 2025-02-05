@@ -1,11 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import { ICONS } from "../../../assets";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { formatDateWithOrdinal } from "../../../utils";
 
 interface Column {
   header: string | JSX.Element;
   accessor: string;
   width?: string;
+  navigate?: boolean;
+  type?: string;
   cellClassName?: string | ((row: any) => string);
   cellRenderer?: (row: any) => JSX.Element;
   icon1?: string;
@@ -17,26 +22,29 @@ interface Column {
 interface TableProps {
   data: Array<Record<string, any>>;
   columns: Column[];
-  tableName: string;
+  tableName?: string;
   showViewAll?: boolean;
   enablePagination?: boolean;
   rowsPerPage?: number;
   tableHeight?: string;
   tableWidth?: string;
   icons?: {
-    i1: string;
-    i2: string;
-    i3: string;
+    i1?: string;
+    i2?: string;
+    i3?: string;
   };
   bg_i1?: string;
   bg_i2?: string;
   bg_i3?: string;
-  onActionClick?:any
+  onActionClick?: any;
+  editToggleModel?: (id?: string) => void;
+  handleDelete?: (id: string) => void;
+  LogToggleModel?: (id: string) => void;
 }
 
 const formatDate = (date: Date) => {
   if (!(date instanceof Date)) return date; // Return as is if not a date
-  return date.toLocaleDateString("en-US", {
+  return date?.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -56,28 +64,30 @@ const Table: React.FC<TableProps> = ({
   bg_i1 = "bg-blue-500",
   bg_i2 = "bg-green-500",
   bg_i3 = "bg-red-500",
-  onActionClick
+  editToggleModel,
+  handleDelete,
+  LogToggleModel,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const location = useLocation();
+
   const totalPages = enablePagination
-    ? Math.ceil(data.length / rowsPerPage)
+    ? Math.ceil(data?.length / rowsPerPage)
     : 1;
   const startIndex = enablePagination ? (currentPage - 1) * rowsPerPage : 0;
-  const endIndex = enablePagination ? startIndex + rowsPerPage : data.length;
+  const endIndex = enablePagination ? startIndex + rowsPerPage : data?.length;
   const currentData = enablePagination
-    ? data.slice(startIndex, endIndex)
+    ? data?.slice(startIndex, endIndex)
     : data;
 
-    const navigate = useNavigate(); // Hook to navigate
+  const navigate = useNavigate();
 
-    const handleNavigateToDetails = (companyName: string) => {
-      navigate(`/clients/Detailpage`);
-      console.log(companyName)
-    };
-    const handleNavigateToInvoiceDetails = (companyName: string) => {
-      navigate(`/invoices/Detailpage`);
-      console.log(companyName)
-    };
+  const handleNavigateToDetails = (id: string) => {
+    navigate(`/clients/Detailpage/${id}`);
+  };
+  const handleNavigateToInvoiceDetails = (id: string) => {
+    navigate(`/invoices/Detailpage/${id}`);
+  };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -87,36 +97,33 @@ const Table: React.FC<TableProps> = ({
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  // const handleEdit = (row: Record<string, any>) => {
-  //   console.log("Edit clicked for:", row);
-  // };
-
-  // const handleApprove = (row: Record<string, any>) => {
-  //   console.log("Approve clicked for:", row);
-  // };
-
-  // const handleDelete = (row: Record<string, any>) => {
-  //   console.log("Delete clicked for:", row);
-  // };
-  const i3CustomClass = (i1: boolean, i2: boolean, i3: boolean) => {
-    if (i1 && i2 && i3) return;
-    if (i1 && i2) return;
-    if (i1 && i3) return "w-[54px] justify-between";
+  const onEditClick = (id: string) => {
+    if (editToggleModel) {
+      editToggleModel(id);
+    }
   };
-  const i1CustomClass = (i1: boolean, i2: boolean, i3: boolean) => {
-    if (i1 && i2 && i3) return;
-    if (i1 && i2) return;
-    if (i1 && i3) return "w-[55px]";
+
+  const onDeleteClick = (id: string) => {
+    if (handleDelete) {
+      handleDelete(id);
+    }
   };
+
+  const onTickClick = (id: string) => {
+    if (LogToggleModel) {
+      LogToggleModel(id);
+    }
+  };
+
   return (
     <div
       className={` w-full overflow-x-scroll custom-scrollbar my-5 scrollbar-hide`}
     >
       <div className="w-full rounded-[24px] overflow-hidden bg-secondary-60 p-6 mr-6 shadow-tableShadow">
-        <div className="w-[100%] flex justify-between items-center h-10">
-          <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
+        <div className="w-[100%] flex justify-between items-center">
+          {/* <div className="font-semibold text-[14px] leading-[20px] whitespace-nowrap overflow-hidden text-ellipsis">
             {tableName}
-          </div>
+          </div> */}
           {showViewAll && (
             <button className="flex items-center px-2 py-1 md:px-3 md:py-2 font-normal text-base leading-6 bg-neutral-70 transition-all rounded-xl">
               View all
@@ -132,7 +139,7 @@ const Table: React.FC<TableProps> = ({
           }  ${!enablePagination ? "overflow-y-auto " : ""} `}
           style={{ maxHeight: tableHeight, minWidth: tableWidth }}
         >
-          <table className="min-w-full text-left border-separate border-spacing-y-1">
+          <table className="min-w-full  text-left border-separate border-spacing-y-1">
             <thead className="sticky top-0 bg-secondary-60 min-h-10">
               <tr className="">
                 {columns.map((col, index) => (
@@ -179,169 +186,230 @@ const Table: React.FC<TableProps> = ({
                     </div>
                   </th>
                 ))}
-                {icons && <th className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85">
-                  Action
-                </th>}
-                
+                {icons && (
+                  <th
+                    style={{ minWidth: "160px" }}
+                    className="px-4 py-2 font-normal text-[14px] leading-[20px] text-neutral-85"
+                  >
+                    <div>Action</div>
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-secondary-60 ">
-              {currentData.map((row, rowIndex) => (
-                <tr
-                  key={rowIndex}
-                  className="rounded-lg border-secondary-60 border  bg-white transition-all min-h-10 "
-                >
-                  {columns.map((col, colIndex) => (
-                    <td
-                      key={colIndex}
-                      className={`pr-4 pl-3 py-4 rounded-lg text-[14px] ${
-                        typeof col.cellClassName === "function"
-                          ? col.cellClassName(row)
-                          : col.cellClassName || ""
-                      }${colIndex === 0 ? "text-[#4186F3]" : ""} `}
-                      style={{ width: col.width }}
+              {currentData?.length > 0 ? (
+                currentData?.map((row, rowIndex) => {
+                  return (
+                    <tr
+                      key={rowIndex}
+                      className="rounded-lg border-secondary-60 border  bg-white transition-all min-h-10 "
                     >
-                      {col.cellRenderer ? (
-                        col.cellRenderer(row) // Use custom cellRenderer if defined
-                      ) : col.accessor === "status" ? (
-                        <span
-                          className={`${
-                            row.status === "Active"
-                              ? " text-neutral-90 bg-sucess-10"
-                              : "text-red-600 bg-red-100"
-                          } px-2 py-1 rounded-xl`}
-                        >
-                          {row[col.accessor]}
-                        </span>
-                      ) :col.accessor === "company_name" ? (
-                        <span
-                          className="text-blue-500 cursor-pointer hover:underline"
-                          onClick={() =>
-                            handleNavigateToDetails(row[col.accessor])
-                          }
-                        >
-                          {row[col.accessor]}
-                        </span>
-                      ) :col.accessor === "invoice_id" ? (
-                        <span
-                          className="text-blue-500 cursor-pointer hover:underline"
-                          onClick={() =>
-                            handleNavigateToInvoiceDetails(row[col.accessor])
-                          }
-                        >
-                          {row[col.accessor]}
-                        </span>
-                      ) : col.accessor === "quantity" ? (
-                        <span
-                        className={`${
-                          row.quantity === 0
-                            ? "text-red-500 bg-red-100"
-                            : row.quantity <= row.alarm
-                            ? "text-yellow-500 bg-yellow-100"
-                            : "text-black bg-gray-200"
-                        } px-2 py-1 rounded-xl text-center flex justify-center`}
-                        >
-                          {row[col.accessor]}
-                        </span>
-                      ): typeof row[col.accessor] === "object" &&
-                        row[col.accessor] instanceof Date ? (
-                        formatDate(row[col.accessor])
-                      ) : (
-                        row[col.accessor]
-                      )}
-                    </td>
-                  ))}
-                  { icons &&<td>
-                    <div className="flex px-4 space-x-2 "> 
-                      {row.iconsOrder.map((icon: string) => {
-                        if (icon === "i1" && row.i1) {
-                          return (
-                            <div
-                              className={`${i1CustomClass(
-                                row.i1,
-                                row.i2,
-                                row.i3
-                              )} max-w-[46px] mr-${
-                                row.i1 && row.i2 && !row.i3 ? "2" : "0"
-                              }`}
-                            >
-                              <button
-                                key="i1"
-                                onClick={() => onActionClick("i1", row)}
-                                className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
+                      {columns?.map((col, colIndex) => {
+                        return (
+                          <td
+                            key={colIndex}
+                            className={`pr-4 pl-3 py-4 rounded-lg text-[14px] ${
+                              typeof col.cellClassName === "function"
+                                ? col.cellClassName(row)
+                                : col.cellClassName || ""
+                            }${colIndex === 0 ? "text-[#4186F3]" : ""} `}
+                            style={{ width: col.width }}
+                          >
+                            {col.cellRenderer ? (
+                              col.cellRenderer(row) // Use custom cellRenderer if defined
+                            ) : col.accessor === "status" ? (
+                              <span
+                                className={`${
+                                  row?.status?.toUpperCase() === "ACTIVE"
+                                    ? " text-neutral-90 bg-sucess-10"
+                                    : "text-red-600 bg-red-100"
+                                } px-2 py-1 rounded-xl`}
                               >
-                                <img
-                                  src={icons.i1}
-                                  alt="Edit"
-                                  className="h-3 w-3"
-                                />
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        if (icon === "i2" && row.i2) {
-                          return (
-                            <div
-                              className={`flex items-center gap-${
-                                row.i1 && row.i2 && !row.i3 ? "4" : "2"
-                              } ml-${row.i1 && row.i2 && !row.i3 ? "4" : "2"}`}
-                            >
-                              <img
-                                src={ICONS.graybar}
-                                alt="|"
-                                className="h-3 w-[2px]"
-                              />
-                              <button
-                                key="i2"
-                                onClick={() => onActionClick("i2", row)}
-                                className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i2}`}
+                                {row[col.accessor]?.toUpperCase()}
+                              </span>
+                            ) : col.accessor === "companyName" &&
+                              !location.pathname.includes("/purchase") ? (
+                              <span
+                                className={`${
+                                  col.navigate === false
+                                    ? ""
+                                    : "text-blue-500 cursor-pointer hover:underline"
+                                }`}
+                                onClick={() => {
+                                  if (col.navigate === false) {
+                                    return;
+                                  } else {
+                                    handleNavigateToDetails(row?.id);
+                                  }
+                                }}
                               >
-                                <img
-                                  src={icons.i2}
-                                  alt="i2"
-                                  className="h-3 w-3"
-                                />
-                              </button>
-                            </div>
-                          );
-                        }
-                        if (icon === "i3" && row.i3) {
-                          return (
-                            <div
-                              className={`flex items-center gap-2 ml-0 ${i3CustomClass(
-                                row.i1,
-                                row.i2,
-                                row.i3
-                              )}`}
-                            >
-                              <img
-                                src={ICONS.graybar}
-                                alt="|"
-                                className="h-3 w-[2px]"
-                              />
-                              <button
-                                key="i3"
-                                onClick={() => onActionClick("i3", row)}
-                                className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i3}  `}
+                                {row[col.accessor]}
+                              </span>
+                            ) : col.accessor === "id" ? (
+                              <span
+                                className="text-blue-500 cursor-pointer hover:underline"
+                                onClick={() =>
+                                  handleNavigateToInvoiceDetails(
+                                    row[col.accessor]
+                                  )
+                                }
                               >
-                                <img
-                                  src={icons.i3}
-                                  alt="i3"
-                                  className="h-3 w-3"
-                                />
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        return null;
+                                {row[col.accessor]}
+                              </span>
+                            ) : col.accessor === "quantity" ? (
+                              <span
+                                className={`${
+                                  row.quantity === 0
+                                    ? "text-red-500 bg-red-100"
+                                    : row.quantity <= row.alarm
+                                    ? "text-yellow-500 bg-yellow-100"
+                                    : "text-black bg-gray-200"
+                                } w-fit px-4 py-[5px] rounded-xl text-center flex justify-center`}
+                              >
+                                {row[col.accessor]}
+                              </span>
+                            ) : typeof row[col.accessor] === "object" &&
+                              row[col.accessor] instanceof Date ? (
+                              formatDate(row[col.accessor])
+                            ) : col.type === "date" ? (
+                              formatDateWithOrdinal(row[col.accessor])
+                            ) : (
+                              row[col.accessor]
+                            )}
+                          </td>
+                        );
                       })}
-                    </div>
-                  </td>}
-                  
-                  <td>
-  {/* <div className="flex px-4 space-x-2">
+                      {/* {icons && (
+                      <td>
+                        <div className="flex px-4 space-x-2 ">
+                          {row?.iconsOrder?.map((icon: string) => {
+                            if (icon === "i1" && row.i1) {
+                              return (
+                                <div
+                                  className={`${i1CustomClass(
+                                    row.i1,
+                                    row.i2,
+                                    row.i3
+                                  )} max-w-[46px] mr-${
+                                    row.i1 && row.i2 && !row.i3 ? "2" : "0"
+                                  }`}
+                                >
+                                  <button
+                                    key="i1"
+                                    onClick={() => onActionClick("i1", row)}
+                                    className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
+                                  >
+                                    <img
+                                      src={icons.i1}
+                                      alt="Edit"
+                                      className="h-3 w-3"
+                                    />
+                                  </button>
+                                </div>
+                              );
+                            }
+
+                            if (icon === "i2" && row.i2) {
+                              return (
+                                <div
+                                  className={`flex items-center gap-${
+                                    row.i1 && row.i2 && !row.i3 ? "4" : "2"
+                                  } ml-${
+                                    row.i1 && row.i2 && !row.i3 ? "4" : "2"
+                                  }`}
+                                >
+                                  <img
+                                    src={ICONS.graybar}
+                                    alt="|"
+                                    className="h-3 w-[2px]"
+                                  />
+                                  <button
+                                    key="i2"
+                                    onClick={() => onActionClick("i2", row)}
+                                    className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i2}`}
+                                  >
+                                    <img
+                                      src={icons.i2}
+                                      alt="i2"
+                                      className="h-3 w-3"
+                                    />
+                                  </button>
+                                </div>
+                              );
+                            }
+                            if (icon === "i3" && row.i3) {
+                              return (
+                                <div
+                                  className={`flex items-center gap-2 ml-0 ${i3CustomClass(
+                                    row.i1,
+                                    row.i2,
+                                    row.i3
+                                  )}`}
+                                >
+                                  <img
+                                    src={ICONS.graybar}
+                                    alt="|"
+                                    className="h-3 w-[2px]"
+                                  />
+                                  <button
+                                    key="i3"
+                                    onClick={() => onActionClick("i3", row)}
+                                    className={`rounded-full h-6 w-6 flex items-center justify-center ${bg_i3}  `}
+                                  >
+                                    <img
+                                      src={icons.i3}
+                                      alt="i3"
+                                      className="h-3 w-3"
+                                    />
+                                  </button>
+                                </div>
+                              );
+                            }
+
+                            return null;
+                          })}
+                        </div>
+                      </td>
+                    )} */}
+                      <td>
+                        <div className="flex gap-4">
+                          <button
+                            key="i1"
+                            onClick={() => onTickClick(row?.id)}
+                            className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
+                          >
+                            <img
+                              src={icons?.i1}
+                              alt="Edit"
+                              className="h-4 w-4"
+                            />
+                          </button>
+                          <button
+                            key="i2"
+                            onClick={() => onEditClick(row.id)}
+                            className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i2}  `}
+                          >
+                            <img
+                              src={icons?.i2}
+                              alt="Edit"
+                              className="h-4 w-4"
+                            />
+                          </button>
+                          <button
+                            key="i3"
+                            onClick={() => onDeleteClick(row.id)}
+                            className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i3}  `}
+                          >
+                            <img
+                              src={icons?.i3}
+                              alt="Edit"
+                              className="h-4 w-4"
+                            />
+                          </button>
+                        </div>
+                      </td>
+                      <td>
+                        {/* <div className="flex px-4 space-x-2">
     {currentData.map((col, colIndex) => (
       <div key={colIndex}>
         {row.iconsOrder.map((icon: string) => {
@@ -404,10 +472,20 @@ const Table: React.FC<TableProps> = ({
       </div>
     ))}
   </div> */}
-</td>
-
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td
+                    colSpan={columns.length + 1}
+                    className="text-center text-lg text-gray-500"
+                  >
+                    No data found
+                  </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

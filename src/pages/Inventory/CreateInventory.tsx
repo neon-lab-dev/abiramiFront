@@ -1,17 +1,26 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useRef, useEffect } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import UploadImage from "./UploadImage";
 import { ICONS } from "../../assets";
+import { createInventories, getCategories } from "../../api/api";
+import { useNavigate } from "react-router-dom";
+import { Category, InventoryListResponse } from "../../types/inventory";
 
 const CreateInventory = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showDropdown2, setShowDropdown2] = useState(false);
-  const [imageFiles, setImageFiles] = useState<File[] | []>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
+  const [imageFiles, setImageFiles] = useState<File | object>({});
+  const [imagePreviews, setImagePreviews] = useState<string | "">("");
+  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     refrence: "",
     category: "",
+    categoryId: "",
     description: "",
     buyingCost: "",
     quantity: "",
@@ -27,8 +36,8 @@ const CreateInventory = () => {
     image: imageFiles,
     WarehouseLocation: "",
   });
+  const [categories, setCategories] = useState<Category[]>();
 
-  const Catagory = ["C1", "C2", "C3", "C4"];
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -39,14 +48,39 @@ const CreateInventory = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    const data = {
+      refrence: formData.refrence,
+      catgoryId: formData.categoryId,
+      description: formData.description,
+      buyingCost: Number(formData.buyingCost),
+      quantity: formData.quantity,
+      quantityType: formData.quantityType,
+      alarm: Number(formData.alarm),
+      sellingCost: Number(formData.sellingCost),
+      file: imageFiles,
+      warehouseLocation: formData.WarehouseLocation,
+    };
+    console.log(data);
+    setIsSubmitting(true);
+    try {
+      const response = await createInventories(data);
+      console.log("Inventory created successfully:", response.data);
+      alert("Inventory created successfully");
+    } catch (error) {
+      console.error("Error creating inventory:", error);
+      alert("Failed to create inventory. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+      navigate("/inventory");
+    }
   };
 
   // remove selected image
-  const removeImage = (url: string) => {
-    setImagePreviews((prev) => prev.filter((preview) => preview !== url));
+  const removeImage = () => {
+    setImageFiles({});
+    setImagePreviews("");
   };
 
   // upload image
@@ -54,11 +88,13 @@ const CreateInventory = () => {
     const file = e.target.files?.[0];
 
     if (file) {
-      setImageFiles((prev) => [...prev, file]);
+      // setImageFiles((prev) => [...prev, file]);
+      setImageFiles(file);
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreviews((prev) => [...prev, reader.result as string]);
+        // setImagePreviews((prev) => [...prev, reader.result as string]);
+        setImagePreviews(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -72,10 +108,11 @@ const CreateInventory = () => {
     }
   };
 
-  const handleStateSelect2 = (catagory: string) => {
+  const handleStateSelect2 = (category: string, categoryId: string) => {
     setFormData((prev) => ({
       ...prev,
-      category: catagory,
+      category: category,
+      categoryId: categoryId,
     }));
     setShowDropdown2(false);
   };
@@ -87,6 +124,27 @@ const CreateInventory = () => {
     }
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showDropdown2]);
+
+  useEffect(() => {
+    console.log(imageFiles);
+    setFormData({ ...formData, image: imageFiles });
+  }, [imageFiles]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const data: InventoryListResponse = await getCategories();
+        console.log(data);
+        setCategories(data.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   return (
     <>
@@ -123,13 +181,15 @@ const CreateInventory = () => {
                 </div>
                 {showDropdown2 && (
                   <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
-                    {Catagory.map((category) => (
+                    {categories?.map((category) => (
                       <div
-                        key={category} // Use category as the unique key
+                        key={category.id} // Use category as the unique key
                         className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-                        onClick={() => handleStateSelect2(category)} // Pass category to handler
+                        onClick={() =>
+                          handleStateSelect2(category.name, category.id)
+                        } // Pass category to handler
                       >
-                        {category} {/* Display category */}
+                        {category.name} {/* Display category */}
                       </div>
                     ))}
                   </div>
@@ -145,11 +205,11 @@ const CreateInventory = () => {
                   value={formData.buyingCost}
                   onChange={handleChange}
                 />
-                <div className=" absolute bottom-[-50%] right-[6%] opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 group-hover:scale-[1] scale-[0.7] before:w-[20px] before:h-[20px] before:bg-[#8d8d8d] before:z-[-1] before:absolute before:top-[-35%] before:left-[1%] before:rotate-[40deg] before:rounded-b-3xl">
+                {/* <div className=" absolute bottom-[-50%] right-[6%] opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 group-hover:scale-[1] scale-[0.7] before:w-[20px] before:h-[20px] before:bg-[#8d8d8d] before:z-[-1] before:absolute before:top-[-35%] before:left-[1%] before:rotate-[40deg] before:rounded-b-3xl">
                   <span className=" text-[0.9rem] bg-[#8d8d8d] text-secondary rounded px-3 py-2 ">
-               This filed accepts alphanumeric input.
+                    This filed accepts alphanumeric input.
                   </span>
-                </div>
+                </div> */}
               </div>
 
               <InputField
@@ -225,9 +285,11 @@ const CreateInventory = () => {
               color="text-primary-10 bg-none"
             />
             <Button
-              text="Submit Form"
+              text={isSubmitting ? "Submitting..." : "Submit Form"}
               type="submit"
+              // onClick={handleSubmit}
               color="bg-primary-10 text-white"
+              disabled={isSubmitting}
             />
           </div>
         </form>

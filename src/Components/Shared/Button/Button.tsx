@@ -9,6 +9,7 @@ type ButtonProps = {
   iconClassName?: string;
   textClass?: string;
   onClick?: () => void;
+  disabled?: boolean;
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -20,13 +21,16 @@ const Button: React.FC<ButtonProps> = ({
   iconClassName,
   textClass,
   onClick,
+  disabled,
 }) => {
   return (
     <button
       type={type}
       onClick={onClick}
-      className={`${textClass=="hidden" ? "px-3": "px-5 "} py-2 rounded-xl font-medium flex justify-between items-center gap-2 ${color}`}
-
+      disabled={disabled}
+      className={`${
+        textClass == "hidden" ? "px-3" : "px-5 "
+      } py-2 rounded-xl font-medium flex justify-between items-center gap-2 ${color}`}
     >
       {imgSrc && (
         <img src={imgSrc} alt={text} className={`w-4 h-4 ${iconClassName}`} />

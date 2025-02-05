@@ -1,42 +1,94 @@
 import React, { useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
+import { createClient } from "../../api/api";
+import { useNavigate } from "react-router-dom";
+import { CreateClient } from "../../types/client";
 
 const CreateClients = () => {
-  const [formData, setFormData] = useState({
-    CompanyName: "",
-    ContactPerson: "",
-    gstnumber: "",
-    MobileNumber: "",
-    LandlineNumber: "",
-    active: "",
-    Inactive: "",
-    Code: "",
+  const [formData, setFormData] = useState<CreateClient>({
+    companyName: "",
+    contactPerson: "",
+    GST: "",
+    mobileNum: "",
+    landLineNum: "",
     email: "",
-    address1: "",
-    address2: "",
-    address3: "",
+    addressLine1: "",
+    addressLine2: "",
+    addressLine3: "",
     city: "",
-    pinCode: "",
+    pincode: null as number | null,
     state: "",
     country: "",
     status: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: name === "pincode" ? Number(value) : value,
     }));
   };
 
-  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   console.log(formData);
-  // };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const clientData = {
+      ...formData,
+    };
+    console.log(clientData);
+    setIsSubmitting(true);
+    try {
+      const response = await createClient(clientData);
+      console.log("Client created successfully:", response.data);
+      alert("Client created successfully!");
+      clearForm();
+      navigate("/clients");
+        } catch (error: unknown) {
+      type ErrorResponse = {
+        response?: {
+          status: number;
+        };
+      };
+      const err = error as ErrorResponse;
+      if (err.response?.status === 400) {
+        alert(
+          "Failed to create client. Please ensure all required fields are filled."
+        );
+      } else {
+        console.error("Error creating client:", error);
+        alert("Failed to create client. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const clearForm = () => {
+    setFormData({
+      companyName: "",
+      contactPerson: "",
+      GST: "",
+      mobileNum: "",
+      landLineNum: "",
+      email: "",
+      addressLine1: "",
+      addressLine2: "",
+      addressLine3: "",
+      city: "",
+      pincode: null,
+      state: "",
+      country: "",
+      status: "",
+    });
+  };
+
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <div>
         <span className="text-sm font-Inter font-[600] ">
           Client Information
@@ -48,8 +100,8 @@ const CreateClients = () => {
             inputBg=""
             type="text"
             placeholder="Enter Company name"
-            name="CompanyName"
-            value={formData.CompanyName}
+            name="companyName"
+            value={formData.companyName}
             onChange={handleChange}
           />
           <InputField
@@ -57,8 +109,8 @@ const CreateClients = () => {
             inputBg=""
             type="text"
             placeholder="Enter contact person name"
-            name="ContactPerson"
-            value={formData.ContactPerson}
+            name="contactPerson"
+            value={formData.contactPerson}
             onChange={handleChange}
           />
           <InputField
@@ -67,8 +119,8 @@ const CreateClients = () => {
             inputBg=""
             type="string"
             placeholder="Enter the GST number"
-            name="gstnumber"
-            value={formData.gstnumber}
+            name="GST"
+            value={formData.GST}
             onChange={handleChange}
           />
         </div>
@@ -83,9 +135,9 @@ const CreateClients = () => {
             label="Mobile Number"
             inputBg=""
             type="number"
-            placeholder="Enter Mobile name"
-            name="MobileNumber"
-            value={formData.MobileNumber}
+            placeholder="Enter Mobile number"
+            name="mobileNum"
+            value={formData.mobileNum}
             onChange={handleChange}
           />
           <InputField
@@ -93,8 +145,8 @@ const CreateClients = () => {
             inputBg=""
             type="text"
             placeholder="Enter Landline number"
-            name="LandlineNumber"
-            value={formData.LandlineNumber}
+            name="landLineNum"
+            value={formData.landLineNum}
             onChange={handleChange}
           />
           <InputField
@@ -119,8 +171,8 @@ const CreateClients = () => {
             inputBg=""
             type="text"
             placeholder="Enter Door Number or building number"
-            name="address1"
-            value={formData.address1}
+            name="addressLine1"
+            value={formData.addressLine1}
             onChange={handleChange}
           />
           <InputField
@@ -128,8 +180,8 @@ const CreateClients = () => {
             inputBg=""
             type="text"
             placeholder="Enter apartment name or building name"
-            name="address2"
-            value={formData.address2}
+            name="addressLine2"
+            value={formData.addressLine2}
             onChange={handleChange}
           />
           <InputField
@@ -137,8 +189,8 @@ const CreateClients = () => {
             inputBg=""
             type="text"
             placeholder="Enter locality or street"
-            name="address3"
-            value={formData.address3}
+            name="addressLine3"
+            value={formData.addressLine3}
             onChange={handleChange}
           />
           <InputField
@@ -155,8 +207,8 @@ const CreateClients = () => {
             inputBg=""
             type="number"
             placeholder="Enter pincode"
-            name="pinCode" 
-            value={formData.pinCode} 
+            name="pincode"
+            value={formData.pincode || null}
             onChange={handleChange}
           />
           <InputField
@@ -188,8 +240,8 @@ const CreateClients = () => {
             <input
               type="radio"
               name="status"
-              value="active"
-              checked={formData.status === "active"}
+              value="ACTIVE"
+              checked={formData.status.trim().toLowerCase() === "active"}
               onChange={handleChange}
             />
             <span>Active</span>
@@ -198,8 +250,8 @@ const CreateClients = () => {
             <input
               type="radio"
               name="status"
-              value="inactive"
-              checked={formData.status === "inactive"}
+              value="INACTIVE"
+              checked={formData.status.trim().toLowerCase() === "inactive"}
               onChange={handleChange}
             />
             <span>Inactive</span>
@@ -213,14 +265,16 @@ const CreateClients = () => {
           text="Clear Form"
           type="reset"
           color="text-primary-10 bg-none"
+          onClick={clearForm}
         />
         <Button
-          text="Create Client"
+          text={isSubmitting ? "Submitting..." : "Create Client"}
+          disabled={isSubmitting}
           type="submit"
           color="bg-primary-10 text-white"
         />
       </div>
-    </div>
+    </form>
   );
 };
 

@@ -1,204 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
+import { formatNumber } from "../../utils";
+import { InvoiceResponse } from "../../types/invoice";
+import { Invoice } from "../../types/client";
 
-// Define a type for the row data
-interface Dashboard {
-  invoice_id: string;
-  invoice_status: "PAID" | "PENDING" | "DRAFT";
-  client: string;
-  invoice_type: "Cheque Invoice" | "Quote Invoice" | "Tax invoice";
-  total_amount: number;
-  tax: number;
-  created_date: Date;
-  i1: boolean;
-  i2: boolean;
-  i3: boolean;
-  iconsOrder: string[];
-}
-
-const DashboardTable: React.FC = () => {
+const DashboardTable = ({
+  invoices,
+  editToggleModel,
+  handleDelete,
+}: {
+  invoices: InvoiceResponse[] | undefined;
+  editToggleModel: (id?: string) => void;
+  handleDelete?: (id?: string) => void;
+}) => {
   const [dropdownOpen1, setDropdownOpen1] = useState(false);
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [typeFilter, setTypeFilter] = useState<string>("");
-
-  const formatCurrency = (value: number) => {
-    return `₹ ${value.toLocaleString()}`;
-  };
 
   const icons = {
     i1: ICONS.blueTick,
     i2: ICONS.greenCross,
     i3: ICONS.deleteRed,
   };
-  
 
-  const data: Dashboard[] = [
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PAID",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Cheque Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 4, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PENDING",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Cheque Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 3, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PAID",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Quote Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 1, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PAID",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Cheque Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 8, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PENDING",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Tax invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PENDING",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Tax invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 6, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PENDING",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Quote Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 4, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "PENDING",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Tax invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 3, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "DRAFT",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Tax invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 9, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "DRAFT",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Quote Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
+  const [sortedData, setSortedData] = useState(invoices);
+  const handleSort = (order: "asc" | "desc"): void => {
+    const sorted = [...(sortedData || [])].sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
 
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "DRAFT",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Quote Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-    {
-      invoice_id: "kjsdgnbj",
-      invoice_status: "DRAFT",
-      client: "ljadbvilhb4jh345kj4n",
-      invoice_type: "Quote Invoice",
-      total_amount: 985735689,
-      created_date: new Date(2024, 2, 10),
-      tax: 985735689,
-      i1: true,
-      i2: true,
-      i3: true,
-      iconsOrder: ["i1", "i2", "i3"],
-    },
-  ];
-  const [sortedData, setSortedData] = useState(data);
-  const handleSort = (data: Dashboard[], order: "asc" | "desc"): void  => {
-    const sorted = [...sortedData].sort((a, b) => {
-      const dateA = new Date(a.created_date);
-      const dateB = new Date(b.created_date);
-      
       if (order === "asc") {
         return dateA.getTime() - dateB.getTime(); // Convert dates to timestamps
       } else if (order === "desc") {
@@ -206,16 +38,16 @@ const DashboardTable: React.FC = () => {
       }
       return 0;
     });
-      
-  setSortedData(sorted);
-};
-   
+
+    setSortedData(sorted);
+  };
+
   const columns = [
     {
       header: "Invoice Id",
-      accessor: "invoice_id",
+      accessor: "id",
       cellClassName: " text-blue-20 ",
-      width: "130px",
+      width: "300px",
     },
     {
       header: (
@@ -235,10 +67,8 @@ const DashboardTable: React.FC = () => {
                 }}
                 className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "PAID"
-
                     ? "text-white bg-customBlue-20"
                     : "text-neutral-100"
-
                 }`}
               >
                 Paid
@@ -250,25 +80,21 @@ const DashboardTable: React.FC = () => {
                 }}
                 className={`block w-full text-left p-2  hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "PENDING"
-
                     ? "text-white bg-customBlue-20"
                     : "text-neutral-100"
-
                 }`}
               >
                 Pending
               </button>
               <button
                 onClick={() => {
-                  setStatusFilter("DRAFT");
+                  setStatusFilter("DRAFT/PERFORMA INVOICE");
                   setDropdownOpen1(false);
                 }}
                 className={`block w-full text-left p-2 hover:bg-customBlue-20 hover:text-white py-[7px] px-4 ${
                   statusFilter === "DRAFT"
-
                     ? "text-white bg-blue-20"
                     : "text-neutral-100"
-
                 }`}
               >
                 Draft
@@ -277,34 +103,39 @@ const DashboardTable: React.FC = () => {
           )}
         </div>
       ),
-      accessor: "invoice_status",
-      cellRenderer: (row: Dashboard) => {
+      accessor: "billingStatus",
+      cellRenderer: (row: Invoice) => {
         let statusClass = "";
+        console.log(
+          row.billingStatus.toUpperCase() === "DRAFT/PERFORMA INVOICE"
+        );
 
         // Conditional coloring based on invoice_status
-        if (row.invoice_status === "PAID") {
+        if (row.billingStatus.toUpperCase() === "PAID") {
           statusClass =
             "text-neutral-90 bg-neutral-50 h-[28px] py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Green for PAID
-        } else if (row.invoice_status === "PENDING") {
+        } else if (row.billingStatus.toUpperCase() === "PENDING") {
           statusClass =
             "text-yellow-500 bg-secondary-35 h-[28px]  py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left"; // Yellow for PENDING (PENDING)
-        } else if (row.invoice_status === "DRAFT") {
-
-          statusClass = "text-gray-500  font-sans text-[12px] font-normal leading-[20px] text-left"; // Gray for DRAFT
-
+        } else if (
+          row.billingStatus.toUpperCase() === "DRAFT/PERFORMA INVOICE"
+        ) {
+          statusClass =
+            "text-gray-500  font-sans text-[12px] font-normal leading-[20px] text-left"; // Gray for DRAFT
         }
 
-        return <span className={statusClass}>{row.invoice_status}</span>;
+        return (
+          <span className={statusClass}>{row.billingStatus.toUpperCase()}</span>
+        );
       },
       width: "112px",
     },
-   
 
     {
       header: "Client",
-      accessor: "client",
+      accessor: "clientName",
       cellClassName: "text-black",
-      width:"200px"
+      width: "200px",
     },
     {
       header: (
@@ -319,14 +150,25 @@ const DashboardTable: React.FC = () => {
             <div className="absolute bg-white mt-1 z-50 rounded-[6px] shadow-dropdown">
               <button
                 onClick={() => {
-                  setTypeFilter("Cheque Invoice");
+                  setTypeFilter("cash invoice");
                   setDropdownOpen2(false);
                 }}
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
-                  typeFilter === "Cheque Invoice"
+                  typeFilter === "cash invoice"
                     ? "text-white bg-blue-500"
-
-
+                    : "text-neutral-100"
+                }`}
+              >
+                Cash Invoice
+              </button>
+              <button
+                onClick={() => {
+                  setTypeFilter("cheque invoice");
+                  setDropdownOpen2(false);
+                }}
+                className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
+                  typeFilter === "cheque invoice"
+                    ? "text-white bg-blue-500"
                     : "text-neutral-100"
                 }`}
               >
@@ -334,34 +176,26 @@ const DashboardTable: React.FC = () => {
               </button>
               <button
                 onClick={() => {
-                  setTypeFilter("Quote Invoice");
+                  setTypeFilter("quote invoice");
                   setDropdownOpen2(false);
                 }}
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
-                  typeFilter === "Quote Invoice"
+                  typeFilter === "quote invoice"
                     ? "text-white bg-blue-500"
-
-
                     : "text-neutral-100"
-
-
                 }`}
               >
                 Quote Invoice
               </button>
               <button
                 onClick={() => {
-                  setTypeFilter("Tax invoice");
+                  setTypeFilter("tax invoice");
                   setDropdownOpen2(false);
                 }}
                 className={`block w-full text-left p-2 hover:bg-blue-20 py-[7px] px-4 ${
-                  typeFilter === "Tax invoice"
+                  typeFilter === "tax invoice"
                     ? "text-white bg-blue-500"
-
-
                     : "text-neutral-100"
-
-
                 }`}
               >
                 Tax invoice
@@ -371,66 +205,82 @@ const DashboardTable: React.FC = () => {
         </div>
       ),
 
-      accessor: "invoice_type",
+      accessor: "invoiceType",
       cellClassName: "text-black",
-      width:"141px"
+      width: "141px",
     },
     {
       header: "Total Amount",
-      accessor: "total_amount",
-      cellRenderer: (row: Dashboard) => {
+      accessor: "totalAmount",
+      cellRenderer: (row: Invoice) => {
         return (
-          <span className="text-black">{formatCurrency(row.total_amount)}</span>
+          <span className="text-black">₹ {formatNumber(row.totalAmount)}</span>
         );
       },
-      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
-      width:"141px"
+      cellClassName:
+        "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      width: "141px",
     },
     {
       header: "Tax",
-      accessor: "tax",
-      cellRenderer: (row: Dashboard) => {
-        // console.log(row.tax); 
-        return <span className="text-black">{formatCurrency(row.tax)}</span>;
+      accessor: "taxGST",
+      cellRenderer: (row: Invoice) => {
+        // console.log(row.tax);
+        return <span className="text-black">₹ {formatNumber(row.taxGST)}</span>;
       },
-      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
-      width:"111px"
+      cellClassName:
+        "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      width: "111px",
     },
 
     {
       header: "Created Date",
-      accessor: "created_date",
-      cellClassName: "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      accessor: "createdAt",
+      type: "date",
+      cellClassName:
+        "text-black whitespace-nowrap overflow-hidden text-ellipsis",
       format: (value: Date) =>
         value.toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
           year: "numeric",
         }),
-      icon1:ICONS.downArrow,
-      onIcon1Click: () => handleSort(data, "asc"), 
-      width:"141px"
+      // icon1: ICONS.downArrow,
+      // onIcon1Click: () => handleSort(data, "asc"),
+      icon2: ICONS.downArrow2,
+      icon1: ICONS.upArrow,
+      width: "143px",
+      onIcon1Click: () => handleSort("asc"),
+      onIcon2Click: () => handleSort("desc"),
+      // width: "141px",
     },
   ];
-  const filteredData = data.filter(
+  const filteredData = sortedData?.filter(
     (invoice) =>
-      (statusFilter === "" || invoice.invoice_status === statusFilter) &&
-      (typeFilter === "" || invoice.invoice_type === typeFilter)
+      (statusFilter === "" ||
+        invoice.billingStatus.toLowerCase() === statusFilter.toLowerCase()) &&
+      (typeFilter === "" ||
+        invoice.invoiceType.toLowerCase() === typeFilter.toLowerCase())
   );
+  useEffect(() => {
+    console.log(typeFilter);
+  }, [typeFilter]);
 
   return (
     <div>
       <Table
-        data={filteredData}
+        data={filteredData || []}
         columns={columns}
         tableName="Recent Invoice"
         showViewAll={true}
-        enablePagination={false}
-        rowsPerPage={5}
+        enablePagination={true}
+        rowsPerPage={10}
         icons={icons}
         bg_i1="bg-customBlue-10"
         bg_i2="bg-sucess-20"
         bg_i3="bg-primary-40"
+        handleDelete={handleDelete}
+        editToggleModel={editToggleModel}
       />
     </div>
   );
