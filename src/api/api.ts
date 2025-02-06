@@ -303,8 +303,8 @@ export const updateInventories = async (id: string, data: any) => {
 
 export const getInventoryLogsById = async (id: string) => {
   try {
-    const response = await axiosInstance.get(`/inventory/${id}/logs`);
-    console.log(response.data)
+    const response = await axiosInstance.get(`/inventory/4c40bb25-7498-4046-9448-55e5ae1d4382/logs`);
+    console.log("log",response.data)
     return response.data;
 
   } catch (error) {
@@ -312,6 +312,19 @@ export const getInventoryLogsById = async (id: string) => {
     throw error;
   }
 };
+
+export const updateInventoryLogs = async (inventoryId: string, logData: any) => {
+  try {
+    const response = await axiosInstance.put(`/inventory/${inventoryId}/logs`, logData, {
+     
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating logs for inventory ${inventoryId}:`, error);
+    throw error;
+  }
+};
+
 
 export const getCategories = async () => {
   try {
