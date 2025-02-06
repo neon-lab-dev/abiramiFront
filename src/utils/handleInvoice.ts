@@ -72,24 +72,28 @@ export const generateInvoicePDF = (invoiceData: InvoiceData) => {
   const finalY = (doc as any).autoTable.previous.finalY + 10;
   doc.text(
     `Sub Total: INR ${formatNumber(invoiceData?.subTotal ?? 0)}`,
-    140,
+    10,
     finalY
   );
   doc.text(
     `PF Amount: INR ${formatNumber(invoiceData?.pfAmount ?? 0)}`,
-    140,
+    10,
     finalY + 5
   );
   doc.text(
-    `IGST | @ 18%: INR ${formatNumber(invoiceData?.taxGST ?? 0)}`,
-    140,
+    `${
+      invoiceData?.taxType === "IGST"
+        ? "IGST | @ 18%"
+        : "CGST | @ 9% & SGST | @ 9%"
+    } : INR ${formatNumber(invoiceData?.taxGST ?? 0)}`,
+    10,
     finalY + 10
   );
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
   doc.text(
     `Total: INR ${formatNumber(invoiceData?.totalAmount ?? 0)}`,
-    140,
+    10,
     finalY + 20
   );
 
