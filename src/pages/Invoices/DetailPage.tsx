@@ -35,9 +35,11 @@ const DetailPage = () => {
     setSelectedOption(option);
     setIsOpen(false);
   };
+
   const handlenavigatetocreateinvoices = () => {
     navigate("/Invoices/CreateInvoices");
   };
+
   const tableHeaders = [
     "S.No",
     "Description",
@@ -47,6 +49,7 @@ const DetailPage = () => {
     "Discount",
     "Amount",
   ];
+  
   useEffect(() => {
     const fetchInvoiceById = async () => {
       setLoading(true);
@@ -63,6 +66,7 @@ const DetailPage = () => {
     };
     fetchInvoiceById();
   }, [id]);
+
   return (
     <>
       {loading ? (
@@ -267,20 +271,10 @@ const DetailPage = () => {
                     ₹ {formatNumber(invoiceData?.pfAmount ?? 0)}
                   </span>
                 </div>
-                {invoiceData?.taxType === "CGST" && (
+                {invoiceData?.taxType === "CGST & SGST" && (
                   <div className="flex">
                     <span className="text-sm font-normal opacity-[0.6] w-[109px]">
-                      CGST | @ 9%
-                    </span>
-                    <span className="text-right font-sans font-medium text-[12px] leading-[1.32] tracking-[0.06px] w-[109px]">
-                      ₹ {formatNumber(invoiceData?.taxGST ?? 0)}
-                    </span>
-                  </div>
-                )}
-                {invoiceData?.taxType === "SGST" && (
-                  <div className="flex">
-                    <span className="text-sm font-normal opacity-[0.6] w-[109px]">
-                      SGST | @ 9%
+                      CGST | @ 9% & SGST | @ 9%
                     </span>
                     <span className="text-right font-sans font-medium text-[12px] leading-[1.32] tracking-[0.06px] w-[109px]">
                       ₹ {formatNumber(invoiceData?.taxGST ?? 0)}

@@ -129,7 +129,7 @@ const CreateInvoice = () => {
           const quantity = updatedRow.quantity || 0;
           const rate = updatedRow.rate || 0;
           const discount = updatedRow.discount || 0;
-          updatedRow.amount = quantity * rate * (1 - discount);
+          updatedRow.amount = Math.abs(quantity * rate * (1 - discount / 100));
         }
 
         return updatedRow;
@@ -276,7 +276,8 @@ const CreateInvoice = () => {
         const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
         const rate = parseFloat(row?.rate?.toString() || "0") || 0;
         const discount = parseFloat(row?.discount?.toString() || "0") || 0;
-        const amount = quantity * rate * (1 - discount);
+        // const amount = quantity * rate - quantity * rate * (discount / 100);
+        const amount = Math.abs(quantity * rate * (1 - discount / 100));
         return sum + amount;
       }, 0);
 
@@ -701,9 +702,6 @@ const CreateInvoice = () => {
                     <input
                       type="number"
                       placeholder="Enter discount"
-                      min={0}
-                      step={0.01}
-                      max={1}
                       value={row.discount ?? ""}
                       onChange={(e) =>
                         handleInputChange(index, "discount", e.target.value)
@@ -803,9 +801,6 @@ const CreateInvoice = () => {
                   <input
                     type="number"
                     placeholder="Enter discount"
-                    min={0}
-                    step={0.01}
-                    max={1}
                     value={row.discount ?? ""}
                     onChange={(e) =>
                       handleInputChange(index, "discount", e.target.value)

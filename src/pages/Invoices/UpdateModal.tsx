@@ -123,18 +123,16 @@ const UpdateModal = ({
 
         const parsedValue =
           typeof value === "number" ? value : parseFloat(value) || 0;
-
         if (["quantity", "rate", "discount", "amount"].includes(field)) {
           updatedRow[field] = parsedValue as never;
         } else {
           updatedRow[field] = value as never;
         }
-
         if (["quantity", "rate", "discount"].includes(field)) {
           const quantity = updatedRow.quantity || 0;
           const rate = updatedRow.rate || 0;
           const discount = updatedRow.discount || 0;
-          updatedRow.amount = quantity * rate * (1 - discount);
+          updatedRow.amount = Math.abs(quantity * rate * (1 - discount / 100));
         }
 
         return updatedRow;
@@ -295,7 +293,7 @@ const UpdateModal = ({
           const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
           const rate = parseFloat(row?.rate?.toString() || "0") || 0;
           const discount = parseFloat(row?.discount?.toString() || "0") || 0;
-          const amount = quantity * rate * (1 - discount);
+          const amount = Math.abs(quantity * rate * (1 - discount / 100));
           return sum + amount;
         },
         0
@@ -763,9 +761,6 @@ const UpdateModal = ({
                           <input
                             type="number"
                             placeholder="Enter discount"
-                            min={0}
-                            step={0.01}
-                            max={1}
                             value={row.discount ?? ""}
                             onChange={(e) =>
                               handleInputChange(
@@ -873,9 +868,6 @@ const UpdateModal = ({
                         <input
                           type="number"
                           placeholder="Enter discount"
-                          min={0}
-                          step={0.01}
-                          max={1}
                           value={row.discount ?? ""}
                           onChange={(e) =>
                             handleInputChange(index, "discount", e.target.value)

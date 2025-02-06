@@ -138,7 +138,7 @@ const CreateModel: React.FC<CreateModelProps> = ({
           const quantity = updatedRow.quantity || 0;
           const rate = updatedRow.rate || 0;
           const discount = updatedRow.discount || 0;
-          updatedRow.amount = quantity * rate * (1 - discount);
+          updatedRow.amount = Math.abs(quantity * rate * (1 - discount / 100));
         }
 
         return updatedRow;
@@ -285,7 +285,7 @@ const CreateModel: React.FC<CreateModelProps> = ({
           const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
           const rate = parseFloat(row?.rate?.toString() || "0") || 0;
           const discount = parseFloat(row?.discount?.toString() || "0") || 0;
-          const amount = quantity * rate * (1 - discount);
+          const amount = Math.abs(quantity * rate * (1 - discount / 100));
           return sum + amount;
         },
         0
@@ -669,9 +669,6 @@ const CreateModel: React.FC<CreateModelProps> = ({
                     <td className=" px-4 py-2">
                       <input
                         type="number"
-                        min={0}
-                        step={0.01}
-                        max={1}
                         placeholder="Enter discount"
                         value={row.discount ?? ""}
                         onChange={(e) =>
@@ -771,9 +768,6 @@ const CreateModel: React.FC<CreateModelProps> = ({
                     <label>Discount</label>
                     <input
                       type="number"
-                      min={0}
-                      step={0.01}
-                      max={1}
                       placeholder="Enter discount"
                       value={row.discount ?? ""}
                       onChange={(e) =>
