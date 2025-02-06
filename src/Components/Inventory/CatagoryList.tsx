@@ -36,7 +36,6 @@ const CatagoryList = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(formData);
     const data = {
       name: formData.Catagory,
       inventory: formData.inventory,
@@ -77,6 +76,7 @@ const CatagoryList = () => {
     setSearchQuery("");
     setSearchResults(null);
   }, [location]);
+
   useEffect(() => {
     setSearchResults(null);
   }, [searchQuery, setSearchResults]);
@@ -113,6 +113,7 @@ const CatagoryList = () => {
       }
     }
   };
+
   return (
     <>
       {loading ? (
