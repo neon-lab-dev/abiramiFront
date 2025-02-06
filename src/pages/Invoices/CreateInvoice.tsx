@@ -21,6 +21,9 @@ const CreateInvoice = () => {
   const [tax, setTax] = useState<number>();
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
+  const [igst, setIgst] = useState(18);
+  const [cgst, setCgst] = useState(9);
+  const [sgst, setSgst] = useState(9);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
@@ -284,8 +287,15 @@ const CreateInvoice = () => {
       setPfamount(Number(calculatedPfAmount.toFixed(2)));
 
       // Calculate Tax (e.g., 18% of Subtotal)
-      const calculatedTax = (taxPercent / 100) * calculatedSubTotal;
-      setTax(Number(calculatedTax.toFixed(2)));
+      let calculatedTax;
+      if (formData.taxtype === "IGST") {
+        calculatedTax = (igst / 100) * calculatedSubTotal;
+        setTax(Number(calculatedTax.toFixed(2)));
+      } else {
+        calculatedTax =
+          (cgst / 100) * calculatedSubTotal + (sgst / 100) * calculatedSubTotal;
+        setTax(Number(calculatedTax.toFixed(2)));
+      }
 
       // Calculate Total
       const calculatedTotal =
@@ -298,7 +308,6 @@ const CreateInvoice = () => {
   }, [rows]);
 
   useEffect(() => {
-    console.log(formData.invoicetype.toLowerCase());
     if (formData.invoicetype.toLowerCase() == "cash invoice") {
       setFormData({
         ...formData,
@@ -342,6 +351,13 @@ const CreateInvoice = () => {
     }
   }, [formData.invoicetype]);
 
+  useEffect(() => {
+    if (formData.taxtype === "IGST") {
+      setTaxPercent(18);
+    } else if (formData.taxtype === "CGST & IGST") {
+      setTaxPercent(9);
+    }
+  }, [formData.taxtype]);
   return (
     <div>
       <span className="text-sm font-Inter font-[600] ">Billing Details</span>
@@ -916,8 +932,8 @@ const CreateInvoice = () => {
             <div className="flex justify-between items-center  py-2">
               <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
                 {formData.Code == "33"
-                  ? "Tax | CGST @ 9% & SGST @ 9%"
-                  : " Tax | IGST @ 18%"}
+                  ? `Tax | CGST @ ${cgst}% & SGST @ ${sgst}%`
+                  : `Tax | IGST @ ${igst}%`}
               </span>
               <div className="w-[111px]">
                 <InputField
