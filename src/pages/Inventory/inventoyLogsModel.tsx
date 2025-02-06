@@ -4,6 +4,7 @@ import InventoryLogsTable from "../../Components/Inventory/InventoryLogsTable";
 import Loader from "../../lib/loader";
 import { getInventoryById, getInventoryLogsById } from "../../api/api"; // Ensure API function is imported
 import { InventoryItem } from "../../types/inventory";
+import { LogApiResponse } from "../../types/logs";
 
 const InventoryLogsModal = ({
   isOpen,
@@ -15,7 +16,7 @@ const InventoryLogsModal = ({
   selectedId: string;
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [inventoryLogs, setInventoryLogs] = useState<any[]>([]);
+  const [inventoryLogs, setInventoryLogs] = useState<LogApiResponse>();
   const [inventory, setInventory] = useState<InventoryItem | null>(null);
 
   useEffect(() => {
@@ -28,18 +29,17 @@ const InventoryLogsModal = ({
     setLoading(true);
     try {
       const logs = await getInventoryLogsById(selectedId);
-      const inventorydata=await getInventoryById(selectedId)
+      const inventorydata = await getInventoryById(selectedId);
       setInventoryLogs(logs);
-      setInventory(inventorydata.data)
-      console.log("logs:", logs)
-
- 
+      setInventory(inventorydata.data);
     } catch (error) {
       console.error("Error fetching inventory logs:", error);
     } finally {
       setLoading(false);
     }
   };
+  console.log("logs:", inventoryLogs);
+  console.log(selectedId);
 
   if (!isOpen) return null; // Don't render if modal is closed
 
@@ -54,7 +54,9 @@ const InventoryLogsModal = ({
           <>
             {/* Modal Header */}
             <div className="flex justify-between pb-4">
-              <span className="font-Inter font-[600] text-sm">Inventory Logs</span>
+              <span className="font-Inter font-[600] text-sm">
+                Inventory Logs
+              </span>
               <img
                 src={ICONS.close}
                 alt="Close"
@@ -76,7 +78,7 @@ const InventoryLogsModal = ({
             <div className="border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
 
             {/* Inventory Logs Table */}
-            <InventoryLogsTable data={inventoryLogs} />
+            <InventoryLogsTable data={inventoryLogs?.data || []} />
           </>
         )}
       </div>

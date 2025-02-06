@@ -113,6 +113,7 @@ const UpdateModal = ({
       ...formData,
     };
     setIsSubmitting(true);
+    setLoading(true);
     try {
       const response = await updateSupplier(selectedId, data);
       console.log("Supplier updated successfully:", response.data);
@@ -122,6 +123,7 @@ const UpdateModal = ({
       alert("Failed to update supplier. Please try again.");
     } finally {
       setIsSubmitting(false);
+      setLoading(false);
       navigate(0);
     }
   };

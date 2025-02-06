@@ -1,21 +1,12 @@
+import { Log } from "../../types/logs";
 import Table from "../Shared/Table/Table";
 
-interface InventoryLog {
-  updated_date: Date;
-  description: string;
-  sell_quantity: number;
-  buy_quantity: number;
-}
-
-interface InventoryLogsTableProps {
-  data: InventoryLog[];
-}
-
-const InventoryLogsTable: React.FC<InventoryLogsTableProps> = ({ data }) => {
+const InventoryLogsTable = ({ data }: { data: Log[] }) => {
   const columns = [
     {
       header: "Updated Date",
-      accessor: "updated_date",
+      accessor: "updatedAt",
+      type: "date",
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
       format: (value: Date) =>
@@ -27,28 +18,30 @@ const InventoryLogsTable: React.FC<InventoryLogsTableProps> = ({ data }) => {
     },
     {
       header: "Description",
-      accessor: "description",
+      accessor: "comments",
       cellClassName: "text-customBlue-20",
-      width: "260px",
+      width: "360px",
     },
     {
-      header: "Sell",
-      accessor: "sell_quantity",
+      header: "Transaction Type",
+      accessor: "txnType",
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      width: "160px",
     },
     {
-      header: "Buy",
-      accessor: "buy_quantity",
+      header: "Units",
+      accessor: "txnUnits",
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
+      width: "160px",
     },
   ];
 
   return (
     <div>
       <Table
-        data={data} // Now using the passed `data` prop
+        data={data}
         columns={columns}
         tableName="Inventory Logs"
         showViewAll={false}

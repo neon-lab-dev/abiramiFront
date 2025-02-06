@@ -10,12 +10,6 @@ import Loader from "../../lib/loader";
 import { useSearch } from "../../context/SearchContext";
 import { InvoicesResponse } from "../../types/invoice";
 
-// interface InvoiceSearchContextType {
-//   searchQuery: string;
-//   searchResults: InvoiceResponse[] | undefined;
-//   setSearchResults: (results: InvoiceResponse[]) => void;
-// }
-
 const ListPage = () => {
   const { searchQuery, searchResults } = useSearch();
   const [isOpen, setIsOpen] = useState(false);
@@ -84,10 +78,6 @@ const ListPage = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  // useEffect(() => {
-  //   setSearchResults([]);
-  // }, [searchQuery, setSearchResults]);
 
   return (
     <>

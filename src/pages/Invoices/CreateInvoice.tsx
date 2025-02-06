@@ -6,7 +6,10 @@ import { ICONS } from "../../assets";
 import { convertNumberToWords, formatNumber } from "../../utils";
 import { createInvoices } from "../../api/api";
 import { useNavigate } from "react-router-dom";
-import { ProductDetail } from "../../types/invoice";
+import { InvoiceData, ProductDetail } from "../../types/invoice";
+import { pdf, PDFDownloadLink } from "@react-pdf/renderer";
+import InvoicePDF from "../../utils/pdfGenerator";
+import { generateInvoicePDF } from "../../utils/handleInvoice";
 
 const CreateInvoice = () => {
   const navigate = useNavigate();
@@ -21,6 +24,10 @@ const CreateInvoice = () => {
   const [tax, setTax] = useState<number>();
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
+  const [igst, setIgst] = useState(18);
+  const [cgst, setCgst] = useState(9);
+  const [sgst, setSgst] = useState(9);
+  const [invoiceData, setInvoiceData] = useState<InvoiceData>();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
@@ -126,7 +133,7 @@ const CreateInvoice = () => {
           const quantity = updatedRow.quantity || 0;
           const rate = updatedRow.rate || 0;
           const discount = updatedRow.discount || 0;
-          updatedRow.amount = quantity * rate * (1 - discount);
+          updatedRow.amount = Math.abs(quantity * rate * (1 - discount / 100));
         }
 
         return updatedRow;
@@ -273,7 +280,8 @@ const CreateInvoice = () => {
         const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
         const rate = parseFloat(row?.rate?.toString() || "0") || 0;
         const discount = parseFloat(row?.discount?.toString() || "0") || 0;
-        const amount = quantity * rate * (1 - discount);
+        // const amount = quantity * rate - quantity * rate * (discount / 100);
+        const amount = Math.abs(quantity * rate * (1 - discount / 100));
         return sum + amount;
       }, 0);
 
@@ -284,8 +292,15 @@ const CreateInvoice = () => {
       setPfamount(Number(calculatedPfAmount.toFixed(2)));
 
       // Calculate Tax (e.g., 18% of Subtotal)
-      const calculatedTax = (taxPercent / 100) * calculatedSubTotal;
-      setTax(Number(calculatedTax.toFixed(2)));
+      let calculatedTax;
+      if (formData.taxtype === "IGST") {
+        calculatedTax = (igst / 100) * calculatedSubTotal;
+        setTax(Number(calculatedTax.toFixed(2)));
+      } else {
+        calculatedTax =
+          (cgst / 100) * calculatedSubTotal + (sgst / 100) * calculatedSubTotal;
+        setTax(Number(calculatedTax.toFixed(2)));
+      }
 
       // Calculate Total
       const calculatedTotal =
@@ -298,7 +313,6 @@ const CreateInvoice = () => {
   }, [rows]);
 
   useEffect(() => {
-    console.log(formData.invoicetype.toLowerCase());
     if (formData.invoicetype.toLowerCase() == "cash invoice") {
       setFormData({
         ...formData,
@@ -341,6 +355,54 @@ const CreateInvoice = () => {
       });
     }
   }, [formData.invoicetype]);
+
+  useEffect(() => {
+    if (formData.taxtype === "IGST") {
+      setTaxPercent(18);
+    } else if (formData.taxtype === "CGST & IGST") {
+      setTaxPercent(9);
+    }
+  }, [formData.taxtype]);
+
+  const handleSavePrint = async () => {
+    const data = {
+      clientName: formData.ClientName,
+      date: formData.ivoicedate,
+      state: formData.Stateandcode,
+      code: Number(formData.Code),
+      billingStatus: formData.status,
+      invoiceType: formData.invoicetype,
+      totalAmount: total,
+      taxGST: tax,
+      bankName: formData.BankName,
+      chequeNumber: formData.ChequeNumber,
+      chequeAmount: Number(formData.ChequeAmount),
+      transport: formData.transport,
+      placeOfSupply: formData.placeOfSupply,
+      poNo: formData.PONo,
+      vehicleNo: formData.vehicleNumber,
+      taxType: formData.taxtype,
+      subTotal: subTotal,
+      pfAmount: pfamount,
+      roundOff: roundOff,
+      productDetails: rows,
+    };
+    console.log(data);
+    setIsSubmitting(true);
+    try {
+      const response = await createInvoices(data);
+      console.log("Invoice created successfully:", response.data);
+      const pdfData = { ...response.data, productDetails: rows };
+      generateInvoicePDF(pdfData);
+      alert("Invoice created successfully!");
+    } catch (error) {
+      console.error("Error creating invoice:", error);
+      alert("Failed to create invoice. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+      navigate("/invoices");
+    }
+  };
 
   return (
     <div>
@@ -685,9 +747,6 @@ const CreateInvoice = () => {
                     <input
                       type="number"
                       placeholder="Enter discount"
-                      min={0}
-                      step={0.01}
-                      max={1}
                       value={row.discount ?? ""}
                       onChange={(e) =>
                         handleInputChange(index, "discount", e.target.value)
@@ -787,9 +846,6 @@ const CreateInvoice = () => {
                   <input
                     type="number"
                     placeholder="Enter discount"
-                    min={0}
-                    step={0.01}
-                    max={1}
                     value={row.discount ?? ""}
                     onChange={(e) =>
                       handleInputChange(index, "discount", e.target.value)
@@ -916,8 +972,8 @@ const CreateInvoice = () => {
             <div className="flex justify-between items-center  py-2">
               <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
                 {formData.Code == "33"
-                  ? "Tax | CGST @ 9% & SGST @ 9%"
-                  : " Tax | IGST @ 18%"}
+                  ? `Tax | CGST @ ${cgst}% & SGST @ ${sgst}%`
+                  : `Tax | IGST @ ${igst}%`}
               </span>
               <div className="w-[111px]">
                 <InputField
@@ -982,7 +1038,12 @@ const CreateInvoice = () => {
           color="text-primary-10 bg-none"
           disabled={isSubmitting}
         />
+        {/* <PDFDownloadLink
+          document={<InvoicePDF invoiceData={invoiceData} />}
+          fileName="invoice.pdf"
+        ></PDFDownloadLink> */}
         <Button
+          onClick={handleSavePrint}
           text={isSubmitting ? "Submitting..." : "Save & Print"}
           type="submit"
           color="bg-primary-10 text-white"

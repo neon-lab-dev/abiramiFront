@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
-import { getInvoiceById, updateInvoice } from "../../api/api";
+import {
+  createInvoicesByClientName,
+  getInvoiceById,
+  updateInvoice,
+} from "../../api/api";
 import { ICONS } from "../../assets";
 import Button from "../../Components/Shared/Button/Button";
 import InputField from "../../Components/Shared/InputField/InputField";
@@ -13,6 +17,7 @@ import {
   ProductDetail,
 } from "../../types/invoice";
 import { useNavigate } from "react-router-dom";
+import { generateInvoicePDF } from "../../utils/handleInvoice";
 
 const UpdateModal = ({
   editToggleModel,
@@ -123,18 +128,16 @@ const UpdateModal = ({
 
         const parsedValue =
           typeof value === "number" ? value : parseFloat(value) || 0;
-
         if (["quantity", "rate", "discount", "amount"].includes(field)) {
           updatedRow[field] = parsedValue as never;
         } else {
           updatedRow[field] = value as never;
         }
-
         if (["quantity", "rate", "discount"].includes(field)) {
           const quantity = updatedRow.quantity || 0;
           const rate = updatedRow.rate || 0;
           const discount = updatedRow.discount || 0;
-          updatedRow.amount = quantity * rate * (1 - discount);
+          updatedRow.amount = Math.abs(quantity * rate * (1 - discount / 100));
         }
 
         return updatedRow;
@@ -295,7 +298,7 @@ const UpdateModal = ({
           const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
           const rate = parseFloat(row?.rate?.toString() || "0") || 0;
           const discount = parseFloat(row?.discount?.toString() || "0") || 0;
-          const amount = quantity * rate * (1 - discount);
+          const amount = Math.abs(quantity * rate * (1 - discount / 100));
           return sum + amount;
         },
         0
@@ -424,6 +427,52 @@ const UpdateModal = ({
       );
     }
   }, [invoiceData]);
+
+  const handleSubmitPrint = async () => {
+    const data = {
+      clientName: formData.clientName,
+      date: formData.date,
+      state: formData.state,
+      code: formData.code,
+      billingStatus: formData.billingStatus,
+      invoiceType: formData.invoiceType,
+      totalAmount: total,
+      taxGST: tax,
+      bankName: formData.bankName,
+      chequeNumber: formData.chequeNumber,
+      chequeAmount: formData.chequeAmount,
+      transport: formData.transport,
+      placeOfSupply: formData.placeOfSupply,
+      poNO: formData.poNO,
+      vehicleNo: formData.vehicleNo,
+      taxType: formData.taxType,
+      subTotal: subTotal,
+      pfAmount: pfamount,
+      roundOff: roundOff,
+      productDetails: rows,
+    };
+    setIsSubmitting(true);
+    setLoading(true);
+    try {
+      if (selectedId) {
+        const response = await updateInvoice(selectedId, data);
+        console.log("Invoice updated successfully:", response.data);
+        const pdfData = { ...response.data, productDetails: rows };
+        generateInvoicePDF(pdfData);
+        alert("Invoice updated successfully!");
+      } else {
+        console.error("No selected ID provided.");
+        alert("Failed to update invoice. No selected ID provided.");
+      }
+    } catch (error) {
+      console.error("Error updating invoice:", error);
+      alert("Failed to update invoice. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+      setLoading(false);
+      navigate(0);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
@@ -763,9 +812,6 @@ const UpdateModal = ({
                           <input
                             type="number"
                             placeholder="Enter discount"
-                            min={0}
-                            step={0.01}
-                            max={1}
                             value={row.discount ?? ""}
                             onChange={(e) =>
                               handleInputChange(
@@ -873,9 +919,6 @@ const UpdateModal = ({
                         <input
                           type="number"
                           placeholder="Enter discount"
-                          min={0}
-                          step={0.01}
-                          max={1}
                           value={row.discount ?? ""}
                           onChange={(e) =>
                             handleInputChange(index, "discount", e.target.value)
@@ -1070,6 +1113,7 @@ const UpdateModal = ({
                 color="text-primary-10 bg-none"
               />
               <Button
+                onClick={handleSubmitPrint}
                 text="Save & Print"
                 type="submit"
                 color="bg-primary-10 text-white"

@@ -11,11 +11,14 @@ import { Category, CategoryResponse } from "../../types/category";
 import { getSearchFunction } from "../../utils/searchUtils";
 
 const CatagoryList = () => {
-  const { searchQuery, setSearchQuery, searchResults, setSearchResults } =
-    useSearch();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<CategoryResponse | null>(
+    null
+  );
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [formData, setFormData] = useState({ Catagory: "", inventory: [] });
   const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState<boolean>(false);
   const [categories, setCategories] = useState<Category[]>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -33,7 +36,6 @@ const CatagoryList = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(formData);
     const data = {
       name: formData.Catagory,
       inventory: formData.inventory,
@@ -72,11 +74,17 @@ const CatagoryList = () => {
 
   useEffect(() => {
     setSearchQuery("");
-    setSearchResults([]);
+    setSearchResults(null);
   }, [location]);
+
+  useEffect(() => {
+    setSearchResults(null);
+  }, [searchQuery, setSearchResults]);
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchQuery.trim() !== "") {
+      setSearching(true);
+
       const searchFunction = getSearchFunction(location.pathname);
       if (searchFunction) {
         try {
@@ -97,12 +105,15 @@ const CatagoryList = () => {
           } else {
             console.error("Search API error:", error);
           }
+        } finally {
+          setSearching(false);
         }
       } else {
         console.warn("No search function available for this route.");
       }
     }
   };
+
   return (
     <>
       {loading ? (
@@ -114,7 +125,14 @@ const CatagoryList = () => {
           {/* Header Section */}
           <div className="w-full py-2 mb-2 flex justify-between items-center">
             <h3 className="font-bold px-2">Inventory List Page</h3>
-            <div className="flex flexrow gap-4 ">
+            <div className="flex flex-row gap-4 items-center ">
+              {searching && (
+                <>
+                  <div>
+                    <Loader w={5} h={5} />
+                  </div>
+                </>
+              )}
               <div className="rounded-md p-1 px-2 bg-none bg-secondary-120 flex gap-2 justify-center items-center">
                 <img src={ICONS.InputField} alt="Search Icon" />
                 <input
@@ -138,7 +156,7 @@ const CatagoryList = () => {
 
           {/* Category Cards Section */}
           <div className="py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {searchQuery.trim() === "" || searchResults.length === 0 ? (
+            {searchQuery.trim() === "" || searchResults === null ? (
               <>
                 {categories &&
                   categories?.length > 0 &&
@@ -152,7 +170,8 @@ const CatagoryList = () => {
               </>
             ) : (
               <>
-                {searchResults?.data?.length > 0 &&
+                {searchResults &&
+                  searchResults?.data?.length > 0 &&
                   searchResults?.data?.map(
                     (category: Category, index: number) => (
                       <CatagoryCard

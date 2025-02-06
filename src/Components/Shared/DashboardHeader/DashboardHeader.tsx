@@ -2,9 +2,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ICONS } from "../../../assets";
 import { useSearch } from "../../../context/SearchContext";
 import { getSearchFunction } from "../../../utils/searchUtils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Button from "../Button/Button";
 import Cookies from "js-cookie";
+import Loader from "../../../lib/loader";
 
 interface DashboardHeaderProps {
   HandleSidebar: (data: boolean) => void;
@@ -16,6 +17,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   callNav,
 }) => {
   const location = useLocation();
+  const [loading, setLoading] = useState<boolean>(false);
   const { searchQuery, setSearchQuery, setSearchResults } = useSearch();
   const navigate = useNavigate();
 
@@ -28,6 +30,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchQuery.trim() !== "") {
+      setLoading(true);
       const searchFunction = getSearchFunction(location.pathname);
       if (searchFunction) {
         try {
@@ -48,6 +51,8 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           } else {
             console.error("Search API error:", error);
           }
+        } finally {
+          setLoading(false);
         }
       } else {
         console.warn("No search function available for this route.");
@@ -100,6 +105,13 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
       <div className="flex justify-center items-center gap-4">
         {/* Search bar with conditional display */}
+        {loading && (
+          <>
+            <div>
+              <Loader w={5} h={5} />
+            </div>
+          </>
+        )}
         <div className="rounded-md p-1 px-2 bg-none md:bg-secondary-10 flex gap-2 justify-center items-center">
           <img src={ICONS.InputField} alt="Search Icon" />
           <input
