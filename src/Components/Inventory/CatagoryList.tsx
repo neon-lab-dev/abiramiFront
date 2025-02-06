@@ -12,7 +12,9 @@ import { getSearchFunction } from "../../utils/searchUtils";
 
 const CatagoryList = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<CategoryResponse | null>(
+    null
+  );
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [formData, setFormData] = useState({ Catagory: "", inventory: [] });
   const [loading, setLoading] = useState(false);
@@ -73,10 +75,10 @@ const CatagoryList = () => {
 
   useEffect(() => {
     setSearchQuery("");
-    setSearchResults([]);
+    setSearchResults(null);
   }, [location]);
   useEffect(() => {
-    setSearchResults([]);
+    setSearchResults(null);
   }, [searchQuery, setSearchResults]);
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -153,7 +155,7 @@ const CatagoryList = () => {
 
           {/* Category Cards Section */}
           <div className="py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {searchQuery.trim() === "" || searchResults.length === 0 ? (
+            {searchQuery.trim() === "" || searchResults === null ? (
               <>
                 {categories &&
                   categories?.length > 0 &&
@@ -167,7 +169,8 @@ const CatagoryList = () => {
               </>
             ) : (
               <>
-                {searchResults?.data?.length > 0 &&
+                {searchResults &&
+                  searchResults?.data?.length > 0 &&
                   searchResults?.data?.map(
                     (category: Category, index: number) => (
                       <CatagoryCard
