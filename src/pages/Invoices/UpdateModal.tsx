@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
-import { getInvoiceById, updateInvoice } from "../../api/api";
+import {
+  createInvoicesByClientName,
+  getInvoiceById,
+  updateInvoice,
+} from "../../api/api";
 import { ICONS } from "../../assets";
 import Button from "../../Components/Shared/Button/Button";
 import InputField from "../../Components/Shared/InputField/InputField";
@@ -13,6 +17,7 @@ import {
   ProductDetail,
 } from "../../types/invoice";
 import { useNavigate } from "react-router-dom";
+import { generateInvoicePDF } from "../../utils/handleInvoice";
 
 const UpdateModal = ({
   editToggleModel,
@@ -422,6 +427,52 @@ const UpdateModal = ({
       );
     }
   }, [invoiceData]);
+
+  const handleSubmitPrint = async () => {
+    const data = {
+      clientName: formData.clientName,
+      date: formData.date,
+      state: formData.state,
+      code: formData.code,
+      billingStatus: formData.billingStatus,
+      invoiceType: formData.invoiceType,
+      totalAmount: total,
+      taxGST: tax,
+      bankName: formData.bankName,
+      chequeNumber: formData.chequeNumber,
+      chequeAmount: formData.chequeAmount,
+      transport: formData.transport,
+      placeOfSupply: formData.placeOfSupply,
+      poNO: formData.poNO,
+      vehicleNo: formData.vehicleNo,
+      taxType: formData.taxType,
+      subTotal: subTotal,
+      pfAmount: pfamount,
+      roundOff: roundOff,
+      productDetails: rows,
+    };
+    setIsSubmitting(true);
+    setLoading(true);
+    try {
+      if (selectedId) {
+        const response = await updateInvoice(selectedId, data);
+        console.log("Invoice updated successfully:", response.data);
+        const pdfData = { ...response.data, productDetails: rows };
+        generateInvoicePDF(pdfData);
+        alert("Invoice updated successfully!");
+      } else {
+        console.error("No selected ID provided.");
+        alert("Failed to update invoice. No selected ID provided.");
+      }
+    } catch (error) {
+      console.error("Error updating invoice:", error);
+      alert("Failed to update invoice. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+      setLoading(false);
+      navigate(0);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
@@ -1062,6 +1113,7 @@ const UpdateModal = ({
                 color="text-primary-10 bg-none"
               />
               <Button
+                onClick={handleSubmitPrint}
                 text="Save & Print"
                 type="submit"
                 color="bg-primary-10 text-white"

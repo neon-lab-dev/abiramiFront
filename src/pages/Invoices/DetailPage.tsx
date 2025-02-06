@@ -12,7 +12,8 @@ import {
 } from "../../utils";
 import Loader from "../../lib/loader";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { InvoicePDF } from "../../utils/pdfGenerator";
+import InvoicePDF from "../../utils/pdfGenerator";
+import { generateInvoicePDF } from "../../utils/handleInvoice";
 
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -49,7 +50,7 @@ const DetailPage = () => {
     "Discount",
     "Amount",
   ];
-  
+
   useEffect(() => {
     const fetchInvoiceById = async () => {
       setLoading(true);
@@ -339,16 +340,19 @@ const DetailPage = () => {
               )}
             </div>
             {invoiceData && (
-              <PDFDownloadLink
-                document={<InvoicePDF invoiceData={invoiceData} />}
-                fileName="invoice.pdf"
-              >
-                <Button
-                  text="Print"
-                  color="bg-secondary-125 text-[14px] text-white text-xs h-10"
-                  iconClassName="h-[24px] w-[31px] "
-                />
-              </PDFDownloadLink>
+              // <PDFDownloadLink
+              //   document={<InvoicePDF invoiceData={invoiceData} />}
+              //   fileName="invoice.pdf"
+              // >
+              <Button
+                text="Print"
+                onClick={() => {
+                  generateInvoicePDF(invoiceData);
+                }}
+                color="bg-secondary-125 text-[14px] text-white text-xs h-10"
+                iconClassName="h-[24px] w-[31px] "
+              />
+              // </PDFDownloadLink>
             )}
           </div>
         </div>

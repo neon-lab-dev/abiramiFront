@@ -6,7 +6,10 @@ import { ICONS } from "../../assets";
 import { convertNumberToWords, formatNumber } from "../../utils";
 import { createInvoices } from "../../api/api";
 import { useNavigate } from "react-router-dom";
-import { ProductDetail } from "../../types/invoice";
+import { InvoiceData, ProductDetail } from "../../types/invoice";
+import { pdf, PDFDownloadLink } from "@react-pdf/renderer";
+import InvoicePDF from "../../utils/pdfGenerator";
+import { generateInvoicePDF } from "../../utils/handleInvoice";
 
 const CreateInvoice = () => {
   const navigate = useNavigate();
@@ -24,6 +27,7 @@ const CreateInvoice = () => {
   const [igst, setIgst] = useState(18);
   const [cgst, setCgst] = useState(9);
   const [sgst, setSgst] = useState(9);
+  const [invoiceData, setInvoiceData] = useState<InvoiceData>();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
@@ -359,6 +363,47 @@ const CreateInvoice = () => {
       setTaxPercent(9);
     }
   }, [formData.taxtype]);
+
+  const handleSavePrint = async () => {
+    const data = {
+      clientName: formData.ClientName,
+      date: formData.ivoicedate,
+      state: formData.Stateandcode,
+      code: Number(formData.Code),
+      billingStatus: formData.status,
+      invoiceType: formData.invoicetype,
+      totalAmount: total,
+      taxGST: tax,
+      bankName: formData.BankName,
+      chequeNumber: formData.ChequeNumber,
+      chequeAmount: Number(formData.ChequeAmount),
+      transport: formData.transport,
+      placeOfSupply: formData.placeOfSupply,
+      poNo: formData.PONo,
+      vehicleNo: formData.vehicleNumber,
+      taxType: formData.taxtype,
+      subTotal: subTotal,
+      pfAmount: pfamount,
+      roundOff: roundOff,
+      productDetails: rows,
+    };
+    console.log(data);
+    setIsSubmitting(true);
+    try {
+      const response = await createInvoices(data);
+      console.log("Invoice created successfully:", response.data);
+      const pdfData = { ...response.data, productDetails: rows };
+      generateInvoicePDF(pdfData);
+      alert("Invoice created successfully!");
+    } catch (error) {
+      console.error("Error creating invoice:", error);
+      alert("Failed to create invoice. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+      navigate("/invoices");
+    }
+  };
+
   return (
     <div>
       <span className="text-sm font-Inter font-[600] ">Billing Details</span>
@@ -993,7 +1038,12 @@ const CreateInvoice = () => {
           color="text-primary-10 bg-none"
           disabled={isSubmitting}
         />
+        {/* <PDFDownloadLink
+          document={<InvoicePDF invoiceData={invoiceData} />}
+          fileName="invoice.pdf"
+        ></PDFDownloadLink> */}
         <Button
+          onClick={handleSavePrint}
           text={isSubmitting ? "Submitting..." : "Save & Print"}
           type="submit"
           color="bg-primary-10 text-white"
