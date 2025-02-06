@@ -4,9 +4,15 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
 import { convertNumberToWords, formatNumber } from "../../utils";
-import { createInvoices } from "../../api/api";
+import { createInvoices, getInvoiceById } from "../../api/api";
 import { useNavigate } from "react-router-dom";
-import { ProductDetail } from "../../types/invoice";
+import {
+  InvoiceData,
+  InvoiceResponseWithClient,
+  ProductDetail,
+} from "../../types/invoice";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import InvoicePDF from "../../utils/pdfGenerator";
 
 const CreateInvoice = () => {
   const navigate = useNavigate();
@@ -14,6 +20,7 @@ const CreateInvoice = () => {
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaveSubmitting, setIsSaveSubmitting] = useState(false);
   const [subTotal, setSubTotal] = useState<number>();
   const [pfPercent, setPfPercent] = useState<number>(10);
   const [pfamount, setPfamount] = useState<number>();
@@ -21,6 +28,7 @@ const CreateInvoice = () => {
   const [tax, setTax] = useState<number>();
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
+  const [invoiceData, setInvoiceData] = useState<InvoiceData>();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
@@ -263,6 +271,54 @@ const CreateInvoice = () => {
     } finally {
       setIsSubmitting(false);
       navigate("/invoices");
+    }
+  };
+  const handleSaveSubmit = async () => {
+    const data = {
+      clientName: formData.ClientName,
+      date: formData.ivoicedate,
+      state: formData.Stateandcode,
+      code: Number(formData.Code),
+      billingStatus: formData.status,
+      invoiceType: formData.invoicetype,
+      totalAmount: total,
+      taxGST: tax,
+      bankName: formData.BankName,
+      chequeNumber: formData.ChequeNumber,
+      chequeAmount: Number(formData.ChequeAmount),
+      transport: formData.transport,
+      placeOfSupply: formData.placeOfSupply,
+      poNo: formData.PONo,
+      vehicleNo: formData.vehicleNumber,
+      taxType: formData.taxtype,
+      subTotal: subTotal,
+      pfAmount: pfamount,
+      roundOff: roundOff,
+      productDetails: rows,
+    };
+    console.log(data);
+    setIsSaveSubmitting(true);
+    try {
+      const response = await createInvoices(data); // Call your API function
+      // console.log("Invoice created successfully:", response.data);
+
+      // Access the ID of the created invoice
+      const id = response.data?.id;
+
+      if (id) {
+        const response: InvoiceResponseWithClient = await getInvoiceById(id);
+        setInvoiceData(response.data);
+        alert(`Invoice created successfully! Invoice ID: ${id}`);
+      } else {
+        console.error("Invoice ID not found in the response.");
+        alert("Invoice created, but ID is missing in the response.");
+      }
+    } catch (error) {
+      console.error("Error creating invoice:", error);
+      alert("Failed to create invoice. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+      navigate("/invoices"); // Redirect or update state
     }
   };
 
@@ -982,12 +1038,21 @@ const CreateInvoice = () => {
           color="text-primary-10 bg-none"
           disabled={isSubmitting}
         />
-        <Button
-          text={isSubmitting ? "Submitting..." : "Save & Print"}
-          type="submit"
-          color="bg-primary-10 text-white"
-          disabled={isSubmitting}
-        />
+
+        <div>
+          <PDFDownloadLink
+            document={<InvoicePDF invoiceData={invoiceData} />}
+            fileName="invoice.pdf"
+          >  </PDFDownloadLink>
+            <Button
+              onClick={handleSaveSubmit}
+              text={isSaveSubmitting ? "Submitting..." : "Save & Print"}
+              type="submit"
+              color="bg-primary-10 text-white"
+              disabled={isSubmitting || !invoiceData} 
+            />
+        
+        </div>
       </div>
     </div>
   );
