@@ -61,6 +61,7 @@ const UpdateModal = ({
       status: formData.status.toUpperCase(),
     };
     setIsSubmitting(true);
+    setLoading(true);
     try {
       const response = await updateClient(clientData, selectedId);
       console.log("Client updated successfully:", response.data);
@@ -83,6 +84,8 @@ const UpdateModal = ({
       }
     } finally {
       setIsSubmitting(false);
+      setLoading(true);
+
       navigate(0);
     }
   };
