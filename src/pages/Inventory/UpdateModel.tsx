@@ -8,6 +8,7 @@ import {
   getCategories,
   getInventoryById,
   updateInventories,
+  updateInventoryLogs,
 } from "../../api/api";
 import { Category, CategoryResponse } from "../../types/category";
 import { InventoryItem, InventoryResponse } from "../../types/inventory";
@@ -203,6 +204,37 @@ const UpdateModel = ({
     }));
     setImagePreviews("");
   };
+  const [LogformData, setLogFormData] = useState({
+    TRType: "buy",
+    transactionUnits: "",
+    comment: "",
+  });
+  const handleLogChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLogFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleUpdateLogs = async () => {
+    if (!selectedId) {
+      console.error("Inventory ID is missing!");
+      return;
+    }
+
+    const logData = {
+      txnType: LogformData.TRType.toUpperCase(),
+      txnUnits: parseInt(LogformData.transactionUnits, 10),
+      comments: LogformData.comment,
+    };
+
+    try {
+      const response = await updateInventoryLogs(selectedId, logData);
+      console.log("Logs updated successfully:", response);
+      alert("Logs updated successfully!");
+    } catch (error) {
+      console.error("Failed to update logs:", error);
+      alert("Failed to update logs!");
+    }
+  };
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
@@ -365,68 +397,68 @@ const UpdateModel = ({
             </div>
 
             {/* heading */}
-            <span className="font-Inter font-[600] text-sm  ">
-              Inventroy Logs
-            </span>
-            <div className="w-full  pb-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
-              <div className="w-full flex items-center gap-4">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="TRType"
-                    value="sell"
-                    checked={formData.TRType === "sell"}
-                    onChange={handleChange}
-                    className="form-radio text-primary-10"
-                  />
-                  <span className="ml-2">Sell</span>
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="TRType"
-                    value="buy"
-                    checked={formData.TRType === "buy"}
-                    onChange={handleChange}
-                    className="form-radio text-primary-10"
-                  />
-                  <span className="ml-2">Buy</span>
-                </label>
-              </div>
-              <InputField
-                label="Transaction Units"
-                required={true}
-                inputBg=""
-                type="number"
-                placeholder="Enter Transaction Units"
-                name="transactionUnits"
-                value={formData.transactionUnits}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Comment"
-                required={false}
-                inputBg=""
-                type="text"
-                placeholder="Enter comment"
-                name="comment"
-                value={formData.comment}
-                onChange={handleChange}
-              />{" "}
-            </div>
-            <div className=" border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
-            <div className="col-span-3 flex justify-center gap-4 my-8">
-              <Button
-                text="Clear Form"
-                type="reset"
-                color="text-primary-10 bg-none"
-              />
-              <Button
-                text="Update Logs"
-                type="submit"
-                color="bg-primary-10 text-white"
-              />
-            </div>
+            <div>
+      <span className="font-Inter font-[600] text-sm">Inventory Logs</span>
+      <div className="w-full pb-[22px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
+        <div className="w-full flex items-center gap-4">
+          <label className="flex items-center">
+            <input
+              type="radio"
+              name="TRType"
+              value="sell"
+              checked={formData.TRType === "sell"}
+              onChange={handleChange}
+              className="form-radio text-primary-10"
+            />
+            <span className="ml-2">Sell</span>
+          </label>
+          <label className="flex items-center">
+            <input
+              type="radio"
+              name="TRType"
+              value="buy"
+              checked={formData.TRType === "buy"}
+              onChange={handleChange}
+              className="form-radio text-primary-10"
+            />
+            <span className="ml-2">Buy</span>
+          </label>
+        </div>
+
+        <InputField
+          label="Transaction Units"
+          required={true}
+          inputBg=""
+          type="number"
+          placeholder="Enter Transaction Units"
+          name="transactionUnits"
+          value={formData.transactionUnits}
+          onChange={handleChange}
+        />
+        <InputField
+          label="Comment"
+          required={false}
+          inputBg=""
+          type="text"
+          placeholder="Enter comment"
+          name="comment"
+          value={formData.comment}
+          onChange={handleChange}
+        />
+      </div>
+
+      <div className="border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
+
+      <div className="col-span-3 flex justify-center gap-4 my-8">
+        <Button text="Clear Form" type="reset" color="text-primary-10 bg-none" />
+        <Button
+          text="Update Logs"
+          type="button"
+          color="bg-primary-10 text-white"
+          onClick={handleUpdateLogs}
+        />
+      </div>
+    </div>
 
             <div></div>
           </>
