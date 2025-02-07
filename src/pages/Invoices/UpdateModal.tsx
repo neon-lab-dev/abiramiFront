@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
-import { getInvoiceById, updateInvoice } from "../../api/api";
+import { createInvoices, getInvoiceById, updateInvoice } from "../../api/api";
 import { ICONS } from "../../assets";
 import Button from "../../Components/Shared/Button/Button";
 import InputField from "../../Components/Shared/InputField/InputField";
@@ -13,6 +13,7 @@ import {
   ProductDetail,
 } from "../../types/invoice";
 import { useNavigate } from "react-router-dom";
+import { generateInvoicePDF } from "../../utils/handleInvoice";
 
 const UpdateModal = ({
   editToggleModel,
@@ -58,6 +59,8 @@ const UpdateModal = ({
     vehicleNo: null,
     productDetails: [],
   });
+
+
   const [rows, setRows] = useState<ProductDetail[]>([
     {
       description: "",
@@ -94,60 +97,57 @@ const UpdateModal = ({
     setRows((prevRows) =>
       prevRows.map((row, i) => {
         if (i !== index) return row;
-  
+
         const updatedRow = { ...row };
         const parsedValue = typeof value === "number" ? value : parseFloat(value) || 0;
-  
+
         if (["quantity", "rate", "discount", "amount"].includes(field)) {
           updatedRow[field] = parsedValue as never;
         } else {
           updatedRow[field] = value as never;
         }
-  
+
         // Correct discount calculation
         if (["quantity", "rate", "discount"].includes(field)) {
           const quantity = updatedRow.quantity || 0;
           const rate = updatedRow.rate || 0;
           const discount = updatedRow.discount || 0;
-  
+
           updatedRow.amount = quantity * rate * (1 - discount / 100);
         }
-  
+
         return updatedRow;
       })
     );
   };
-  
+
   useEffect(() => {
     const calculateValues = () => {
       // Calculate Subtotal
       const calculatedSubTotal = rows?.reduce(
         (sum: number, row: ProductDetail) => {
-          console.log(sum);
           const quantity = row?.quantity || 0;
           const rate = row?.rate || 0;
           const discount = row?.discount || 0;
-          
+
           const baseAmount = quantity * rate;
           const amount = baseAmount - ((baseAmount * discount) / 100);
-          console.log(amount+sum);
-  
+
           return sum + amount;
         },
         0
       );
-  
-      console.log(calculatedSubTotal);
+
       setSubTotal(calculatedSubTotal);
-  
+
       // Calculate PF Amount (e.g., 10% of Subtotal)
       const calculatedPfAmount = (pfPercent / 100) * calculatedSubTotal;
       setPfamount(Number(calculatedPfAmount.toFixed(2)));
-  
+
       // Calculate Tax (e.g., 18% of Subtotal)
       const calculatedTax = (taxPercent / 100) * calculatedSubTotal;
       setTax(Number(calculatedTax.toFixed(2)));
-  
+
       // Calculate Total
       const calculatedTotal =
         calculatedSubTotal + calculatedPfAmount + calculatedTax;
@@ -166,10 +166,10 @@ const UpdateModal = ({
       ...prevData,
       [name]:
         name === "quantity" ||
-        name === "rate" ||
-        name === "discount" ||
-        name === "amount" ||
-        name === "chequeAmount"
+          name === "rate" ||
+          name === "discount" ||
+          name === "amount" ||
+          name === "chequeAmount"
           ? Number(value)
           : value,
     }));
@@ -253,7 +253,7 @@ const UpdateModal = ({
     }));
     setShowDropdown2(false);
   };
-  
+
   const handleStateSelect1 = (Status: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -290,10 +290,8 @@ const UpdateModal = ({
     try {
       if (selectedId) {
         const response = await updateInvoice(selectedId, data);
-        console.log("Invoice updated successfully:", response.data);
         alert("Invoice updated successfully!");
       } else {
-        console.error("No selected ID provided.");
         alert("Failed to update invoice. No selected ID provided.");
       }
     } catch (error) {
@@ -305,9 +303,6 @@ const UpdateModal = ({
       navigate(0);
     }
   };
-
-
-  
 
   useEffect(() => {
     if (formData.invoiceType.toLowerCase() == "cash invoice") {
@@ -412,6 +407,57 @@ const UpdateModal = ({
       );
     }
   }, [invoiceData]);
+
+  const rowsData = rows?.map(row => {
+    return {
+      description: row.description,
+      HSNno: row.HSNno,
+      quantity: row.quantity,
+      rate: row.rate,
+      discount: row.discount,
+      amount: row.amount,
+    }
+  })
+
+
+  const handleSavePrint = async () => {
+    const data = {
+      clientName: formData.clientName,
+      date: formData.date,
+      state: formData.state,
+      code: Number(formData.code),
+      billingStatus: formData.billingStatus,
+      invoiceType: formData.invoiceType,
+      totalAmount: total,
+      taxGST: tax,
+      bankName: formData.bankName,
+      chequeNumber: formData.chequeNumber,
+      chequeAmount: Number(formData.chequeAmount),
+      transport: formData.transport,
+      placeOfSupply: formData.placeOfSupply,
+      poNo: formData.poNO,
+      vehicleNo: formData.vehicleNo,
+      taxType: formData.taxType,
+      subTotal: subTotal,
+      pfAmount: pfamount,
+      roundOff: roundOff,
+      productDetails: rowsData,
+    };
+    setIsSubmitting(true);
+    try {
+      const response = await createInvoices(data);
+      const pdfData = { ...response.data, productDetails: rows };
+      generateInvoicePDF(pdfData);
+      alert("Invoice created successfully!");
+    } catch (error) {
+      console.error("Error creating invoice:", error);
+      alert("Failed to create invoice. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+      navigate("/invoices");
+    }
+  };
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
@@ -1057,6 +1103,7 @@ const UpdateModal = ({
                 color="text-primary-10 bg-none"
               />
               <Button
+                onClick={handleSavePrint}
                 text="Save & Print"
                 type="submit"
                 color="bg-primary-10 text-white"

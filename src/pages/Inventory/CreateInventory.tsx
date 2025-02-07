@@ -205,11 +205,11 @@ const CreateInventory = () => {
                   value={formData.buyingCost}
                   onChange={handleChange}
                 />
-                {/* <div className=" absolute bottom-[-50%] right-[6%] opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 group-hover:scale-[1] scale-[0.7] before:w-[20px] before:h-[20px] before:bg-[#8d8d8d] before:z-[-1] before:absolute before:top-[-35%] before:left-[1%] before:rotate-[40deg] before:rounded-b-3xl">
-                  <span className=" text-[0.9rem] bg-[#8d8d8d] text-secondary rounded px-3 py-2 ">
+                <div className=" absolute -bottom-8 w-full opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 group-hover:scale-[1] scale-[0.7] before:rounded-b-3xl">
+                  <span className=" text-[0.9rem] bg-[#8d8d8d]/40 text-secondary rounded px-3 py-2 ">
                     This filed accepts alphanumeric input.
                   </span>
-                </div> */}
+                </div>
               </div>
 
               <InputField

@@ -7,21 +7,6 @@ import { Invoice } from "../../types/client";
 import { formatNumber } from "../../utils";
 import { InvoiceResponse } from "../../types/invoice";
 
-// Define a type for the row data
-// interface Invoice {
-//   invoice_id: string;
-//   invoice_status: "PAID" | "PENDING" | "DRAFT";
-//   client: string;
-//   invoice_type: "Cheque Invoice" | "Quote Invoice" | "Tax invoice";
-//   total_amount: number;
-//   tax: number;
-//   created_date: Date;
-//   i1: boolean;
-//   i2: boolean;
-//   i3: boolean;
-//   iconsOrder: string[];
-// }
-
 const InvoiceListPageTable = ({
   invoices,
   editToggleModel,
@@ -42,166 +27,6 @@ const InvoiceListPageTable = ({
     i3: ICONS.deleteRed,
   };
 
-  // const data: Dashboard[] = [
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "PAID",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Cheque Invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 4, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "PENDING",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Cheque Invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 3, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "PAID",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Quote Invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 1, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "PAID",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Cheque Invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 8, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "PENDING",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Tax invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "PENDING",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Tax invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 6, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "PENDING",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Quote Invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 4, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "PENDING",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Tax invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 3, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "DRAFT",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Tax invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 9, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "DRAFT",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Quote Invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "DRAFT",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Quote Invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-  //   {
-  //     invoice_id: "kjsdgnbj",
-  //     invoice_status: "DRAFT",
-  //     client: "ljadbvilhb4jh345kj4n",
-  //     invoice_type: "Quote Invoice",
-  //     total_amount: 985735689,
-  //     created_date: new Date(2024, 2, 10),
-  //     tax: 985735689,
-  //     i1: true,
-  //     i2: true,
-  //     i3: true,
-  //     iconsOrder: ["i1", "i2", "i3"],
-  //   },
-  // ];
-
   const [sortedData, setSortedData] = useState<InvoiceResponse[]>(invoices);
   const handleSort = (order: "asc" | "desc"): void => {
     const sorted = [...sortedData].sort((a, b) => {
@@ -209,9 +34,9 @@ const InvoiceListPageTable = ({
       const dateB = new Date(b.createdAt);
 
       if (order === "asc") {
-        return dateA.getTime() - dateB.getTime(); // Convert dates to timestamps
+        return dateA.getTime() - dateB.getTime();
       } else if (order === "desc") {
-        return dateB.getTime() - dateA.getTime(); // Convert dates to timestamps
+        return dateB.getTime() - dateA.getTime();
       }
       return 0;
     });

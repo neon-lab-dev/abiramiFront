@@ -88,25 +88,6 @@ const CreateInvoice = () => {
   const removeRow = (index: number) => {
     setRows(rows.filter((_, idx) => idx !== index));
   };
-  // const handleInputChange = (index: number, field: string, value: number) => {
-  //   const updatedRows = [...rows];
-  //   if (["quantity", "rate", "discount", "amount"].includes(field)) {
-  //     updatedRows[index][field] = parseFloat(value) || 0;
-  //   } else {
-  //     updatedRows[index][field] = value;
-  //   }
-
-  //   // Automatically calculate the amount if relevant fields are updated
-  //   if (["quantity", "rate", "discount"].includes(field)) {
-  //     const quantity = updatedRows[index].quantity || 0;
-  //     const rate = updatedRows[index].rate || 0;
-  //     const discount = updatedRows[index].discount || 0;
-
-  //     updatedRows[index].amount = quantity * rate * (1 - discount);
-  //   }
-  //   console.log(updatedRows);
-  //   setRows(updatedRows);
-  // };
 
   const handleInputChange = (
     index: number,
