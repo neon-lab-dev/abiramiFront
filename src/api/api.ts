@@ -236,6 +236,7 @@ export const createCategory = async (data: any) => {
 export const getInventoryData = async () => {
   try {
     const response = await axiosInstance.get("/inventory/items");
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error("Get clients error:", error);

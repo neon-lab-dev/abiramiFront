@@ -21,7 +21,7 @@ const Layout = () => {
         <Loader />
       </div>
     );
-  if (!admin ) {
+  if (!admin) {
     navigate("/login");
   }
 

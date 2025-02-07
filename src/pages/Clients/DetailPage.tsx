@@ -47,6 +47,8 @@ const DetailPage = () => {
           const data: SingleClientResponse = await getClientById(id);
           console.log(data);
           setInvoiceData(data);
+          // console.log(invoiceData)
+          // console.log(data.paidInvoices)
           setClient(data?.data);
         }
       } catch (err) {

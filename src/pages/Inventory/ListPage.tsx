@@ -40,6 +40,7 @@ const ListPage = () => {
         const response: InventoryResponse = await getInventoryData();
         if (response.statusText === "OK") {
           setInventoryData(response?.data as unknown as InventoryData);
+          console.log(inventoryData)
         }
       } catch (err) {
         console.error(err);

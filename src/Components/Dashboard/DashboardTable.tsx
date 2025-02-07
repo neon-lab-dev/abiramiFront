@@ -105,7 +105,8 @@ const DashboardTable = ({
       ),
       accessor: "billingStatus",
       cellRenderer: (row: Invoice) => {
-        let statusClass = "";
+        let statusClass ="text-gray-700 bg-gray-100 h-[28px] py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left";// Gray for DRAFT
+        ;
         console.log(
           row.billingStatus.toUpperCase() === "DRAFT/PERFORMA INVOICE"
         );
@@ -121,7 +122,7 @@ const DashboardTable = ({
           row.billingStatus.toUpperCase() === "DRAFT/PERFORMA INVOICE"
         ) {
           statusClass =
-            "text-gray-500  font-sans text-[12px] font-normal leading-[20px] text-left"; // Gray for DRAFT
+           "text-gray-700 bg-gray-100 h-[28px] py-[2px] px-[12px] rounded-[12px] font-sans text-[12px] font-normal leading-[20px] text-left";// Gray for DRAFT
         }
 
         return (

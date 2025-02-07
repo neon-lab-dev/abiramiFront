@@ -209,13 +209,13 @@ const UpdateModal = ({
   ];
   const status = [
     {
-      status: "Paid",
+      status: "PAID",
     },
     {
-      status: "Pending",
+      status: "PENDING",
     },
     {
-      status: "Draft/Performa Invoice",
+      status: "DRAFT",
     },
   ];
 

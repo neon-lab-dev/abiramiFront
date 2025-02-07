@@ -11,8 +11,8 @@ import { useNavigate } from "react-router-dom";
 import UpdateModal from "../Invoices/UpdateModal";
 import { InvoicesResponse } from "../../types/invoice";
 const Dashboard = () => {
-  const monthlySales = [10, 200, 300, 400, 500, 600, 700]; // Replace with actual sales data
-  const monthlyPurchases = [50, 150, 250, 350, 450, 550, 650]; // Replace with actual purchase data
+  const monthlySales = [10, 200, 300, 400, 500, 600, 700];
+  const monthlyPurchases = [50, 150, 250, 350, 450, 550, 650]; 
   const [loading, setLoading] = useState<boolean>(false);
   const [invoices, setInvoices] = useState<InvoicesResponse>();
   const [dashboard, setDashboard] = useState<DashboardData>();
