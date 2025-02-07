@@ -75,6 +75,16 @@ export const getDashboardData = async () => {
     throw error;
   }
 };
+//Dashboard graph APIs
+export const getGraphData = async () => {
+  try {
+    const response = await axiosInstance.get("/dashboard/graph");
+    return response.data;
+  } catch (error) {
+    console.error("Get clients error:", error);
+    throw error;
+  }
+};
 
 // Client APIs
 export const createClient = async (clientData: any) => {

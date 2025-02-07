@@ -3,7 +3,7 @@ import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import DashboardTable from "../../Components/Dashboard/DashboardTable";
 import RevenueChart from "../../Components/Dashboard/RevenueChart";
 import { useEffect, useState } from "react";
-import { deleteInvoice, getDashboardData, getInvoices } from "../../api/api";
+import { deleteInvoice, getDashboardData, getGraphData, getInvoices } from "../../api/api";
 import Loader from "../../lib/loader";
 import { DashboardApiResponse, DashboardData } from "../../types/dashboard";
 import { formatNumber } from "../../utils";
@@ -11,13 +11,13 @@ import { useNavigate } from "react-router-dom";
 import UpdateModal from "../Invoices/UpdateModal";
 import { InvoicesResponse } from "../../types/invoice";
 const Dashboard = () => {
-  const monthlySales = [10, 200, 300, 400, 500, 600, 700]; // Replace with actual sales data
-  const monthlyPurchases = [50, 150, 250, 350, 450, 550, 650]; // Replace with actual purchase data
   const [loading, setLoading] = useState<boolean>(false);
   const [invoices, setInvoices] = useState<InvoicesResponse>();
   const [dashboard, setDashboard] = useState<DashboardData>();
   const [selectedId, setSelectedId] = useState<string>("");
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [monthlySales,setMonthlySales]=useState([]);
+  const [monthlyPurchases,setMonthlyPurchases]=useState([]);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -26,11 +26,15 @@ const Dashboard = () => {
         setLoading(true);
         try {
           const response: DashboardApiResponse = await getDashboardData();
+          const graphResponse=await getGraphData();
+          setMonthlySales(graphResponse.data.sales)
+          setMonthlyPurchases(graphResponse.data.purchase)
+          console.log("graph", graphResponse);
           setDashboard(response.data);
         } catch (error) {
           console.error("Failed to fetch dashboard data:", error);
         } finally {
-          setLoading(false);
+          setLoading(false)
         }
       };
 

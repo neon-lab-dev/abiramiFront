@@ -179,6 +179,8 @@ const UpdateModel = ({
       const response = await updateInventories(selectedId, updatedData);
       console.log("Inventory Updated:", response);
       alert("Inventory Updated Successfully");
+      editToggleModel();
+      window.location.reload();
     } catch (err) {
       console.error("Inventory Update Error:", err);
       alert("Inventory Update Failed");
@@ -221,17 +223,6 @@ const UpdateModel = ({
     setIsSubmitting(true);
     setLoading(true);
     const updatedData = {
-      // refrence: formData.refrence,
-      // buyingCost: formData.buyingCost,
-      // quantity: Number(formData.quantity),
-      // description: formData.description,
-      // sellingCost: Number(formData.sellingCost),
-      // warehouseLocation: formData.WarehouseLocation,
-      // quantityType: formData.quantityType,
-      // alarm: Number(formData.alarm),
-      // catgoryId: formData.categoryId,
-      // file: imageFiles ? imageFiles : undefined,
-      // image: !imageFiles ? inventory?.image : undefined,
       txnType: formData.TRType.toUpperCase() || "",
       txnUnits: formData.transactionUnits || null,
       comments: formData.comment || "",
@@ -241,6 +232,8 @@ const UpdateModel = ({
       const response = await updateInventoryLogs(selectedId, updatedData);
       console.log("Logs updated successfully:", response);
       alert("Logs updated successfully!");
+      editToggleModel();
+      window.location.reload();
     } catch (error) {
       console.error("Failed to update logs:", error);
       alert("Failed to update logs!");
@@ -253,237 +246,234 @@ const UpdateModel = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
       <div className="bg-white rounded-3xl p-6 w-[70%] h-[550px] shadow-lg overflow-y-scroll custom-scrollbar scroll-none">
-        {loading ? (
-          <div className="w-full h-full flex justify-center items-center">
-            <Loader />
-          </div>
-        ) : (
-          <>
-            <div className="flex justify-between pb-4 ">
-              <span className="font-Inter font-[600] text-sm ">Edit</span>
-              <img
-                src={ICONS.close}
-                alt=""
-                onClick={editToggleModel}
-                className=" cursor-pointer"
-              />
-            </div>
+     {
+      loading? <div className="size-10 "><Loader/> </div>
+      :
+      <>
+        <div className="flex justify-between pb-4 ">
+          <span className="font-Inter font-[600] text-sm ">Edit</span>
+          <img
+            src={ICONS.close}
+            alt=""
+            onClick={editToggleModel}
+            className=" cursor-pointer"
+          />
+        </div>
 
-            {/* client information */}
-            <div className="">
-              <span className="font-Inter font-[600] text-sm ">
-                Inventory Information
-              </span>
-              <div className="w-full pb-[22px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
+        {/* client information */}
+        <div className="">
+          <span className="font-Inter font-[600] text-sm ">
+            Inventory Information
+          </span>
+          <div className="w-full pb-[22px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
+            <InputField
+              label="Refrence"
+              required={true}
+              inputBg=""
+              type="text"
+              placeholder="Enter company name"
+              name="refrence"
+              value={formData.refrence}
+              onChange={handleChange}
+            />
+
+            <div className="flex-2 relative" ref={dropdownRef}>
+              <div className="" onClick={() => setShowDropdown2(true)}>
                 <InputField
-                  label="Refrence"
+                  label="Category"
                   required={true}
                   inputBg=""
-                  type="text"
-                  placeholder="Enter company name"
-                  name="refrence"
-                  value={formData.refrence}
+                  type="select"
+                  icon={ICONS.downArrow2}
+                  placeholder="Enter the category"
+                  name="category"
+                  value={formData.category}
                   onChange={handleChange}
                 />
-
-                <div className="flex-2 relative" ref={dropdownRef}>
-                  <div className="" onClick={() => setShowDropdown2(true)}>
-                    <InputField
-                      label="Category"
-                      required={true}
-                      inputBg=""
-                      type="select"
-                      icon={ICONS.downArrow2}
-                      placeholder="Enter the category"
-                      name="category"
-                      value={formData.category}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  {showDropdown2 && (
-                    <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
-                      {categories.map((category) => (
-                        <div
-                          key={category.id} // Use category as the unique key
-                          className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-                          onClick={() =>
-                            handleStateSelect2(category.name, category.id)
-                          }
-                        >
-                          {category.name} {/* Display category */}
-                        </div>
-                      ))}
+              </div>
+              {showDropdown2 && (
+                <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
+                  {categories.map((category) => (
+                    <div
+                      key={category.id} // Use category as the unique key
+                      className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+                      onClick={() =>
+                        handleStateSelect2(category.name, category.id)
+                      }
+                    >
+                      {category.name} {/* Display category */}
                     </div>
-                  )}
+                  ))}
                 </div>
-                <div className=" relative group">
-                  <InputField
-                    label="Buying Cost"
-                    inputBg=""
-                    type="text"
-                    placeholder="Enter Buying Cost"
-                    name="buyingCost"
-                    value={formData.buyingCost}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <InputField
-                  label="Quantity"
-                  required={true}
-                  inputBg=""
-                  type="number"
-                  placeholder="Enter quantity"
-                  name="quantity"
-                  value={formData.quantity}
-                  onChange={handleChange}
-                />
-                <InputField
-                  label="Description"
-                  inputBg=""
-                  type="text"
-                  placeholder="Enter description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                />
-                <InputField
-                  label="SellingCost"
-                  inputBg=""
-                  type="number"
-                  placeholder="Enter Selling Cost"
-                  name="sellingCost"
-                  value={formData.sellingCost}
-                  onChange={handleChange}
-                />
-                <InputField
-                  label="Warehouse Location"
-                  inputBg=""
-                  type="text"
-                  placeholder="Enter the Warehouse Location"
-                  name="WarehouseLocation"
-                  value={formData.WarehouseLocation}
-                  onChange={handleChange}
-                />
-                <InputField
-                  label="Quantity Type"
-                  inputBg=""
-                  type="text"
-                  placeholder="Enter Quantity Type"
-                  name="quantityType"
-                  value={formData.quantityType}
-                  onChange={handleChange}
-                />
-                <InputField
-                  label="Alarm"
-                  inputBg=""
-                  type="number"
-                  placeholder="Enter Alarm"
-                  name="alarm"
-                  value={formData.alarm}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="py-4 w-full flex justify-center">
-                <UploadImage
-                  removeImage={removeImage}
-                  handleImageChange={handleImageChange}
-                  imagePreviews={imagePreviews}
-                />
-              </div>
+              )}
             </div>
-
-            <div className=" border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
-            <div className="col-span-3 flex justify-center gap-4 my-8">
-              <Button
-                text="Clear Form"
-                onClick={clearInventoryForm}
-                type="reset"
-                color="text-primary-10 bg-none"
-              />
-              <Button
-                text={isSubmitting ? "Updating..." : "Update Inventory"}
-                type="submit"
-                onClick={handleSubmit}
-                color="bg-primary-10 text-white"
-                disabled={isSubmitting}
+            <div className=" relative group">
+              <InputField
+                label="Buying Cost"
+                inputBg=""
+                type="text"
+                placeholder="Enter Buying Cost"
+                name="buyingCost"
+                value={formData.buyingCost}
+                onChange={handleChange}
               />
             </div>
 
-            {/* heading */}
-            <div>
-              <span className="font-Inter font-[600] text-sm">
-                Inventory Logs
-              </span>
-              <div className="w-full pb-[22px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
-                <div className="w-full flex items-center gap-4">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="TRType"
-                      value="sell"
-                      checked={formData.TRType === "sell"}
-                      onChange={handleChange}
-                      className="form-radio text-primary-10"
-                    />
-                    <span className="ml-2">Sell</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="TRType"
-                      value="buy"
-                      checked={formData.TRType === "buy"}
-                      onChange={handleChange}
-                      className="form-radio text-primary-10"
-                    />
-                    <span className="ml-2">Buy</span>
-                  </label>
-                </div>
+            <InputField
+              label="Quantity"
+              required={true}
+              inputBg=""
+              type="number"
+              placeholder="Enter quantity"
+              name="quantity"
+              value={formData.quantity}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Description"
+              inputBg=""
+              type="text"
+              placeholder="Enter description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+            />
+            <InputField
+              label="SellingCost"
+              inputBg=""
+              type="number"
+              placeholder="Enter Selling Cost"
+              name="sellingCost"
+              value={formData.sellingCost}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Warehouse Location"
+              inputBg=""
+              type="text"
+              placeholder="Enter the Warehouse Location"
+              name="WarehouseLocation"
+              value={formData.WarehouseLocation}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Quantity Type"
+              inputBg=""
+              type="text"
+              placeholder="Enter Quantity Type"
+              name="quantityType"
+              value={formData.quantityType}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Alarm"
+              inputBg=""
+              type="number"
+              placeholder="Enter Alarm"
+              name="alarm"
+              value={formData.alarm}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="py-4 w-full flex justify-center">
+            <UploadImage
+              removeImage={removeImage}
+              handleImageChange={handleImageChange}
+              imagePreviews={imagePreviews}
+            />
+          </div>
+        </div>
 
-                <InputField
-                  label="Transaction Units"
-                  required={true}
-                  inputBg=""
-                  type="number"
-                  placeholder="Enter Transaction Units"
-                  name="transactionUnits"
-                  value={formData.transactionUnits}
-                  onChange={handleChange}
-                />
-                <InputField
-                  label="Comment"
-                  required={false}
-                  inputBg=""
-                  type="text"
-                  placeholder="Enter comment"
-                  name="comment"
-                  value={formData.comment}
-                  onChange={handleChange}
-                />
-              </div>
+        <div className=" border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
+        <div className="col-span-3 flex justify-center gap-4 my-8">
+          <Button
+            text="Clear Form"
+            onClick={clearInventoryForm}
+            type="reset"
+            color="text-primary-10 bg-none"
+          />
+          <Button
+            text={isSubmitting ? "Updating..." : "Update Inventory"}
+            type="submit"
+            onClick={handleSubmit}
+            color="bg-primary-10 text-white"
+            disabled={isSubmitting}
+          />
+        </div>
 
-              <div className="border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
-
-              <div className="col-span-3 flex justify-center gap-4 my-8">
-                <Button
-                  text="Clear Form"
-                  type="reset"
-                  color="text-primary-10 bg-none"
-                />
-                <Button
-                  text="Update Logs"
-                  type="button"
-                  color="bg-primary-10 text-white"
-                  onClick={handleUpdateLogs}
-                />
-              </div>
-            </div>
-
-            <div></div>
-          </>
-        )}
         {/* heading */}
+        <div>
+          <span className="font-Inter font-[600] text-sm">
+            Inventory Logs
+          </span>
+          <div className="w-full pb-[22px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
+            <div className="w-full flex items-center gap-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="TRType"
+                  value="sell"
+                  checked={formData.TRType === "sell"}
+                  onChange={handleChange}
+                  className="form-radio text-primary-10"
+                />
+                <span className="ml-2">Sell</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="TRType"
+                  value="buy"
+                  checked={formData.TRType === "buy"}
+                  onChange={handleChange}
+                  className="form-radio text-primary-10"
+                />
+                <span className="ml-2">Buy</span>
+              </label>
+            </div>
+
+            <InputField
+              label="Transaction Units"
+              required={true}
+              inputBg=""
+              type="number"
+              placeholder="Enter Transaction Units"
+              name="transactionUnits"
+              value={formData.transactionUnits}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Comment"
+              required={false}
+              inputBg=""
+              type="text"
+              placeholder="Enter comment"
+              name="comment"
+              value={formData.comment}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="border-[0.5px] opacity-[0.5] border-secondary-110 border-dashed mb-[22px]"></div>
+
+          <div className="col-span-3 flex justify-center gap-4 my-8">
+            <Button
+              text="Clear Form"
+              type="reset"
+              color="text-primary-10 bg-none"
+            />
+            <Button
+              text="Update Logs"
+              type="button"
+              color="bg-primary-10 text-white"
+              onClick={handleUpdateLogs}
+            />
+          </div>
+        </div>
+
+        <div></div>
+      </>
+     }
       </div>
     </div>
   );

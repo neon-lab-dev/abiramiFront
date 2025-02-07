@@ -54,7 +54,11 @@ const options = {
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+const labels = [
+  "January", "February", "March", "April", "May", "June", 
+  "July", "August", "September", "October", "November", "December"
+];
+
 
 interface RevenueChartProps {
   salesData: number[];
@@ -85,7 +89,9 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ salesData, purchaseData }) 
     <div className="h-[330px] w-full my-5 bg-neutral-60 p-6 rounded-2xl mb-4">
       <div className="flex justify-start gap-4 items-center">
         <h1 className="font-inter text-sm font-semibold leading-5 text-left text-neutral-5">
-          Sales v/s Purchase
+          Sales v/s Purchase <span className="w-[2px] h-2 bg-black"></span> <span className="font-inter text-xs font-normal leading-5 text-left">
+            {"2025"}
+          </span>
         </h1>
         <div className="flex justify-start gap-[5px] items-center">
           <div className="w-[6px] h-[6px] bg-[#00FF00] rounded-full"></div>
