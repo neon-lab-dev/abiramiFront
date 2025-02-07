@@ -85,62 +85,78 @@ const UpdateModal = ({
   const removeRow = (index: number) => {
     setRows(rows.filter((_, idx) => idx !== index));
   };
-  // const handleInputChange = (
-  //   index: number,
-  //   field: string,
-  //   value: number | string
-  // ) => {
-  //   const updatedRows: any[] = [...rows];
-  //   if (["quantity", "rate", "discount", "amount"].includes(field)) {
-  //     updatedRows[index][field] = parseFloat(value) || 0;
-  //   } else {
-  //     updatedRows[index][field] = value;
-  //   }
-
-  //   // Automatically calculate the amount if relevant fields are updated
-  //   if (["quantity", "rate", "discount"].includes(field)) {
-  //     const quantity = updatedRows[index].quantity || 0;
-  //     const rate = updatedRows[index].rate || 0;
-  //     const discount = updatedRows[index].discount || 0;
-
-  //     updatedRows[index].amount = quantity * rate * (1 - discount);
-  //   }
-  //   console.log(updatedRows);
-  //   setRows(updatedRows);
-  // };
 
   const handleInputChange = (
     index: number,
     field: keyof ProductDetail,
     value: string | number
   ) => {
-    console.log(field);
     setRows((prevRows) =>
       prevRows.map((row, i) => {
         if (i !== index) return row;
-
+  
         const updatedRow = { ...row };
-
-        const parsedValue =
-          typeof value === "number" ? value : parseFloat(value) || 0;
-
+        const parsedValue = typeof value === "number" ? value : parseFloat(value) || 0;
+  
         if (["quantity", "rate", "discount", "amount"].includes(field)) {
           updatedRow[field] = parsedValue as never;
         } else {
           updatedRow[field] = value as never;
         }
-
+  
+        // Correct discount calculation
         if (["quantity", "rate", "discount"].includes(field)) {
           const quantity = updatedRow.quantity || 0;
           const rate = updatedRow.rate || 0;
           const discount = updatedRow.discount || 0;
-          updatedRow.amount = quantity * rate * (1 - discount);
+  
+          updatedRow.amount = quantity * rate * (1 - discount / 100);
         }
-
+  
         return updatedRow;
       })
     );
   };
+  
+  useEffect(() => {
+    const calculateValues = () => {
+      // Calculate Subtotal
+      const calculatedSubTotal = rows?.reduce(
+        (sum: number, row: ProductDetail) => {
+          console.log(sum);
+          const quantity = row?.quantity || 0;
+          const rate = row?.rate || 0;
+          const discount = row?.discount || 0;
+          
+          const baseAmount = quantity * rate;
+          const amount = baseAmount - ((baseAmount * discount) / 100);
+          console.log(amount+sum);
+  
+          return sum + amount;
+        },
+        0
+      );
+  
+      console.log(calculatedSubTotal);
+      setSubTotal(calculatedSubTotal);
+  
+      // Calculate PF Amount (e.g., 10% of Subtotal)
+      const calculatedPfAmount = (pfPercent / 100) * calculatedSubTotal;
+      setPfamount(Number(calculatedPfAmount.toFixed(2)));
+  
+      // Calculate Tax (e.g., 18% of Subtotal)
+      const calculatedTax = (taxPercent / 100) * calculatedSubTotal;
+      setTax(Number(calculatedTax.toFixed(2)));
+  
+      // Calculate Total
+      const calculatedTotal =
+        calculatedSubTotal + calculatedPfAmount + calculatedTax;
+      const roundedTotal = Math.round(calculatedTotal);
+      setRoundOff(roundedTotal);
+      setTotal(roundedTotal);
+    };
+    calculateValues();
+  }, [rows]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -207,6 +223,7 @@ const UpdateModal = ({
     { name: "Tax Invoice" },
     { name: "Quote Invoice" },
   ];
+
   const status = [
     {
       status: "PAID",
@@ -228,6 +245,7 @@ const UpdateModal = ({
     }));
     setShowDropdown(false);
   };
+
   const handleStateSelect2 = (Invoicetype: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -235,6 +253,7 @@ const UpdateModal = ({
     }));
     setShowDropdown2(false);
   };
+  
   const handleStateSelect1 = (Status: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -287,39 +306,8 @@ const UpdateModal = ({
     }
   };
 
-  useEffect(() => {
-    const calculateValues = () => {
-      // Calculate Subtotal
-      const calculatedSubTotal = rows?.reduce(
-        (sum: number, row: ProductDetail) => {
-          const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
-          const rate = parseFloat(row?.rate?.toString() || "0") || 0;
-          const discount = parseFloat(row?.discount?.toString() || "0") || 0;
-          const amount = quantity * rate * (1 - discount);
-          return sum + amount;
-        },
-        0
-      );
 
-      setSubTotal(calculatedSubTotal);
-
-      // Calculate PF Amount (e.g., 10% of Subtotal)
-      const calculatedPfAmount = (pfPercent / 100) * calculatedSubTotal;
-      setPfamount(Number(calculatedPfAmount.toFixed(2)));
-
-      // Calculate Tax (e.g., 18% of Subtotal)
-      const calculatedTax = (taxPercent / 100) * calculatedSubTotal;
-      setTax(Number(calculatedTax.toFixed(2)));
-
-      // Calculate Total
-      const calculatedTotal =
-        calculatedSubTotal + calculatedPfAmount + calculatedTax;
-      const roundedTotal = Math.round(calculatedTotal);
-      setRoundOff(roundedTotal);
-      setTotal(roundedTotal);
-    };
-    calculateValues();
-  }, [rows]);
+  
 
   useEffect(() => {
     if (formData.invoiceType.toLowerCase() == "cash invoice") {
@@ -763,9 +751,8 @@ const UpdateModal = ({
                           <input
                             type="number"
                             placeholder="Enter discount"
-                            min={0}
-                            step={0.01}
-                            max={1}
+                            // min={0}
+                            // max={1}
                             value={row.discount ?? ""}
                             onChange={(e) =>
                               handleInputChange(

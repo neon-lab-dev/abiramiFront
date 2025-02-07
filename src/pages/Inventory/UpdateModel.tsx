@@ -51,7 +51,7 @@ const UpdateModel = ({
     comment: "",
   });
   const handleStateSelect2 = (catagory: string, categoryId: string) => {
-    setFormData((prev) => ({
+    setFormData((prev:any) => ({
       ...prev,
       category: catagory,
       categoryId: categoryId,
@@ -79,7 +79,7 @@ const UpdateModel = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setFormData((prevData:any) => ({
       ...prevData,
       [name]: name === "transactionUnits" ? Number(value) : value,
     }));
@@ -131,9 +131,9 @@ const UpdateModel = ({
 
   useEffect(() => {
     const categoryName = categories.find(
-      (category) => category.id === inventory?.catgoryId
+      (category:any) => category.id === inventory?.catgoryId
     )?.name;
-    setFormData((prevData) => ({
+    setFormData((prevData:any) => ({
       ...prevData,
       category: categoryName || "",
       categoryId: inventory?.catgoryId || "",
@@ -143,7 +143,7 @@ const UpdateModel = ({
   }, [inventory, categories]);
 
   useEffect(() => {
-    setFormData((prevData) => ({
+    setFormData((prevData:any) => ({
       ...prevData,
       refrence: inventory?.refrence || "",
       buyingCost: inventory?.buyingCost?.toString() || "",
@@ -247,7 +247,7 @@ const UpdateModel = ({
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
       <div className="bg-white rounded-3xl p-6 w-[70%] h-[550px] shadow-lg overflow-y-scroll custom-scrollbar scroll-none">
      {
-      loading? <div className="size-10 "><Loader/> </div>
+      loading ? <div className="size-10 mx-auto flex items-center justify-center h-screen"><Loader/> </div>
       :
       <>
         <div className="flex justify-between pb-4 ">
