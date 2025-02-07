@@ -4,6 +4,7 @@ import Button from "../../Components/Shared/Button/Button";
 import { createClient } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { CreateClient } from "../../types/client";
+import { validateEmail, validateGST, validatePhoneNumber, validatePincode, validateTelephone } from "../../utils/validation";
 
 const CreateClients = () => {
   const [formData, setFormData] = useState<CreateClient>({
@@ -122,6 +123,7 @@ const CreateClients = () => {
             name="GST"
             value={formData.GST}
             onChange={handleChange}
+            validate={validateGST}
           />
         </div>
       </div>
@@ -133,12 +135,14 @@ const CreateClients = () => {
         <div className="w-full  py-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
           <InputField
             label="Mobile Number"
+            required={true}
             inputBg=""
             type="number"
             placeholder="Enter Mobile number"
             name="mobileNum"
             value={formData.mobileNum}
             onChange={handleChange}
+            validate={validatePhoneNumber}
           />
           <InputField
             label="Landline Number"
@@ -148,6 +152,7 @@ const CreateClients = () => {
             name="landLineNum"
             value={formData.landLineNum}
             onChange={handleChange}
+            validate={validateTelephone}
           />
           <InputField
             label="Email ID"
@@ -157,6 +162,7 @@ const CreateClients = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            validate={validateEmail}
           />
         </div>
       </div>
@@ -210,6 +216,7 @@ const CreateClients = () => {
             name="pincode"
             value={formData.pincode || null}
             onChange={handleChange}
+            validate={validatePincode}
           />
           <InputField
             label="State"

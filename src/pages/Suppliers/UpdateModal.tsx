@@ -10,6 +10,7 @@ import {
   SupplierRequest,
 } from "../../types/supplier";
 import { useNavigate } from "react-router-dom";
+import { validateEmail, validateGST, validatePhoneNumber, validatePincode, validateTelephone } from "../../utils/validation";
 
 const UpdateModal = ({
   editToggleModel,
@@ -183,6 +184,7 @@ const UpdateModal = ({
                       name="GST"
                       value={formData.GST}
                       onChange={handleChange}
+                      validate={validateGST}
                     />
                   </div>
 
@@ -202,6 +204,7 @@ const UpdateModal = ({
                       name="mobileNum"
                       value={formData.mobileNum}
                       onChange={handleChange}
+                      validate={validatePhoneNumber}
                     />
 
                     <InputField
@@ -212,6 +215,7 @@ const UpdateModal = ({
                       name="landLineNum"
                       value={formData.landLineNum}
                       onChange={handleChange}
+                      validate={validateTelephone}
                     />
 
                     <InputField
@@ -222,6 +226,7 @@ const UpdateModal = ({
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
+                      validate={validateEmail}
                     />
                   </div>
 
@@ -281,6 +286,7 @@ const UpdateModal = ({
                       name="pincode"
                       value={formData.pincode?.toString() || ""}
                       onChange={handleChange}
+                      validate={validatePincode}
                     />
 
                     <InputField

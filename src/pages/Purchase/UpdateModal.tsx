@@ -6,6 +6,8 @@ import { ICONS } from "../../assets";
 import Loader from "../../lib/loader";
 import { getPurchaseById, updatePurchase } from "../../api/api";
 import { useNavigate } from "react-router-dom";
+import { validateGST } from "../../utils/validation";
+import { number } from "zod";
 
 const UpdateModal = ({
   editToggleModel,
@@ -142,14 +144,15 @@ const UpdateModal = ({
                   onChange={handleChange}
                 />
                 <InputField
-                  label="GST Number"
-                  inputBg=""
-                  type="number"
-                  placeholder="Enter the GST number"
-                  name="gstNum"
-                  value={formData.gstNum}
-                  onChange={handleChange}
-                />
+                label="GST Number"
+                inputBg=""
+                type="text"
+                placeholder="Enter the GST number"
+                name="gstNum"
+                value={formData.gstNum}
+                onChange={handleChange}
+                validate={validateGST}
+              />
               </div>
             </div>
 

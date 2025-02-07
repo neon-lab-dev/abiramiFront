@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
-import { createInvoices, getInvoiceById, updateInvoice } from "../../api/api";
+import { createInvoices, getClients, getInvoiceById, updateInvoice } from "../../api/api";
 import { ICONS } from "../../assets";
 import Button from "../../Components/Shared/Button/Button";
 import InputField from "../../Components/Shared/InputField/InputField";
@@ -14,6 +14,7 @@ import {
 } from "../../types/invoice";
 import { useNavigate } from "react-router-dom";
 import { generateInvoicePDF } from "../../utils/handleInvoice";
+import { validateBankName, validateChequeNumber, validateClient, validatePONumber, validateVehicleNumber } from "../../utils/validation";
 
 const UpdateModal = ({
   editToggleModel,
@@ -175,6 +176,26 @@ const UpdateModal = ({
     }));
   };
 
+   const [clients, setClients] = useState<string[]>([]); // Store only names
+  
+    // Fetch clients from API
+    useEffect(() => {
+      const fetchClients = async () => {
+        setLoading(true);
+        try {
+          const response = await getClients(); // Fetch data from API
+          const clientNames: string[] = response.data.map((client: { companyName: string }) => client.companyName);
+          setClients(clientNames);
+          console.log(clients)
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      fetchClients();
+    }, []);
   const states = [
     { name: "Jammu and Kashmir", code: "01" },
     { name: "Himachal Pradesh", code: "02" },
@@ -489,6 +510,7 @@ const UpdateModal = ({
                 name="clientName"
                 value={formData.clientName}
                 onChange={handleChange}
+                validate={(value) => validateClient(value, clients)}
               />
 
               <InputField
@@ -545,16 +567,7 @@ const UpdateModal = ({
                 </div>
               </div>
 
-              {/* <InputField
-            label="Status"
-            required={true}
-            inputBg=""
-            type="text"
-            placeholder="Enter Status"
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-          /> */}
+              
               <div className="flex-2 relative" ref={dropdownRef}>
                 <div className="" onClick={() => setShowDropdown1(true)}>
                   <InputField
@@ -633,6 +646,7 @@ const UpdateModal = ({
                     name="bankName"
                     value={formData.bankName}
                     onChange={handleChange}
+                    validate={validateBankName}
                   />
                   <InputField
                     label="Cheque Number"
@@ -643,6 +657,7 @@ const UpdateModal = ({
                     name="chequeNumber"
                     value={formData.chequeNumber}
                     onChange={handleChange}
+                    validate={validateChequeNumber}
                   />
                   <InputField
                     label="Cheque Amount"
@@ -653,6 +668,7 @@ const UpdateModal = ({
                     name="chequeAmount"
                     value={formData.chequeAmount}
                     onChange={handleChange}
+                   
                   />
                 </>
               )}
@@ -688,6 +704,7 @@ const UpdateModal = ({
                     name="poNo"
                     value={formData.poNO}
                     onChange={handleChange}
+                    validate={validatePONumber}
                   />
                   <InputField
                     label="Vehicle Number"
@@ -698,6 +715,7 @@ const UpdateModal = ({
                     name="vehicleNo"
                     value={formData.vehicleNo}
                     onChange={handleChange}
+                    validate={validateVehicleNumber}
                   />{" "}
                 </>
               )}

@@ -4,12 +4,14 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
 import { convertNumberToWords, formatNumber } from "../../utils";
-import { createInvoices } from "../../api/api";
+import { createInvoices, getClients } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { InvoiceData, ProductDetail } from "../../types/invoice";
 import { pdf, PDFDownloadLink } from "@react-pdf/renderer";
 import InvoicePDF from "../../utils/pdfGenerator";
 import { generateInvoicePDF } from "../../utils/handleInvoice";
+import { Client } from "../../types/client";
+import { validateBankName, validateChequeNumber, validateClient, validatePONumber, validateVehicleNumber } from "../../utils/validation";
 
 const CreateInvoice = () => {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ const CreateInvoice = () => {
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaveSubmitting , setIsSaveSubmitting ] = useState(false);
   const [subTotal, setSubTotal] = useState<number>();
   const [pfPercent, setPfPercent] = useState<number>(10);
   const [pfamount, setPfamount] = useState<number>();
@@ -29,6 +32,27 @@ const CreateInvoice = () => {
   const [sgst, setSgst] = useState(9);
   const [invoiceData, setInvoiceData] = useState<InvoiceData>();
 
+  const [clients, setClients] = useState<string[]>([]); // Store only names
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // Fetch clients from API
+  useEffect(() => {
+    const fetchClients = async () => {
+      setLoading(true);
+      try {
+        const response = await getClients(); // Fetch data from API
+        const clientNames: string[] = response.data.map((client: { companyName: string }) => client.companyName);
+        setClients(clientNames);
+        console.log(clients)
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchClients();
+  }, []);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
     ClientName: "",
@@ -369,7 +393,7 @@ const CreateInvoice = () => {
       productDetails: rows,
     };
     console.log(data);
-    setIsSubmitting(true);
+    setIsSaveSubmitting (true);
     try {
       const response = await createInvoices(data);
       console.log("Invoice created successfully:", response.data);
@@ -380,7 +404,7 @@ const CreateInvoice = () => {
       console.error("Error creating invoice:", error);
       alert("Failed to create invoice. Please try again.");
     } finally {
-      setIsSubmitting(false);
+      setIsSaveSubmitting(false);
       navigate("/invoices");
     }
   };
@@ -398,6 +422,7 @@ const CreateInvoice = () => {
           name="ClientName"
           value={formData.ClientName}
           onChange={handleChange}
+          validate={(value) => validateClient(value, clients)}
         />
 
         <InputField
@@ -490,40 +515,7 @@ const CreateInvoice = () => {
             </div>
           )}
         </div>
-        {/* {formData.invoicetype == "Cheque Invoice" && (
-          <>
-            <InputField
-              label="Bank Name"
-              required={true}
-              inputBg=""
-              type="text"
-              placeholder="Enter bank name"
-              name="BankName"
-              value={formData.BankName}
-              onChange={handleChange}
-            />
-            <InputField
-              label="Cheque Number"
-              required={true}
-              inputBg=""
-              type="number"
-              placeholder="Enter Cheque Number"
-              name="ChequeNumber"
-              value={formData.ChequeNumber}
-              onChange={handleChange}
-            />
-            <InputField
-              label="Cheque Amount"
-              required={true}
-              inputBg=""
-              type="text"
-              placeholder="Enter amount"
-              name="ChequeAmount"
-              value={formData.ChequeAmount}
-              onChange={handleChange}
-            />
-          </>
-        )} */}
+       
         <InputField
           label="Tax Type"
           required={true}
@@ -574,6 +566,7 @@ const CreateInvoice = () => {
               name="BankName"
               value={formData.BankName}
               onChange={handleChange}
+              validate={validateBankName}
             />
             <InputField
               label="Cheque Number"
@@ -584,6 +577,7 @@ const CreateInvoice = () => {
               name="ChequeNumber"
               value={formData.ChequeNumber}
               onChange={handleChange}
+              validate={validateChequeNumber}
             />
             <InputField
               label="Cheque Amount"
@@ -629,6 +623,7 @@ const CreateInvoice = () => {
               name="PONo"
               value={formData.PONo}
               onChange={handleChange}
+              validate={validatePONumber}
             />
             <InputField
               label="Vehicle Number"
@@ -639,6 +634,7 @@ const CreateInvoice = () => {
               name="vehicleNumber"
               value={formData.vehicleNumber}
               onChange={handleChange}
+              validate={validateVehicleNumber}
             />{" "}
           </>
         )}
@@ -1025,7 +1021,7 @@ const CreateInvoice = () => {
         ></PDFDownloadLink> */}
         <Button
           onClick={handleSavePrint}
-          text={isSubmitting ? "Submitting..." : "Save & Print"}
+          text={isSaveSubmitting ? "Submitting..." : "Save & Print"}
           type="submit"
           color="bg-primary-10 text-white"
           disabled={isSubmitting}

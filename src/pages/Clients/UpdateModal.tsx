@@ -6,6 +6,7 @@ import { getClientById, updateClient } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../lib/loader";
 import { CreateClient, SingleClientResponse } from "../../types/client";
+import { validateEmail, validateGST, validatePhoneNumber, validatePincode, validateTelephone } from "../../utils/validation";
 
 const UpdateModal = ({
   editToggleModel,
@@ -198,6 +199,7 @@ const UpdateModal = ({
                     name="GST"
                     value={formData.GST}
                     onChange={handleChange}
+                    validate={validateGST}
                   />
                 </div>
               </div>
@@ -217,6 +219,7 @@ const UpdateModal = ({
                     name="mobileNum"
                     value={formData.mobileNum}
                     onChange={handleChange}
+                    validate={validatePhoneNumber}
                   />
                   <InputField
                     label="Landline Number"
@@ -226,6 +229,7 @@ const UpdateModal = ({
                     name="landLineNum"
                     value={formData.landLineNum}
                     onChange={handleChange}
+                    validate={validateTelephone}
                   />
                   <InputField
                     label="Email ID"
@@ -235,6 +239,7 @@ const UpdateModal = ({
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    validate={validateEmail}
                   />
                 </div>
               </div>
@@ -288,6 +293,7 @@ const UpdateModal = ({
                     name="pincode"
                     value={formData.pincode}
                     onChange={handleChange}
+                    validate={validatePincode}
                   />
                   <InputField
                     label="State"

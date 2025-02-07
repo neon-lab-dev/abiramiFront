@@ -31,6 +31,7 @@ const ListPage = () => {
       setLoading(true);
       try {
         const data: ClientResponse = await getClients();
+        console.log(data)
         setClients(data);
       } catch (err) {
         console.error(err);

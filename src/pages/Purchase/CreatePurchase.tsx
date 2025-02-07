@@ -4,6 +4,7 @@ import Button from "../../Components/Shared/Button/Button";
 import { PurchaseFormData, PurchaseResponse } from "../../types/purchase";
 import { createPurchase } from "../../api/api";
 import { useNavigate } from "react-router-dom";
+import { validateGST } from "../../utils/validation";
 
 const CreatePurchase = () => {
   // const [loading, setLoading] = useState(false);
@@ -114,11 +115,12 @@ const CreatePurchase = () => {
               <InputField
                 label="GST Number"
                 inputBg=""
-                type="number"
+                type="text"
                 placeholder="Enter the GST number"
                 name="gstNum"
                 value={formData.gstNum}
                 onChange={handleChange}
+                validate={validateGST}
               />
             </div>
           </div>

@@ -4,6 +4,7 @@ import Button from "../../Components/Shared/Button/Button";
 import { createSupplier } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { SupplierRequest } from "../../types/supplier";
+import { validateEmail, validateGST, validatePhoneNumber, validateTelephone } from "../../utils/validation";
 
 const CreateSupplier = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -108,6 +109,7 @@ const CreateSupplier = () => {
 
           <InputField
             label="Title / Item"
+            required={true}
             inputBg=""
             type="text"
             placeholder="Enter the title"
@@ -118,12 +120,14 @@ const CreateSupplier = () => {
 
           <InputField
             label="GST Number"
+            required={true}
             inputBg=""
             type="text"
             placeholder="Enter the GST number"
             name="GST"
             value={formData.GST}
             onChange={handleChange}
+            validate={validateGST}
           />
         </div>
 
@@ -135,12 +139,14 @@ const CreateSupplier = () => {
         <div className="w-full py-5 border-b-2 border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <InputField
             label="Mobile Number"
+            required={true}
             inputBg=""
             type="text"
             placeholder="Enter mobile number"
             name="mobileNum"
             value={formData.mobileNum}
             onChange={handleChange}
+            validate={validatePhoneNumber}
           />
 
           <InputField
@@ -151,6 +157,7 @@ const CreateSupplier = () => {
             name="landLineNum"
             value={formData.landLineNum}
             onChange={handleChange}
+            validate={validateTelephone}
           />
 
           <InputField
@@ -161,6 +168,7 @@ const CreateSupplier = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            validate={validateEmail}
           />
         </div>
 

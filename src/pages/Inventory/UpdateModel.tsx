@@ -13,6 +13,7 @@ import {
 import { Category, CategoryResponse } from "../../types/category";
 import { InventoryItem, InventoryResponse } from "../../types/inventory";
 import Loader from "../../lib/loader";
+import { validateTransactionUnits } from "../../utils/validation";
 
 const UpdateModel = ({
   editToggleModel,
@@ -441,6 +442,9 @@ const UpdateModel = ({
               name="transactionUnits"
               value={formData.transactionUnits}
               onChange={handleChange}
+              validate={(value) =>
+                validateTransactionUnits(value, formData.TRType, formData.quantity)
+              }
             />
             <InputField
               label="Comment"
