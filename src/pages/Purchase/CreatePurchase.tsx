@@ -15,7 +15,7 @@ const CreatePurchase = () => {
     invoiceNumber: null,
     date: "",
     totalPurchaseAmt: null,
-    gstNum: null,
+    gstNum: "",
     status: "ACTIVE",
   });
 
@@ -23,22 +23,22 @@ const CreatePurchase = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+  
     setFormData((prevData) => ({
       ...prevData,
       [name]:
-        name === "invoiceNumber" ||
-        name === "totalPurchaseAmt" ||
-        name === "gstNum"
+        name === "invoiceNumber" || name === "totalPurchaseAmt"
           ? Number(value)
-          : value,
+          : value, // Leave gstNum as a string
     }));
   };
+  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      console.log(formData);
+      console.log("Final Payload:", formData);
       const response: PurchaseResponse = await createPurchase(formData);
       if (response.statusText === "Created") {
         alert("Purchase created successfully");
@@ -51,6 +51,7 @@ const CreatePurchase = () => {
       setIsSubmitting(false);
     }
   };
+  
 
   const clearForm = () => {
     setFormData({
@@ -58,7 +59,7 @@ const CreatePurchase = () => {
       invoiceNumber: null,
       date: "",
       totalPurchaseAmt: null,
-      gstNum: null,
+      gstNum: "",
       status: "ACTIVE",
     });
   };

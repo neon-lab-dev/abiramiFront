@@ -24,7 +24,7 @@ const UpdateModal = ({
     invoiceNumber: 0,
     date: "",
     totalPurchaseAmt: 0,
-    gstNum: 0,
+    gstNum: "",
     status: "ACTIVE",
   });
 
@@ -32,17 +32,15 @@ const UpdateModal = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    console.log(name)
     setFormData((prevData) => ({
       ...prevData,
       [name]:
-        name === "invoiceNumber" ||
-        name === "totalPurchaseAmt" ||
-        name === "gstNum"
+        name === "invoiceNumber" || name === "totalPurchaseAmt"
           ? Number(value)
-          : value,
+          : value, // Leave `gstNum` as string
     }));
   };
+  
 
   const handleSubmit = async () => {
     setIsSubmitting(true);

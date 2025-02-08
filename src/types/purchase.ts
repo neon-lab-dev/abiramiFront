@@ -4,7 +4,7 @@ export interface Purchase {
   invoiceNumber: number;
   date: string;
   totalPurchaseAmt: number;
-  gstNum: number;
+  gstNum: string;
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -15,7 +15,7 @@ export interface PurchaseFormData {
   invoiceNumber: number | null;
   date: string;
   totalPurchaseAmt: number | null;
-  gstNum: number | null;
+  gstNum: string;
   status: string;
 }
 
