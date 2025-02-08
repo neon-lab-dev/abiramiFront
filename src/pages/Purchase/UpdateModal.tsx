@@ -21,10 +21,10 @@ const UpdateModal = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<PurchaseFormData>({
     companyName: "",
-    invoiceNumber: null,
+    invoiceNumber: 0,
     date: "",
-    totalPurchaseAmt: null,
-    gstNum: null,
+    totalPurchaseAmt: 0,
+    gstNum: 0,
     status: "ACTIVE",
   });
 
@@ -32,6 +32,7 @@ const UpdateModal = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+    console.log(name)
     setFormData((prevData) => ({
       ...prevData,
       [name]:
@@ -79,7 +80,7 @@ const UpdateModal = ({
     };
     fetchPurchase();
   }, [selectedId]);
-
+  console.log(formData.gstNum)
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
       <div className="bg-white rounded-3xl p-8 lg:p-12 w-[70%] h-[550px] shadow-lg overflow-y-scroll custom-scrollbar scroll-none">

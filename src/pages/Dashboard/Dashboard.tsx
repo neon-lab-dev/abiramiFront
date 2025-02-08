@@ -26,6 +26,7 @@ const Dashboard = () => {
         setLoading(true);
         try {
           const response: DashboardApiResponse = await getDashboardData();
+          console.log(response)
           const graphResponse=await getGraphData();
           setMonthlySales(graphResponse.data.sales)
           setMonthlyPurchases(graphResponse.data.purchase)

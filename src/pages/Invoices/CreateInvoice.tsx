@@ -267,6 +267,7 @@ const CreateInvoice = () => {
     setIsSubmitting(true);
     try {
       const response = await createInvoices(data);
+      console.log(data)
       console.log("Invoice created successfully:", response.data);
       alert("Invoice created successfully!");
     } catch (error) {

@@ -311,6 +311,8 @@ const UpdateModal = ({
     try {
       if (selectedId) {
         const response = await updateInvoice(selectedId, data);
+        console.log(data)
+        console.log(response)
         alert("Invoice updated successfully!");
       } else {
         alert("Failed to update invoice. No selected ID provided.");
