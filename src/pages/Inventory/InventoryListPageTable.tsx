@@ -233,7 +233,6 @@ const InventoryListPageTable = () => {
   const handleDelete = async (id?: string) => {
     if (window.confirm("Are you sure you want to delete?")) {
       const response = await deleteInventory(id || "");
-      console.log("Item deleted!", response);
       if (response.status === 200) {
         alert("Inventory deleted Successfully!!!");
         navigate(0);
@@ -242,8 +241,6 @@ const InventoryListPageTable = () => {
       console.log("Delete action canceled.");
     }
   };
-
-  console.log(searchResults);
 
   return (
     <>

@@ -62,11 +62,9 @@ const CreateInventory = () => {
       file: imageFiles,
       warehouseLocation: formData.WarehouseLocation,
     };
-    console.log(data);
     setIsSubmitting(true);
     try {
-      const response = await createInventories(data);
-      console.log("Inventory created successfully:", response.data);
+      await createInventories(data);
       alert("Inventory created successfully");
     } catch (error) {
       console.error("Error creating inventory:", error);
@@ -126,7 +124,6 @@ const CreateInventory = () => {
   }, [showDropdown2]);
 
   useEffect(() => {
-    console.log(imageFiles);
     setFormData({ ...formData, image: imageFiles });
   }, [imageFiles]);
 
@@ -135,7 +132,6 @@ const CreateInventory = () => {
       setLoading(true);
       try {
         const data: InventoryListResponse = await getCategories();
-        console.log(data);
         setCategories(data.data);
       } catch (err) {
         console.error(err);

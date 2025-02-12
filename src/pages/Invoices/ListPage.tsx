@@ -31,7 +31,6 @@ const ListPage = () => {
   const handleDelete = async (id?: string) => {
     if (id && window.confirm("Are you sure you want to delete?")) {
       const response = await deleteInvoice(id);
-      console.log("Item deleted!", response);
       if (response.status === 200) {
         alert("Invoice deleted Successfully!!!");
         navigate(0);
@@ -190,6 +189,7 @@ const ListPage = () => {
             <UpdateModal
               editToggleModel={editToggleModel}
               selectedId={selectedId}
+              setEditModalOpen={setEditModalOpen}
             />
           )}
         </div>

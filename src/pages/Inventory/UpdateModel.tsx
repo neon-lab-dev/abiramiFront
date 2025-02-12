@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import React, { useEffect, useRef, useState } from "react";
 import { ICONS } from "../../assets";
@@ -139,7 +140,6 @@ const UpdateModel = ({
       category: categoryName || "",
       categoryId: inventory?.catgoryId || "",
     }));
-    console.log(inventory);
     setImagePreviews(inventory?.image?.url || "");
   }, [inventory, categories]);
 
@@ -176,9 +176,7 @@ const UpdateModel = ({
       comment: formData.comment || "",
     };
     try {
-      console.log("Updated Data:", updatedData);
-      const response = await updateInventories(selectedId, updatedData);
-      console.log("Inventory Updated:", response);
+      await updateInventories(selectedId, updatedData);
       alert("Inventory Updated Successfully");
       editToggleModel();
       window.location.reload();
@@ -230,8 +228,7 @@ const UpdateModel = ({
     };
 
     try {
-      const response = await updateInventoryLogs(selectedId, updatedData);
-      console.log("Logs updated successfully:", response);
+      await updateInventoryLogs(selectedId, updatedData);
       alert("Logs updated successfully!");
       editToggleModel();
       window.location.reload();

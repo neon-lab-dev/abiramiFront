@@ -43,7 +43,6 @@ const CreateInvoice = () => {
         const response = await getClients(); // Fetch data from API
         const clientNames: string[] = response.data.map((client: { companyName: string }) => client.companyName);
         setClients(clientNames);
-        console.log(clients)
       } catch (err) {
         console.error(err);
       } finally {
@@ -118,7 +117,6 @@ const CreateInvoice = () => {
     field: keyof ProductDetail,
     value: string | number
   ) => {
-    console.log(field);
     setRows((prevRows) =>
       prevRows.map((row, i) => {
         if (i !== index) return row;
@@ -263,12 +261,9 @@ const CreateInvoice = () => {
       roundOff: roundOff,
       productDetails: rows,
     };
-    console.log(data);
     setIsSubmitting(true);
     try {
-      const response = await createInvoices(data);
-      console.log(data)
-      console.log("Invoice created successfully:", response.data);
+      await createInvoices(data);
       alert("Invoice created successfully!");
     } catch (error) {
       console.error("Error creating invoice:", error);
@@ -393,11 +388,9 @@ const CreateInvoice = () => {
       roundOff: roundOff,
       productDetails: rows,
     };
-    console.log(data);
     setIsSaveSubmitting (true);
     try {
       const response = await createInvoices(data);
-      console.log("Invoice created successfully:", response.data);
       const pdfData = { ...response.data, productDetails: rows };
       generateInvoicePDF(pdfData);
       alert("Invoice created successfully!");

@@ -38,8 +38,6 @@ const InventoryLogsModal = ({
       setLoading(false);
     }
   };
-  console.log("logs:", inventoryLogs);
-  console.log(selectedId);
 
   if (!isOpen) return null; // Don't render if modal is closed
 

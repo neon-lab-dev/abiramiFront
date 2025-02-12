@@ -41,11 +41,9 @@ const CreateClients = () => {
     const clientData = {
       ...formData,
     };
-    console.log(clientData);
     setIsSubmitting(true);
     try {
-      const response = await createClient(clientData);
-      console.log("Client created successfully:", response.data);
+      await createClient(clientData);
       alert("Client created successfully!");
       clearForm();
       navigate("/clients");

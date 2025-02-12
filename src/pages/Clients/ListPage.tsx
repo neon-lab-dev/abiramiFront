@@ -31,7 +31,6 @@ const ListPage = () => {
       setLoading(true);
       try {
         const data: ClientResponse = await getClients();
-        console.log(data)
         setClients(data);
       } catch (err) {
         console.error(err);
@@ -46,7 +45,6 @@ const ListPage = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete?")) {
       const response = await deleteClient(id);
-      console.log("Item deleted!", response);
       if (response.status === 200) {
         alert("Client deleted Successfully!!!");
         navigate(0);

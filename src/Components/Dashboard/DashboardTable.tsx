@@ -229,7 +229,6 @@ const DashboardTable = ({
       header: "Tax",
       accessor: "taxGST",
       cellRenderer: (row: Invoice) => {
-        // console.log(row.tax);
         return <span className="text-black">₹ {formatNumber(row.taxGST)}</span>;
       },
       cellClassName:
@@ -267,7 +266,7 @@ const DashboardTable = ({
         invoice.invoiceType.toLowerCase() === typeFilter.toLowerCase())
   );
   useEffect(() => {
-    console.log(typeFilter);
+    // console.log(typeFilter);
   }, [typeFilter]);
 
   return (

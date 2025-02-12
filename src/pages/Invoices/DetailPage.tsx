@@ -96,7 +96,7 @@ const DetailPage = () => {
             </div>
           </div>
 
-          <div className="flex gap-7 max-md:flex-col">
+          <div className="flex overflow-x-scroll scrollbar-hide gap-7 max-md:flex-col">
             <div className="flex-1">
               <InvoiceListCard
                 subtitle={"From"}

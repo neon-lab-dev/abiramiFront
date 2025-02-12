@@ -266,7 +266,7 @@ const InvoiceListPageTable = ({
         invoice.invoiceType.toLowerCase() === typeFilter.toLowerCase())
   );
   useEffect(() => {
-    console.log(typeFilter);
+    // console.log(typeFilter);
   }, [typeFilter]);
 
   const removeFilter = () => {

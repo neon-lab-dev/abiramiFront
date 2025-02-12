@@ -30,7 +30,6 @@ export const validatePincode = (value: string): string | null => {
 
 // Validate if the entered client exists in the API response
 export const validateClient = (value: string, clientList: string[]): string | null => {
-  console.log("validationg")
   const clientExists = clientList.includes(value);
   return clientExists ? null : "Client not found";
 };

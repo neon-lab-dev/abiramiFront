@@ -45,7 +45,6 @@ const DetailPage = () => {
       try {
         if (id) {
           const data: SingleClientResponse = await getClientById(id);
-          console.log(data);
           setInvoiceData(data);
           setClient(data?.data);
         }
@@ -62,7 +61,6 @@ const DetailPage = () => {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete?")) {
       const response = await deleteClient(id || "");
-      console.log("Item deleted!", response);
       if (response.status === 200) {
         alert("Client deleted Successfully!!!");
         navigate("/clients");
@@ -71,8 +69,6 @@ const DetailPage = () => {
       console.log("Delete action canceled.");
     }
   };
-
-  console.log(client);
 
   return (
     <React.Fragment>

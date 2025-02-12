@@ -19,9 +19,11 @@ import { validateBankName, validateChequeNumber, validateClient, validatePONumbe
 const UpdateModal = ({
   editToggleModel,
   selectedId,
+  setEditModalOpen,
 }: {
   editToggleModel?: (id: string) => void;
   selectedId?: string;
+  setEditModalOpen?: (isEditModalOpen: boolean) => void;
 }) => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -186,7 +188,6 @@ const UpdateModal = ({
           const response = await getClients(); // Fetch data from API
           const clientNames: string[] = response.data.map((client: { companyName: string }) => client.companyName);
           setClients(clientNames);
-          console.log(clients)
         } catch (err) {
           console.error(err);
         } finally {
@@ -311,9 +312,7 @@ const UpdateModal = ({
     try {
       if (selectedId) {
         const response = await updateInvoice(selectedId, data);
-        console.log(data)
-        console.log(response)
-        alert("Invoice updated successfully!");
+        setEditModalOpen && setEditModalOpen(false)
       } else {
         alert("Failed to update invoice. No selected ID provided.");
       }

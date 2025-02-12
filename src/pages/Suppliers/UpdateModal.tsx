@@ -109,15 +109,13 @@ const UpdateModal = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
     const data = {
       ...formData,
     };
     setIsSubmitting(true);
     setLoading(true);
     try {
-      const response = await updateSupplier(selectedId, data);
-      console.log("Supplier updated successfully:", response.data);
+      await updateSupplier(selectedId, data);
       alert("Supplier updated successfully!");
     } catch (error) {
       console.error("Error updating supplier:", error);

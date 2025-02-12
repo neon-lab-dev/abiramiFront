@@ -120,7 +120,6 @@ const CreateModel: React.FC<CreateModelProps> = ({
     field: keyof ProductDetail,
     value: string | number
   ) => {
-    console.log(field);
     setRows((prevRows) =>
       prevRows.map((row, i) => {
         if (i !== index) return row;
@@ -266,7 +265,6 @@ const CreateModel: React.FC<CreateModelProps> = ({
     try {
       if (clientName) {
         const response = await createInvoicesByClientName(data, clientName);
-        console.log("Invoice created successfully:", response.data);
       }
       alert("Invoice created successfully!");
       navigate(0);
@@ -306,7 +304,6 @@ const CreateModel: React.FC<CreateModelProps> = ({
     try {
       if (clientName) {
         const response = await createInvoicesByClientName(data, clientName);
-        console.log("Invoice created successfully:", response.data);
         const pdfData = { ...response.data, productDetails: rows };
         generateInvoicePDF(pdfData);
       }
@@ -356,7 +353,6 @@ const CreateModel: React.FC<CreateModelProps> = ({
   }, [rows]);
 
   useEffect(() => {
-    console.log(formData.invoicetype.toLowerCase());
     if (formData.invoicetype.toLowerCase() == "cash invoice") {
       setFormData({
         ...formData,

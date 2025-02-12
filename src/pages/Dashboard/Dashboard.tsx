@@ -26,11 +26,9 @@ const Dashboard = () => {
         setLoading(true);
         try {
           const response: DashboardApiResponse = await getDashboardData();
-          console.log(response)
           const graphResponse=await getGraphData();
           setMonthlySales(graphResponse.data.sales)
           setMonthlyPurchases(graphResponse.data.purchase)
-          console.log("graph", graphResponse);
           setDashboard(response.data);
         } catch (error) {
           console.error("Failed to fetch dashboard data:", error);
@@ -68,7 +66,6 @@ const Dashboard = () => {
   const handleDelete = async (id?: string) => {
     if (window.confirm("Are you sure you want to delete?")) {
       const response = await deleteInvoice(id ?? "");
-      console.log("Item deleted!", response);
       if (response.status === 200) {
         alert("Invoice deleted Successfully!!!");
         navigate(0);

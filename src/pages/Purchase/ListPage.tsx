@@ -59,7 +59,6 @@ const ListPage = () => {
     if (window.confirm("Are you sure you want to delete?")) {
       try {
         const response = await deletePurchase(id);
-        console.log("Item deleted!", response);
         if (response.status === 200) {
           alert("Purchase deleted Successfully!!!");
           navigate(0);

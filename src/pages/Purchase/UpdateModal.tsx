@@ -45,9 +45,7 @@ const UpdateModal = ({
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      console.log(formData);
       const response = await updatePurchase(selectedId, formData);
-      console.log("Purchase updated successfully:", response);
       if (response.statusText === "OK") {
         alert("Purchase updated successfully!");
         navigate(0);
@@ -78,7 +76,6 @@ const UpdateModal = ({
     };
     fetchPurchase();
   }, [selectedId]);
-  console.log(formData.gstNum)
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
       <div className="bg-white rounded-3xl p-8 lg:p-12 w-[70%] h-[550px] shadow-lg overflow-y-scroll custom-scrollbar scroll-none">

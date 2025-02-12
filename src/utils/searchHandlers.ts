@@ -1,12 +1,10 @@
 import axiosInstance from "../api/axios";
 
 export const searchClients = async (query: string) => {
-  console.log(query);
   try {
     const response = await axiosInstance.get(`/clients/search`, {
       params: { query },
     });
-    console.log(response);
 
     return response.data;
   } catch (error) {

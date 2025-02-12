@@ -351,7 +351,7 @@ const InvoiceTable: React.FC = () => {
       header: "Total Amount",
       accessor: "total_amount",
       cellRenderer: (row: Invoice) => {
-        console.log(row.total_amount); // For debugging
+        // console.log(row.total_amount);
         return (
           <span className="text-black">{formatCurrency(row.total_amount)}</span>
         );
@@ -364,7 +364,7 @@ const InvoiceTable: React.FC = () => {
       header: "Tax",
       accessor: "tax",
       cellRenderer: (row: Invoice) => {
-        console.log(row.tax); // For debugging
+        // console.log(row.tax);
         return <span className="text-black">{formatCurrency(row.tax)}</span>;
       },
       cellClassName:

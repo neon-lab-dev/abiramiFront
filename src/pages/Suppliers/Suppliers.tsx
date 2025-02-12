@@ -49,7 +49,6 @@ export default function Suppliers() {
     setLoading(true);
     if (window.confirm("Are you sure you want to delete?")) {
       const response = await deleteSupplier(id ?? "");
-      console.log("Item deleted!", response);
       if (response.status === 200) {
         alert("Supplier deleted Successfully!!!");
         navigate(0);

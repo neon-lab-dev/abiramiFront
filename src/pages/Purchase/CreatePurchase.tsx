@@ -38,7 +38,6 @@ const CreatePurchase = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      console.log("Final Payload:", formData);
       const response: PurchaseResponse = await createPurchase(formData);
       if (response.statusText === "Created") {
         alert("Purchase created successfully");

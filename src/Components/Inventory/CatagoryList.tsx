@@ -42,8 +42,7 @@ const CatagoryList = () => {
     };
     setIsSubmitting(true);
     try {
-      const response = await createCategory(data);
-      console.log("Client created successfully:", response.data);
+      await createCategory(data);
       alert("Category created successfully");
     } catch (err) {
       console.error(err);

@@ -15,7 +15,6 @@ const UpdateModal = ({
   editToggleModel?: (id: string) => void;
   selectedId?: string;
 }) => {
-  console.log(selectedId);
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<CreateClient>({
@@ -64,8 +63,7 @@ const UpdateModal = ({
     setIsSubmitting(true);
     setLoading(true);
     try {
-      const response = await updateClient(clientData, selectedId);
-      console.log("Client updated successfully:", response.data);
+      await updateClient(clientData, selectedId);
       alert("Client updated successfully!");
       clearForm();
     } catch (error) {
@@ -96,7 +94,6 @@ const UpdateModal = ({
       setLoading(true);
       try {
         const data: SingleClientResponse = await getClientById(selectedId);
-        console.log("Client data:", data);
         setFormData({
           companyName: data.data.companyName || "",
           contactPerson: data.data.contactPerson || "",
