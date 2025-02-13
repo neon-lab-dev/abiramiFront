@@ -31,6 +31,8 @@ const UpdateModal = ({
   const [showDropdown2, setShowDropdown2] = useState(false);
   const [invoiceData, setInvoiceData] = useState<InvoiceData>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaveSubmitting, setIsSaveSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [subTotal, setSubTotal] = useState<number>();
   const [pfPercent, setPfPercent] = useState<number>(10);
@@ -307,8 +309,8 @@ const UpdateModal = ({
       roundOff: roundOff,
       productDetails: rows,
     };
-    setIsSubmitting(true);
-    setLoading(true);
+    setIsSaving(true);
+    // setLoading(true);
     try {
       if (selectedId) {
         const response = await updateInvoice(selectedId, data);
@@ -320,8 +322,8 @@ const UpdateModal = ({
       console.error("Error updating invoice:", error);
       alert("Failed to update invoice. Please try again.");
     } finally {
-      setIsSubmitting(false);
-      setLoading(false);
+      setIsSaving(false);
+      // setLoading(false);
       navigate(0);
     }
   };
@@ -465,7 +467,8 @@ const UpdateModal = ({
       roundOff: roundOff,
       productDetails: rowsData,
     };
-    setIsSubmitting(true);
+    setIsSaveSubmitting(true)
+    // setIsSubmitting(true);
     try {
       const response = await createInvoices(data);
       const pdfData = { ...response.data, productDetails: rows };
@@ -475,7 +478,8 @@ const UpdateModal = ({
       console.error("Error creating invoice:", error);
       alert("Failed to create invoice. Please try again.");
     } finally {
-      setIsSubmitting(false);
+      setIsSaveSubmitting(false)
+      // setIsSubmitting(false);
       navigate("/invoices");
     }
   };
@@ -1117,13 +1121,13 @@ const UpdateModal = ({
             <div className="col-span-3 flex justify-end gap-4 my-8">
               <Button
                 onClick={handleSubmit}
-                text="Save"
+                text={isSaving ? "Submitting..." : "Save"}
                 type="reset"
                 color="text-primary-10 bg-none"
               />
               <Button
                 onClick={handleSavePrint}
-                text="Save & Print"
+                text={isSaveSubmitting ? "Submitting..." : "Save & Print"}
                 type="submit"
                 color="bg-primary-10 text-white"
               />

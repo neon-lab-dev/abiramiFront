@@ -21,7 +21,7 @@ const DashboardTable = ({
 
   const icons = {
     i1: ICONS.blueTick,
-    i2: ICONS.greenCross,
+    i2: ICONS.editBlack,
     i3: ICONS.deleteRed,
   };
 
@@ -268,7 +268,10 @@ const DashboardTable = ({
   useEffect(() => {
     // console.log(typeFilter);
   }, [typeFilter]);
-
+  const handleViewAction =(()=>{
+    setTypeFilter("");
+    setStatusFilter("")
+  })
   return (
     <div>
       <Table
@@ -280,10 +283,11 @@ const DashboardTable = ({
         rowsPerPage={10}
         icons={icons}
         bg_i1="bg-customBlue-10"
-        bg_i2="bg-sucess-20"
+        bg_i2="bg-neutral-65"
         bg_i3="bg-primary-40"
         handleDelete={handleDelete}
         editToggleModel={editToggleModel}
+        handleViewAction={handleViewAction}
       />
     </div>
   );

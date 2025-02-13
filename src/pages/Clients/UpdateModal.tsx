@@ -61,10 +61,10 @@ const UpdateModal = ({
       status: formData.status.toUpperCase(),
     };
     setIsSubmitting(true);
-    setLoading(true);
+    // setLoading(true);
     try {
       await updateClient(clientData, selectedId);
-      alert("Client updated successfully!");
+      // alert("Client updated successfully!");
       clearForm();
     } catch (error) {
       type ErrorResponse = {
@@ -83,7 +83,7 @@ const UpdateModal = ({
       }
     } finally {
       setIsSubmitting(false);
-      setLoading(true);
+      // setLoading(true);
 
       navigate(0);
     }

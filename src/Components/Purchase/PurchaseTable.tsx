@@ -60,7 +60,7 @@ const PurchaseTable = ({
       accessor: "gstNum",
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",
-      // icon1: ICONS.search,
+      icon1: ICONS.search,
       width: "164px",
     },
     {
@@ -122,7 +122,7 @@ const PurchaseTable = ({
         editToggleModel={editToggleModel}
         handleDelete={handleDelete}
       />
-      <div className=" flex justify-between">
+      {/* <div className=" flex justify-between">
         <div className="flex justify-between md:gap-4 gap-3">
           
           <Button
@@ -148,7 +148,7 @@ const PurchaseTable = ({
           />
         </div>
         <DownloadButton data={purchases} />
-      </div>
+      </div> */}
     </div>
   );
 };

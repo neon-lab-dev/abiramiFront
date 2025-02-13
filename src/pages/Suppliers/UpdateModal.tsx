@@ -116,7 +116,7 @@ const UpdateModal = ({
     setLoading(true);
     try {
       await updateSupplier(selectedId, data);
-      alert("Supplier updated successfully!");
+      // alert("Supplier updated successfully!");
     } catch (error) {
       console.error("Error updating supplier:", error);
       alert("Failed to update supplier. Please try again.");

@@ -177,7 +177,7 @@ const UpdateModel = ({
     };
     try {
       await updateInventories(selectedId, updatedData);
-      alert("Inventory Updated Successfully");
+      // alert("Inventory Updated Successfully");
       editToggleModel();
       window.location.reload();
     } catch (err) {
@@ -220,7 +220,7 @@ const UpdateModel = ({
       return;
     }
     setIsSubmitting(true);
-    setLoading(true);
+    // setLoading(true);
     const updatedData = {
       txnType: formData.TRType.toUpperCase() || "",
       txnUnits: formData.transactionUnits || null,
@@ -229,7 +229,7 @@ const UpdateModel = ({
 
     try {
       await updateInventoryLogs(selectedId, updatedData);
-      alert("Logs updated successfully!");
+      // alert("Logs updated successfully!");
       editToggleModel();
       window.location.reload();
     } catch (error) {

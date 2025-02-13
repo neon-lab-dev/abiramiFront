@@ -16,11 +16,16 @@ import Inventory from "../pages/Inventory/ListPage";
 import CreateInventory from "../pages/Inventory/CreateInventory";
 import InventoryTable from "../pages/Inventory/InventoryListPageTable";
 import Login from "../pages/Login/Login";
+import ProtectedRoute from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
     errorElement: <ErrorPage />,
     children: [
       {

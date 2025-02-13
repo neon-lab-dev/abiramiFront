@@ -409,7 +409,7 @@ const InvoiceTable: React.FC = () => {
         bg_i2="bg-sucess-20"
         bg_i3="bg-primary-40"
       />
-      <div className=" flex justify-between">
+      {/* <div className=" flex justify-between">
         <div className="flex justify-between md:gap-4 gap-3">
           <Button
             text="Start Date - End Date"
@@ -435,7 +435,7 @@ const InvoiceTable: React.FC = () => {
           />
         </div>
         <DownloadButton data={data} />
-      </div>
+      </div> */}
     </div>
   );
 };

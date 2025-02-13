@@ -40,6 +40,7 @@ interface TableProps {
   editToggleModel?: (id?: string) => void;
   handleDelete?: (id: string) => void;
   LogToggleModel?: (id: string) => void;
+  handleViewAction?: () => void;
 }
 
 const formatDate = (date: Date) => {
@@ -67,6 +68,7 @@ const Table: React.FC<TableProps> = ({
   editToggleModel,
   handleDelete,
   LogToggleModel,
+  handleViewAction,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const location = useLocation();
@@ -115,6 +117,12 @@ const Table: React.FC<TableProps> = ({
     }
   };
 
+  const handleView=(()=>{
+   if(handleViewAction){
+    handleViewAction()
+   }
+  })
+
   return (
     <div
       className={` w-full overflow-x-scroll custom-scrollbar my-5 scrollbar-hide`}
@@ -125,9 +133,9 @@ const Table: React.FC<TableProps> = ({
             {tableName}
           </div> */}
           {showViewAll && (
-            <button className="flex items-center px-2 py-1 md:px-3 md:py-2 font-normal text-base leading-6 bg-neutral-70 transition-all rounded-xl">
+            <button className="flex items-center px-2 py-1 md:px-3 md:py-2 font-normal text-base leading-6 bg-neutral-70 transition-all rounded-xl" onClick={handleViewAction}>
               View all
-              <img src={ICONS.downArrow} alt="" className="ml-2 w-5 h-5" />
+              {/* <img src={ICONS.downArrow} alt="" className="ml-2 w-5 h-5" /> */}
             </button>
           )}
         </div>

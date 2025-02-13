@@ -23,7 +23,7 @@ const InvoiceListPageTable = ({
 
   const icons = {
     i1: ICONS.blueTick,
-    i2: ICONS.greenCross,
+    i2: ICONS.editBlack,
     i3: ICONS.deleteRed,
   };
 
@@ -289,12 +289,13 @@ const InvoiceListPageTable = ({
         rowsPerPage={10}
         icons={icons}
         bg_i1="bg-customBlue-10"
-        bg_i2="bg-sucess-20"
+        bg_i2="bg-neutral-65"
         bg_i3="bg-primary-40"
         handleDelete={handleDelete}
         editToggleModel={editToggleModel}
+        handleViewAction={removeFilter}
       />
-      <div className=" flex justify-between">
+      {/* <div className=" flex justify-between">
         <div className="flex justify-between md:gap-4 gap-3">
           <Button
             text="Start Date - End Date"
@@ -320,7 +321,7 @@ const InvoiceListPageTable = ({
           />
         </div>
         <DownloadButton data={invoices} />
-      </div>
+      </div> */}
     </div>
   );
 };

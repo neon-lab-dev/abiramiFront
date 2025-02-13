@@ -273,13 +273,13 @@ const InventoryListPageTable = () => {
           />
           <div className=" flex justify-between">
             <div className="flex justify-between md:gap-4 gap-3">
-              <Button
+              {/* <Button
                 text="Filter"
                 imgSrc={ICONS.filterGray}
                 color="border-neutral-80 border-2 bg-white text-[14px] text-black"
                 iconClassName="h-[16px] w-[16px]"
                 textClass="hidden"
-              />
+              /> */}
             </div>
             <DownloadButton data={inventory} />
           </div>
