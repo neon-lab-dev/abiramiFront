@@ -75,6 +75,9 @@ export const validateTransactionUnits = (
   TRType: string, 
   availableQuantity: string | number // Handle string input from the API
 ): string | null => {
+  if( TRType===""){
+    return "Transaction type must be specified"
+  }
   if (!value || isNaN(Number(value))) {
     return "Transaction Units are required"; // Ensure input is not empty
   }

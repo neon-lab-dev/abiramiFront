@@ -28,6 +28,7 @@ const UpdateModel = ({
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isLogSubmitting, setIsLogSubmitting] = useState<boolean>(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [inventory, setInventory] = useState<InventoryItem | null>(null);
@@ -86,6 +87,8 @@ const UpdateModel = ({
       [name]: name === "transactionUnits" ? Number(value) : value,
     }));
   };
+
+  
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
@@ -206,20 +209,23 @@ const UpdateModel = ({
     setImagePreviews("");
   };
   const [LogformData, setLogFormData] = useState({
-    TRType: "buy",
+    TRType: "sell",
     transactionUnits: "",
     comment: "",
   });
   const handleLogChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setLogFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prevData:any) => ({
+      ...prevData,
+      [name]: name === "transactionUnits" ? Number(value) : value,
+    }));
   };
   const handleUpdateLogs = async () => {
     if (!selectedId) {
       console.error("Inventory ID is missing!");
       return;
     }
-    setIsSubmitting(true);
+    setIsLogSubmitting(true);
     // setLoading(true);
     const updatedData = {
       txnType: formData.TRType.toUpperCase() || "",
@@ -236,7 +242,7 @@ const UpdateModel = ({
       console.error("Failed to update logs:", error);
       alert("Failed to update logs!");
     } finally {
-      setIsSubmitting(false);
+      setIsLogSubmitting(false);
       setLoading(false);
     }
   };
@@ -412,8 +418,9 @@ const UpdateModel = ({
                   name="TRType"
                   value="sell"
                   checked={formData.TRType === "sell"}
-                  onChange={handleChange}
+                  onChange={ handleLogChange}
                   className="form-radio text-primary-10"
+
                 />
                 <span className="ml-2">Sell</span>
               </label>
@@ -423,7 +430,7 @@ const UpdateModel = ({
                   name="TRType"
                   value="buy"
                   checked={formData.TRType === "buy"}
-                  onChange={handleChange}
+                  onChange={ handleLogChange}
                   className="form-radio text-primary-10"
                 />
                 <span className="ml-2">Buy</span>
@@ -438,7 +445,7 @@ const UpdateModel = ({
               placeholder="Enter Transaction Units"
               name="transactionUnits"
               value={formData.transactionUnits}
-              onChange={handleChange}
+              onChange={ handleLogChange}
               validate={(value) =>
                 validateTransactionUnits(value, formData.TRType, formData.quantity)
               }
@@ -451,7 +458,7 @@ const UpdateModel = ({
               placeholder="Enter comment"
               name="comment"
               value={formData.comment}
-              onChange={handleChange}
+              onChange={ handleLogChange}
             />
           </div>
 
@@ -464,7 +471,7 @@ const UpdateModel = ({
               color="text-primary-10 bg-none"
             />
             <Button
-              text="Update Logs"
+             text={isLogSubmitting ? "Updating..." : "Update Logs"}
               type="button"
               color="bg-primary-10 text-white"
               onClick={handleUpdateLogs}

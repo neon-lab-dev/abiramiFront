@@ -289,7 +289,7 @@ const Table: React.FC<TableProps> = ({
                       })}
                       {/* {icons && (
                       <td>
-                        <div className="flex px-4 space-x-2 ">
+                        <div className="flex px-4 gap-2 ">
                           {row?.iconsOrder?.map((icon: string) => {
                             if (icon === "i1" && row.i1) {
                               return (
@@ -380,7 +380,7 @@ const Table: React.FC<TableProps> = ({
                       </td>
                     )} */}
                      {icons &&( <td>
-                        <div className="flex gap-4">
+                        <div className="flex gap-4 pl-2">
                           <button
                             key="i1"
                             onClick={() => onTickClick(row?.id)}
