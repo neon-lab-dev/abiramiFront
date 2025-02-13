@@ -1,15 +1,12 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  
-    const { admin, loading } = useContext(AuthContext);
-  
-
+  const { admin } = useContext(AuthContext);
   useEffect(() => {
-    if (!admin ) {
-      alert("Please login to continue.");
+    if (!admin) {
+      <Navigate to="/login" replace />
     }
   }, [admin]);
 
@@ -20,4 +17,4 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
-export default ProtectedRoute;
+export default ProtectedRoute;

@@ -18,7 +18,9 @@ const Login = () => {
     try {
       const response = await login(data);
       if (response.status === 200) {
+        localStorage.setItem("admin", JSON.stringify(response?.data));
         navigate("/");
+        console.log(response);
       }
     } catch (error) {
       console.error("Login error:", error);

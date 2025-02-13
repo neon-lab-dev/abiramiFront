@@ -14,6 +14,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const admin = JSON.parse(localStorage.getItem("admin") || 'null');
+    if (admin) {
+      setAdmin(admin);
+    } else {
+      setAdmin(null);
+    }
+  }, [])
+
+  useEffect(() => {
     const checkAuth = async () => {
       setLoading(true);
       try {
