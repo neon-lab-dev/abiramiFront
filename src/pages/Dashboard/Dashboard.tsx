@@ -30,6 +30,7 @@ const Dashboard = () => {
           setMonthlySales(graphResponse.data.sales)
           setMonthlyPurchases(graphResponse.data.purchase)
           setDashboard(response.data);
+          console.log(response.data)
         } catch (error) {
           console.error("Failed to fetch dashboard data:", error);
         } finally {
@@ -110,7 +111,7 @@ const Dashboard = () => {
               cardBg="bg-secondary-80"
               iconBg="bg-secondary-85"
               title="Income Received this Financial year"
-              value={formatNumber(dashboard?.totalPurchaseReceivedFY ?? 0)}
+              value={formatNumber(dashboard?.incomeReceivedFY ?? 0)}
               icon={ICONS.incomeReceived}
             />
             <StatusCard

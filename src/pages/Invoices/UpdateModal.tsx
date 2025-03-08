@@ -469,18 +469,21 @@ const UpdateModal = ({
     };
     setIsSaveSubmitting(true)
     // setIsSubmitting(true);
-    try {
-      const response = await createInvoices(data);
+    try { 
+      if (selectedId) {
+      const response = await updateInvoice(selectedId, data);
       const pdfData = { ...response.data, productDetails: rows };
       generateInvoicePDF(pdfData);
-      alert("Invoice created successfully!");
+    } else {
+      alert("Failed to update invoice. No selected ID provided.");
+    }
     } catch (error) {
       console.error("Error creating invoice:", error);
       alert("Failed to create invoice. Please try again.");
     } finally {
       setIsSaveSubmitting(false)
       // setIsSubmitting(false);
-      navigate("/invoices");
+      // navigate("/invoices");
     }
   };
 

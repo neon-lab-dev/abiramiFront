@@ -11,15 +11,22 @@ import { pdf, PDFDownloadLink } from "@react-pdf/renderer";
 import InvoicePDF from "../../utils/pdfGenerator";
 import { generateInvoicePDF } from "../../utils/handleInvoice";
 import { Client } from "../../types/client";
-import { validateBankName, validateChequeNumber, validateClient, validatePONumber, validateVehicleNumber } from "../../utils/validation";
+import {
+  validateBankName,
+  validateChequeNumber,
+  validateClient,
+  validatePONumber,
+  validateVehicleNumber,
+} from "../../utils/validation";
 
 const CreateInvoice = () => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
+  const [showDropdown3, setShowDropdown3] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSaveSubmitting , setIsSaveSubmitting ] = useState(false);
+  const [isSaveSubmitting, setIsSaveSubmitting] = useState(false);
   const [subTotal, setSubTotal] = useState<number>();
   const [pfPercent, setPfPercent] = useState<number>(10);
   const [pfamount, setPfamount] = useState<number>();
@@ -41,7 +48,9 @@ const CreateInvoice = () => {
       setLoading(true);
       try {
         const response = await getClients(); // Fetch data from API
-        const clientNames: string[] = response.data.map((client: { companyName: string }) => client.companyName);
+        const clientNames: string[] = response.data.map(
+          (client: { companyName: string }) => client.companyName
+        );
         setClients(clientNames);
       } catch (err) {
         console.error(err);
@@ -49,7 +58,7 @@ const CreateInvoice = () => {
         setLoading(false);
       }
     };
-  
+
     fetchClients();
   }, []);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -204,13 +213,13 @@ const CreateInvoice = () => {
   ];
   const status = [
     {
-      status: "Paid",
+      status: "PAID",
     },
     {
-      status: "Pending",
+      status: "PENDING",
     },
     {
-      status: "Draft/Performa Invoice",
+      status: "DRAFT",
     },
   ];
 
@@ -388,7 +397,7 @@ const CreateInvoice = () => {
       roundOff: roundOff,
       productDetails: rows,
     };
-    setIsSaveSubmitting (true);
+    setIsSaveSubmitting(true);
     try {
       const response = await createInvoices(data);
       const pdfData = { ...response.data, productDetails: rows };
@@ -407,17 +416,38 @@ const CreateInvoice = () => {
     <div>
       <span className="text-sm font-Inter font-[600] ">Billing Details</span>
       <div className="w-full  pb-[44px] pt-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
-        <InputField
-          label="Client"
-          required={true}
-          inputBg=""
-          type="text"
-          placeholder="Enter Client name"
-          name="ClientName"
-          value={formData.ClientName}
-          onChange={handleChange}
-          validate={(value) => validateClient(value, clients)}
-        />
+        <div className="flex-2 relative" ref={dropdownRef}>
+          <div className="" onClick={() => setShowDropdown3(true)}>
+            <InputField
+              label="Client"
+              required={true}
+              inputBg=""
+              type="text"
+              placeholder="Enter Client name"
+              icon={ICONS.downArrow2}
+              name="ClientName"
+              value={formData.ClientName}
+              onChange={handleChange}
+              validate={(value) => validateClient(value, clients)}
+            />
+          </div>
+          {showDropdown3 && (
+            <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
+              {clients.map((client) => (
+                <div
+                  key={client}
+                  className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+                  onClick={() => {
+                    setFormData({ ...formData, ClientName: client });
+                    setShowDropdown3(false);
+                  }}
+                >
+                  {client}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         <InputField
           label="Date"
@@ -470,17 +500,6 @@ const CreateInvoice = () => {
             />
           </div>
         </div>
-
-        {/* <InputField
-          label="Status"
-          required={true}
-          inputBg=""
-          type="text"
-          placeholder="Enter Status"
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-        /> */}
         <div className="flex-2 relative" ref={dropdownRef}>
           <div className="" onClick={() => setShowDropdown1(true)}>
             <InputField
@@ -509,7 +528,7 @@ const CreateInvoice = () => {
             </div>
           )}
         </div>
-       
+
         <InputField
           label="Tax Type"
           required={true}
