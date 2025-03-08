@@ -483,7 +483,7 @@ const UpdateModal = ({
     } finally {
       setIsSaveSubmitting(false)
       // setIsSubmitting(false);
-      // navigate("/invoices");
+      navigate("/invoices");
     }
   };
 
