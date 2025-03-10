@@ -7,98 +7,102 @@ import { formatNumber } from ".";
 export const generateInvoicePDF = (invoiceData: InvoiceData) => {
   const doc = new jsPDF();
 
+  // // Add watermark logo
+  // const img = new Image();
+  // img.src = "src/assets/icons/fevIcon.png"; // Ensure the correct path
+  // doc.addImage(img, "PNG", 50, 100, 100, 100, "watermark", "FAST");
+
   // Add header
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
   doc.text("Invoice", 105, 15, { align: "center" });
 
-  // Sender & Receiver Details
-  doc.setFontSize(12);
-  doc.setFont("helvetica", "normal");
-  doc.text("From:", 10, 30);
-  doc.text("Abirami Enterprises", 10, 35);
-  doc.text("1052, Bharatpur road, Coimbatore", 10, 40);
-  doc.text("GST: 33ACVPC901G1ZS", 10, 45);
-
-  doc.text("To:", 140, 30);
-  doc.text(invoiceData?.clientName, 140, 35);
-  doc.text(invoiceData?.state, 140, 40);
-
-  // Billing Details
-  doc.text("Billing Details:", 10, 55);
-  doc.text(`Invoice ID: ${invoiceData?.id}`, 10, 60);
-  doc.text(`Invoice Type: ${invoiceData?.invoiceType}`, 10, 65);
-  doc.text(`Tax Type: ${invoiceData?.taxType}`, 10, 70);
-  doc.text(
-    `Created Date: ${new Date(invoiceData?.date).toDateString()}`,
-    10,
-    75
-  );
-  doc.text(
-    `State & Code: ${invoiceData?.state} (${invoiceData?.code})`,
-    10,
-    80
-  );
-
-  // Items Table
-  const tableColumn = [
-    "S.No",
-    "Description",
-    "HSN No.",
-    "Quantity",
-    "Rate",
-    "Discount",
-    "Amount",
-  ];
-  const tableRows = invoiceData?.productDetails?.map((item, index) => [
-    index + 1,
-    item?.description,
-    item?.HSNno,
-    item?.quantity,
-    item?.rate,
-    item?.discount,
-    item?.amount,
-  ]);
-
+  // Sender & Receiver Details Table
   autoTable(doc, {
-    startY: 90,
-    head: [tableColumn],
-    body: tableRows,
+    startY: 25,
+    head: [["From", "To"]],
+    body: [ 
+      [
+        "Abirami Enterprises\n1052, Bharatpur road, Coimbatore\nGST: 33ACVPC901G1ZS",
+        `${invoiceData?.clientName}\n${invoiceData?.state}`,
+      ],
+    ],
     theme: "grid",
     styles: { fontSize: 10, cellPadding: 2 },
+    headStyles: { fillColor: [255,235,235], textColor: 0, fontStyle: "bold" },
   });
 
-  // Totals
-  const finalY = (doc as any).autoTable.previous.finalY + 10;
-  doc.text(
-    `Sub Total: INR ${formatNumber(invoiceData?.subTotal ?? 0)}`,
-    10,
-    finalY
-  );
-  doc.text(
-    `PF Amount: INR ${formatNumber(invoiceData?.pfAmount ?? 0)}`,
-    10,
-    finalY + 5
-  );
-  doc.text(
-    `${
-      invoiceData?.taxType === "IGST"
-        ? "IGST | @ 18%"
-        : "CGST | @ 9% & SGST | @ 9%"
-    } : INR ${formatNumber(invoiceData?.taxGST ?? 0)}`,
-    10,
-    finalY + 10
-  );
-  doc.setFontSize(14);
-  doc.setFont("helvetica", "bold");
-  doc.text(
-    `Total: INR ${formatNumber(invoiceData?.totalAmount ?? 0)}`,
-    10,
-    finalY + 20
-  );
+  // Billing Details Table
+  autoTable(doc, {
+    startY: (doc as any).autoTable.previous.finalY + 0,
+    head: [["Invoice ID", "Invoice Type", "Tax Type", "Created Date", "State & Code"]],
+    body: [
+      [
+        invoiceData?.id,
+        invoiceData?.invoiceType,
+        invoiceData?.taxType,
+        new Date(invoiceData?.date).toDateString(),
+        `${invoiceData?.state} (${invoiceData?.code})`,
+      ],
+    ],
+    theme: "grid",
+    styles: { fontSize: 10, cellPadding: 2 },
+    headStyles: { fillColor: [255,235,235], textColor: 0, fontStyle: "bold" },
+  });
+
+  // Items Table
+  autoTable(doc, {
+    startY:(doc as any).autoTable.previous.finalY + 0,
+    head: [["S.No", "Description", "HSN No.", "Quantity", "Rate", "Discount", "Amount"]],
+    body: invoiceData?.productDetails?.map((item, index) => [
+      index + 1,
+      item?.description,
+      item?.HSNno,
+      item?.quantity,
+      item?.rate,
+      item?.discount,
+      item?.amount,
+    ]),
+    theme: "grid",
+    styles: { fontSize: 10, cellPadding: 2 },
+    headStyles: { fillColor: [255,235,235], textColor: 0, fontStyle: "bold" },
+  });
+
+  // Totals Table
+  autoTable(doc, {
+    startY: (doc as any).autoTable.previous.finalY + 0,
+    head: [["Description", "Amount (INR)"]],
+    body: [
+      ["Sub Total", formatNumber(invoiceData?.subTotal ?? 0)],
+      ["PF Amount", formatNumber(invoiceData?.pfAmount ?? 0)],
+      [
+        invoiceData?.taxType === "IGST" ? "IGST @ 18%" : "CGST @ 9% & SGST @ 9%",
+        formatNumber(invoiceData?.taxGST ?? 0),
+      ],
+      ["Total", formatNumber(invoiceData?.totalAmount ?? 0)],
+    ],
+    theme: "grid",
+    styles: { fontSize: 10, cellPadding: 2 },
+    headStyles: { fillColor: [255,235,235], textColor: 0, fontStyle: "bold" },
+  });
+  autoTable(doc, {
+    startY: (doc as any).autoTable.previous.finalY + 0,
+    head: [["Bank Name", "Account Number", "IFSC", "Branch"]],
+    body: [
+      [
+        "State Bank of India",
+        "xxxx 98",
+        "SBIN0098763",
+        "Avinashi Road, Coimbatore-37",
+      ],
+    ],
+    theme: "grid",
+    styles: { fontSize: 10, cellPadding: 1 },
+    headStyles: { fillColor: [255,235,235], textColor: 0, fontStyle: "bold" },
+  });
+
+ 
 
   // Save the PDF
   doc.save("invoice.pdf");
 };
-
-// export default generateInvoicePDF;

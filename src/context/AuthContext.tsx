@@ -3,24 +3,16 @@ import { verifyAdminByToken } from "../api/api";
 import Cookies from "js-cookie";
 import { ReactNode } from "react";
 
+
 export const AuthContext = createContext({
   admin: localStorage.getItem("admin") || null,
   loading: true,
+  setAdmin: (admin: any) => {}, // <-- Add this function
 });
-
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [admin, setAdmin] = useState(localStorage.getItem("admin") || null);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const admin = JSON.parse(localStorage.getItem("admin") || 'null');
-    if (admin) {
-      setAdmin(admin);
-    } else {
-      setAdmin(null);
-    }
-  }, [])
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -29,13 +21,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const token = Cookies.get("token");
         if (!token) {
           localStorage.removeItem("admin");
+          setAdmin(null);
           return;
         }
 
         const { data } = await verifyAdminByToken(token);
         setAdmin(data);
-
-        // localStorage.setItem("admin", JSON.stringify(data));
       } catch (error) {
         console.error(error);
         Cookies.remove("token");
@@ -49,8 +40,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ admin, loading }}>
+    <AuthContext.Provider value={{ admin, loading, setAdmin }}>
       {children}
     </AuthContext.Provider>
   );
 };
+

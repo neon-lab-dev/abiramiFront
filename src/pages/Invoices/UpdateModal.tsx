@@ -473,6 +473,7 @@ const UpdateModal = ({
       if (selectedId) {
       const response = await updateInvoice(selectedId, data);
       const pdfData = { ...response.data, productDetails: rows };
+      console.log(pdfData);
       generateInvoicePDF(pdfData);
     } else {
       alert("Failed to update invoice. No selected ID provided.");

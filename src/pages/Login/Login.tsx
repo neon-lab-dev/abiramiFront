@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { login } from "../../api/api";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setAdmin } = useContext(AuthContext); // <-- Use setAdmin from context
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,21 +14,17 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const data = {
-      email,
-      password,
-    };
     try {
-      const response = await login(data);
+      const response = await login({ email, password });
+
       if (response.status === 200) {
-        localStorage.setItem("admin", JSON.stringify(response?.data));
-        navigate("/");
-        console.log(response);
+        localStorage.setItem("admin", JSON.stringify(response?.data));  
+        setAdmin(response?.data); // <-- Update context
+        navigate("/"); // <-- Redirect to dashboard
       }
     } catch (error) {
       console.error("Login error:", error);
       alert("Login Error: Please try again with valid credentials!!!");
-      throw error;
     } finally {
       setIsSubmitting(false);
     }
@@ -40,13 +39,8 @@ const Login = () => {
             Abirami <br /> Enterprises
           </p>
         </div>
-        <h2 className="text-white text-center text-[24px] font-bold mb-4 ">
-          Login
-        </h2>
-        <form
-          onSubmit={handleSubmit}
-          className="text-white flex flex-col gap-4 w-[80%] "
-        >
+        <h2 className="text-white text-center text-[24px] font-bold mb-4 ">Login</h2>
+        <form onSubmit={handleSubmit} className="text-white flex flex-col gap-4 w-[80%]">
           <div className="flex justify-between items-center">
             <label>Email:</label>
             <input
@@ -67,10 +61,7 @@ const Login = () => {
               className="py-1 px-2 rounded-lg outline-none text-black"
             />
           </div>
-          <button
-            className="w-fit mx-auto py-2 px-5 bg-secondary-130 rounded-lg text-black  "
-            type="submit"
-          >
+          <button className="w-fit mx-auto py-2 px-5 bg-secondary-130 rounded-lg text-black">
             {isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>

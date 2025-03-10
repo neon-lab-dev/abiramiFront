@@ -123,7 +123,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             className="border-0 hidden md:block outline-0 md:w-[170px] lg:w-[200px] bg-transparent text-secondary-110 placeholder:text-secondary-110"
           />
         </div>
-        <img src={ICONS.bell} alt="bell-icon" className="cursor-pointer" />
+        {/* <img src={ICONS.bell} alt="bell-icon" className="cursor-pointer" /> */}
         <Button
           text="Logout"
           color="bg-primary-10 text-white "
