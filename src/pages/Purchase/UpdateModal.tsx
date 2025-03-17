@@ -21,13 +21,12 @@ const UpdateModal = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<PurchaseFormData>({
     companyName: "",
-    invoiceNumber: 0,
+    invoiceNumber: "",
     date: "",
     totalPurchaseAmt: 0,
     gstNum: "",
     status: "ACTIVE",
   });
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {

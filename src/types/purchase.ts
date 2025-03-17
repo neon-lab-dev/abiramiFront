@@ -1,7 +1,7 @@
 export interface Purchase {
   id: string;
   companyName: string;
-  invoiceNumber: number;
+  invoiceNumber: string;
   date: string;
   totalPurchaseAmt: number;
   gstNum: string;
@@ -12,7 +12,7 @@ export interface Purchase {
 
 export interface PurchaseFormData {
   companyName: string;
-  invoiceNumber: number | null;
+  invoiceNumber: string;
   date: string;
   totalPurchaseAmt: number | null;
   gstNum: string;

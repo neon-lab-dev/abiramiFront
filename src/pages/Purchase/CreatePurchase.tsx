@@ -12,7 +12,7 @@ const CreatePurchase = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<PurchaseFormData>({
     companyName: "",
-    invoiceNumber: null,
+    invoiceNumber: "",
     date: "",
     totalPurchaseAmt: null,
     gstNum: "",
@@ -46,6 +46,7 @@ const CreatePurchase = () => {
     } catch (error) {
       console.error("Create purchase error:", error);
       alert("Failed to create purchase");
+      
     } finally {
       setIsSubmitting(false);
     }
@@ -55,7 +56,7 @@ const CreatePurchase = () => {
   const clearForm = () => {
     setFormData({
       companyName: "",
-      invoiceNumber: null,
+      invoiceNumber: "",
       date: "",
       totalPurchaseAmt: null,
       gstNum: "",
@@ -86,7 +87,7 @@ const CreatePurchase = () => {
               <InputField
                 label="Invoice Number"
                 inputBg=""
-                type="number"
+                type="text"
                 placeholder="Enter the invoice number"
                 name="invoiceNumber"
                 value={formData.invoiceNumber}
