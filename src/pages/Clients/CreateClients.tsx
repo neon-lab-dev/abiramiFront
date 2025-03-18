@@ -21,7 +21,7 @@ const CreateClients = () => {
     pincode: null as number | null,
     state: "",
     country: "",
-    status: "",
+    status: "ACTIVE",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();

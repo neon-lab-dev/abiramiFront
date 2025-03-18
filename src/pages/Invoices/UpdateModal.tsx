@@ -1112,10 +1112,11 @@ const UpdateModal = ({
               </span>
               <div className="flex flex-col py-1">
                 <span className="text-[rgba(28,28,28,0.4)]  font-sans font-normal text-[14px] leading-[20px]">
-                  1.some notes goes here
+                  1.Goods once sold will not be taken back under any circumstances.
                 </span>
                 <span className="text-[rgba(28,28,28,0.4)] font-sans font-normal text-[14px] leading-[20px]">
-                  2.some notes goes here
+                  2.We are not responsible for any loss or damage of goods in transit.
+
                 </span>
               </div>
             </div>

@@ -3,21 +3,26 @@ import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import DashboardTable from "../../Components/Dashboard/DashboardTable";
 import RevenueChart from "../../Components/Dashboard/RevenueChart";
 import { useEffect, useState } from "react";
-import { deleteInvoice, getDashboardData, getGraphData, getInvoices } from "../../api/api";
+import {
+  deleteInvoice,
+  getDashboardData,
+  getGraphData,
+  getInvoices,
+} from "../../api/api";
 import Loader from "../../lib/loader";
 import { DashboardApiResponse, DashboardData } from "../../types/dashboard";
 import { formatNumber } from "../../utils";
 import { useNavigate } from "react-router-dom";
 import UpdateModal from "../Invoices/UpdateModal";
-import { InvoicesResponse } from "../../types/invoice";
+import { InvoiceResponse, InvoicesResponse } from "../../types/invoice";
 const Dashboard = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [invoices, setInvoices] = useState<InvoicesResponse>();
+  const [invoices, setInvoices] = useState<InvoiceResponse[]>();
   const [dashboard, setDashboard] = useState<DashboardData>();
   const [selectedId, setSelectedId] = useState<string>("");
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
-  const [monthlySales,setMonthlySales]=useState([]);
-  const [monthlyPurchases,setMonthlyPurchases]=useState([]);
+  const [monthlySales, setMonthlySales] = useState([]);
+  const [monthlyPurchases, setMonthlyPurchases] = useState([]);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -26,37 +31,41 @@ const Dashboard = () => {
         setLoading(true);
         try {
           const response: DashboardApiResponse = await getDashboardData();
-          const graphResponse=await getGraphData();
-          setMonthlySales(graphResponse.data.sales)
-          setMonthlyPurchases(graphResponse.data.purchase)
+          // // const graphResponse=await getGraphData();
+          // setMonthlySales(graphResponse.data.sales)
+          // setMonthlyPurchases(graphResponse.data.purchase)
           setDashboard(response.data);
-          console.log(response.data)
         } catch (error) {
           console.error("Failed to fetch dashboard data:", error);
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
       };
+      const fetchInvoices = async () => {
+        setLoading(true);
+        try {
+          const data: InvoicesResponse = await getInvoices();
+
+          // Filter invoices that are created today
+          const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+          const todayInvoices = data.data.filter((invoice) =>
+            invoice.createdAt.startsWith(today)
+          );
+          setInvoices(todayInvoices);
+          console.log(data);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchInvoices();
 
       fetchDashboardData();
     } catch (error) {
       console.log(error);
     }
-  }, []);
-  useEffect(() => {
-    const fetchInvoices = async () => {
-      setLoading(true);
-      try {
-        const data: InvoicesResponse = await getInvoices();
-        setInvoices(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchInvoices();
   }, []);
 
   const editToggleModel = (id: string = "") => {
@@ -143,12 +152,12 @@ const Dashboard = () => {
               icon={ICONS.totalPurchase}
             />
           </div>
-          <RevenueChart
+          {/* <RevenueChart
             salesData={monthlySales}
             purchaseData={monthlyPurchases}
-          />
+          /> */}
           <DashboardTable
-            invoices={invoices?.data ?? []}
+            invoices={invoices ?? []}
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}
           />

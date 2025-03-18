@@ -302,12 +302,30 @@ const DetailPage = () => {
               </div>
             </div>
           </div>
+          <div className="flex flex-col my-[22px]">
+              <span className="text-sm font-Inter font-[600]">
+                Terms & Conditions
+              </span>
+              <span className="text-sm font-Inter font-normal mt-[22px]">
+                Notes
+              </span>
+              <div className="flex flex-col py-1">
+                <span className="text-[rgba(28,28,28,0.4)]  font-sans font-normal text-[14px] leading-[20px]">
+                  1.Goods once sold will not be taken back under any circumstances.
+                </span>
+                <span className="text-[rgba(28,28,28,0.4)] font-sans font-normal text-[14px] leading-[20px]">
+                  2.We are not responsible for any loss or damage of goods in transit.
 
+                </span>
+              </div>
+            </div>
           <div
             className={`flex gap-4 justify-end py-[22px]  sticky   bg-white z-10 ${
               isOpen ? " h-56 bottom-4 " : "bottom-0"
             }  `}
           >
+
+
             <div className="relative">
               {/* Dropdown Button */}
               <button
