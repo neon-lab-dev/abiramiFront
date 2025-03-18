@@ -27,7 +27,7 @@ const CreatePurchase = () => {
     setFormData((prevData) => ({
       ...prevData,
       [name]:
-        name === "invoiceNumber" || name === "totalPurchaseAmt"
+         name === "totalPurchaseAmt"
           ? Number(value)
           : value, // Leave gstNum as a string
     }));

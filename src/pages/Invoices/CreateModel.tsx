@@ -1002,9 +1002,6 @@ const CreateModel: React.FC<CreateModelProps> = ({
               <span className="text-sm font-Inter font-[600]">
                 Terms & Conditions
               </span>
-              <span className="text-sm font-Inter font-normal mt-[22px]">
-                Notes
-              </span>
               <div className="flex flex-col py-1">
                 <span className="text-[rgba(28,28,28,0.4)]  font-sans font-normal text-[14px] leading-[20px]">
                   1.Goods once sold will not be taken back under any circumstances.

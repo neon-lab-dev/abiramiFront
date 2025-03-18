@@ -1,12 +1,12 @@
 import { ICONS } from "../../assets";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import DashboardTable from "../../Components/Dashboard/DashboardTable";
-import RevenueChart from "../../Components/Dashboard/RevenueChart";
+// import RevenueChart from "../../Components/Dashboard/RevenueChart";
 import { useEffect, useState } from "react";
 import {
   deleteInvoice,
   getDashboardData,
-  getGraphData,
+  // getGraphData,
   getInvoices,
 } from "../../api/api";
 import Loader from "../../lib/loader";
@@ -21,8 +21,8 @@ const Dashboard = () => {
   const [dashboard, setDashboard] = useState<DashboardData>();
   const [selectedId, setSelectedId] = useState<string>("");
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
-  const [monthlySales, setMonthlySales] = useState([]);
-  const [monthlyPurchases, setMonthlyPurchases] = useState([]);
+  // const [monthlySales, setMonthlySales] = useState([]);
+  // const [monthlyPurchases, setMonthlyPurchases] = useState([]);
 
   const navigate = useNavigate();
   useEffect(() => {

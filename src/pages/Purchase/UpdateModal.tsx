@@ -33,8 +33,7 @@ const UpdateModal = ({
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]:
-        name === "invoiceNumber" || name === "totalPurchaseAmt"
+      [name]: name === "totalPurchaseAmt"
           ? Number(value)
           : value, // Leave `gstNum` as string
     }));
@@ -112,7 +111,7 @@ const UpdateModal = ({
                 <InputField
                   label="Invoice Number"
                   inputBg=""
-                  type="number"
+                  type="text"
                   placeholder="Enter the invoice number"
                   name="invoiceNumber"
                   value={formData.invoiceNumber}
