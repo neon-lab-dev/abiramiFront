@@ -15,14 +15,15 @@ import { formatNumber } from "../../utils";
 import { useNavigate } from "react-router-dom";
 import UpdateModal from "../Invoices/UpdateModal";
 import { InvoiceResponse, InvoicesResponse } from "../../types/invoice";
+import RevenueChart from "../../Components/Dashboard/RevenueChart";
 const Dashboard = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [invoices, setInvoices] = useState<InvoiceResponse[]>();
   const [dashboard, setDashboard] = useState<DashboardData>();
   const [selectedId, setSelectedId] = useState<string>("");
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
-  // const [monthlySales, setMonthlySales] = useState([]);
-  // const [monthlyPurchases, setMonthlyPurchases] = useState([]);
+  const [monthlySales, setMonthlySales] = useState([]);
+  const [monthlyPurchases, setMonthlyPurchases] = useState([]);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -152,10 +153,10 @@ const Dashboard = () => {
               icon={ICONS.totalPurchase}
             />
           </div>
-          {/* <RevenueChart
+          <RevenueChart
             salesData={monthlySales}
             purchaseData={monthlyPurchases}
-          /> */}
+          />
           <DashboardTable
             invoices={invoices ?? []}
             editToggleModel={editToggleModel}

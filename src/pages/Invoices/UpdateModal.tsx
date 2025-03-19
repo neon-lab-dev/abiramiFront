@@ -46,19 +46,16 @@ const UpdateModal = ({
   const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [subTotal, setSubTotal] = useState<number>();
-  
-   
-    const [igst, setIgst] = useState(18);
-    const [cgst, setCgst] = useState(9);
-    const [sgst, setSgst] = useState(9);
   const [pfamount, setPfamount] = useState<number>(0);
-   const [subTotalPlusPfAmount, setSubTotalPlusPfAmount] =
-      useState<number>(0);
-  
+  const [taxPercent, setTaxPercent] = useState<number>(18);
   const [tax, setTax] = useState<number>();
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
   const dropdownRef = useRef<HTMLDivElement>(null);
+   const [subTotalPlusPfAmount, setSubTotalPlusPfAmount] =
+      useState<number>(0);
+  
+   
   const options = [
     "Original for Recipient",
     "Duplicate for Transporter",
@@ -158,44 +155,44 @@ const UpdateModal = ({
   };
 
   useEffect(() => {
-     const calculateValues = () => {
-       // Calculate Subtotal
-       const calculatedSubTotal = rows.reduce((sum, row) => {
-         const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
-         const rate = parseFloat(row?.rate?.toString() || "0") || 0;
-         const discount = parseFloat(row?.discount?.toString() || "0") || 0;
-         const amount = Math.abs(quantity * rate * (1 - discount / 100));
-         return sum + amount;
-       }, 0);
-   
-       setSubTotal(calculatedSubTotal);
-   
-       // Use calculatedSubTotal directly here
-       const pfAndTotal = Number(calculatedSubTotal) + Number(pfamount);
-       console.log("SubTotal + PF =>", pfAndTotal);
-       setSubTotalPlusPfAmount(pfAndTotal);
-   
-       // Calculate Tax
-       let calculatedTax;
-       if (formData.taxType === "IGST") {
-         calculatedTax = (pfAndTotal * igst) / 100;
-       } else {
-         calculatedTax = (pfAndTotal * cgst) / 100 + (pfAndTotal * sgst) / 100;
-       }
-       setTax(Number(calculatedTax.toFixed(2)));
-   
-       // Calculate Total
-       const calculatedTotal = pfAndTotal + calculatedTax;
-       const roundedTotal = Math.round(calculatedTotal);
-       setRoundOff(roundedTotal);
-       setTotal(roundedTotal);
-     };
-   
-     calculateValues();
-   }, [rows, pfamount, formData.taxType, igst, cgst, sgst]);
-   
- 
-
+    const calculateValues = () => {
+      // Calculate Subtotal
+      const calculatedSubTotal = rows?.reduce((sum, row) => {
+        const quantity = row?.quantity || 0;
+        const rate = row?.rate || 0;
+        const discount = row?.discount || 0;
+  
+        const baseAmount = quantity * rate;
+        const amount = baseAmount - (baseAmount * discount) / 100;
+  
+        return sum + amount;
+      }, 0);
+  
+      setSubTotal(calculatedSubTotal);
+  
+      
+      const pfAndTotal = Number(calculatedSubTotal) + Number(pfamount);
+      setSubTotalPlusPfAmount(pfAndTotal);
+  
+    
+      const calculatedTax = (taxPercent / 100) * pfAndTotal;
+      setTax(Number(calculatedTax.toFixed(2)));
+  
+    
+      const calculatedTotal = pfAndTotal + calculatedTax;
+      const roundedTotal = Math.round(calculatedTotal);
+      setRoundOff(roundedTotal);
+      setTotal(roundedTotal);
+  
+      console.log("SubTotal:", calculatedSubTotal);
+      console.log("SubTotal + PF =>", pfAndTotal);
+      console.log("Tax =>", calculatedTax);
+      console.log("Total =>", roundedTotal);
+    };
+  
+    calculateValues();
+  }, [rows, pfamount, taxPercent]);
+  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -1064,36 +1061,22 @@ const UpdateModal = ({
                       />
                     </div>
                   </div>
-                  {/* <div className="flex justify-between items-center  py-2">
-                <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
-                  Discount
-                </span>
-                <div className="w-[111px]">
-                  <InputField
-                    label=""
-                    inputBg="bg-white w-full "
-                    type="text"
-                    placeholder="₹ 0"
-                    name=""
-                    onChange={handleChange}
-                  />
-                </div>
-              </div> */}
+                  
                   <div className="flex justify-between items-center  py-2">
                     
                     <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
                       PF Amount
                     </span>
                     <div className="w-[111px]">
-                      <InputField
-                        label=""
-                        inputBg="bg-white w-full "
-                        type="number"
+                    <InputField
+                  label=""
+                  inputBg="bg-white w-full "
+                  type="number"
                   placeholder="₹ 0"
                   value={pfamount}
                   name=""
                   onChange={(e) => setPfamount(Number(e.target.value))}
-                      />
+                />
                     </div>
                   </div>
                   <div className="flex justify-between items-center  py-2">

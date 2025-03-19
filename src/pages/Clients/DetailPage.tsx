@@ -36,7 +36,7 @@ const DetailPage = () => {
   };
 
   const createToggleModel = () => {
-    setCreateModalOpen(!isCreateModalOpen);
+    navigate("/Invoices/CreateInvoices");
   };
 
   useEffect(() => {

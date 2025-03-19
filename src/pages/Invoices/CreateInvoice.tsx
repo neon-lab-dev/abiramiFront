@@ -184,48 +184,51 @@ const CreateInvoice = () => {
       [name]: value,
     }));
   };
-
+  
   const states = [
-    { name: "Jammu and Kashmir", code: "01" },
-    { name: "Himachal Pradesh", code: "02" },
-    { name: "Punjab", code: "03" },
-    { name: "Chandigarh", code: "04" },
-    { name: "Uttarakhand", code: "05" },
-    { name: "Haryana", code: "06" },
-    { name: "Delhi", code: "07" },
-    { name: "Rajasthan", code: "08" },
-    { name: "Uttar Pradesh", code: "09" },
-    { name: "Bihar", code: "10" },
-    { name: "Sikkim", code: "11" },
-    { name: "Arunachal Pradesh", code: "12" },
-    { name: "Nagaland", code: "13" },
-    { name: "Manipur", code: "14" },
-    { name: "Mizoram", code: "15" },
-    { name: "Tripura", code: "16" },
-    { name: "Meghalaya", code: "17" },
-    { name: "Assam", code: "18" },
-    { name: "West Bengal", code: "19" },
-    { name: "Jharkhand", code: "20" },
-    { name: "Odisha", code: "21" },
-    { name: "Chhattisgarh", code: "22" },
-    { name: "Madhya Pradesh", code: "23" },
-    { name: "Gujarat", code: "24" },
-    { name: "Dadra and Nagar Haveli and Daman and Diu", code: "26" },
-    { name: "Maharashtra", code: "27" },
-    { name: "Andhra Pradesh (Before Division)", code: "28" },
-    { name: "Karnataka", code: "29" },
-    { name: "Goa", code: "30" },
-    { name: "Lakshadweep", code: "31" },
-    { name: "Kerala", code: "32" },
-    { name: "Tamil Nadu", code: "33" },
-    { name: "Puducherry", code: "34" },
     { name: "Andaman and Nicobar Islands", code: "35" },
-    { name: "Telangana", code: "36" },
+    { name: "Andhra Pradesh (Before Division)", code: "28" },
     { name: "Andhra Pradesh (Newly Added)", code: "37" },
-    { name: "Ladakh (Newly Added)", code: "38" },
-    { name: "Other Territory", code: "97" },
+    { name: "Arunachal Pradesh", code: "12" },
+    { name: "Assam", code: "18" },
+    { name: "Bihar", code: "10" },
     { name: "Centre Jurisdiction", code: "99" },
+    { name: "Chandigarh", code: "04" },
+    { name: "Chhattisgarh", code: "22" },
+    { name: "Dadra and Nagar Haveli and Daman and Diu", code: "26" },
+    { name: "Delhi", code: "07" },
+    { name: "Goa", code: "30" },
+    { name: "Gujarat", code: "24" },
+    { name: "Haryana", code: "06" },
+    { name: "Himachal Pradesh", code: "02" },
+    { name: "Jammu and Kashmir", code: "01" },
+    { name: "Jharkhand", code: "20" },
+    { name: "Karnataka", code: "29" },
+    { name: "Kerala", code: "32" },
+    { name: "Ladakh (Newly Added)", code: "38" },
+    { name: "Lakshadweep", code: "31" },
+    { name: "Madhya Pradesh", code: "23" },
+    { name: "Maharashtra", code: "27" },
+    { name: "Manipur", code: "14" },
+    { name: "Meghalaya", code: "17" },
+    { name: "Mizoram", code: "15" },
+    { name: "Nagaland", code: "13" },
+    { name: "Odisha", code: "21" },
+    { name: "Other Territory", code: "97" },
+    { name: "Puducherry", code: "34" },
+    { name: "Punjab", code: "03" },
+    { name: "Rajasthan", code: "08" },
+    { name: "Sikkim", code: "11" },
+    { name: "Tamil Nadu", code: "33" },
+    { name: "Telangana", code: "36" },
+    { name: "Tripura", code: "16" },
+    { name: "Uttarakhand", code: "05" },
+    { name: "Uttar Pradesh", code: "09" },
+    { name: "West Bengal", code: "19" },
   ];
+  const filteredStates = states.filter((state) =>
+    state.name.toLowerCase().includes(formData.Stateandcode.toLowerCase())
+  );
 
   const invoice = [
     { name: "Cash Invoice" },
@@ -488,34 +491,39 @@ const CreateInvoice = () => {
           onChange={handleChange}
         />
         <div className=" flex gap-1 items-center">
-          <div className="flex-2 relative" ref={dropdownRef}>
-            <div className="" onClick={() => setShowDropdown(true)}>
-              <InputField
-                label="State"
-                required={true}
-                inputBg=""
-                type="text"
-                icon={ICONS.invoicesearch}
-                placeholder="Search"
-                name="Stateandcode"
-                value={formData.Stateandcode}
-                onChange={handleChange}
-              />
-            </div>
-            {showDropdown && (
-              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
-                {states.map((state) => (
-                  <div
-                    key={state.code}
-                    className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-                    onClick={() => handleStateSelect(state.name, state.code)}
-                  >
-                    {state.name}
-                  </div>
-                ))}
-              </div>
-            )}
+        <div className="flex-2 relative" ref={dropdownRef}>
+  <div onClick={() => setShowDropdown(true)}>
+    <InputField
+      label="State"
+      required={true}
+      inputBg=""
+      type="text"
+      icon={ICONS.invoicesearch}
+      placeholder="Search"
+      name="Stateandcode"
+      value={formData.Stateandcode}
+      onChange={handleChange}
+    />
+  </div>
+
+  {showDropdown && (
+    <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto w-full mt-1 z-10">
+      {filteredStates.length > 0 ? (
+        filteredStates.map((state) => (
+          <div
+            key={state.code}
+            className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+            onClick={() => handleStateSelect(state.name, state.code)}
+          >
+            {state.name}
           </div>
+        ))
+      ) : (
+        <div className="px-4 py-2 text-gray-500">No results found</div>
+      )}
+    </div>
+  )}
+</div>
           <div className="flex items-end pb-[2px] flex-1">
             <InputField
               label="Code"
@@ -529,6 +537,7 @@ const CreateInvoice = () => {
             />
           </div>
         </div>
+
 
         <div className="flex-2 relative" ref={dropdownRef}>
           <div className="" onClick={() => setShowDropdown1(true)}>

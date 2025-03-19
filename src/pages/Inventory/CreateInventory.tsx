@@ -151,16 +151,7 @@ const CreateInventory = () => {
             <h2 className="text-xl font-semibold">Inventory Information</h2>
 
             <div className="w-full  pb-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
-              {/* <InputField
-                label="Refrence"
-                required={true}
-                inputBg=""
-                type="text"
-                placeholder="Enter company name"
-                name="refrence"
-                value={formData.refrence}
-                onChange={handleChange}
-              /> */}
+             
               <div className="flex-2 relative" ref={dropdownRef}>
                 <div className="" onClick={() => setShowDropdown2(true)}>
                   <InputField
