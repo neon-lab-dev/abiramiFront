@@ -178,7 +178,7 @@ const UpdateModal = ({
       const calculatedTax = (taxPercent / 100) * pfAndTotal;
       setTax(Number(calculatedTax.toFixed(2)));
   
-    
+      // ✅ Calculate Total and Round off
       const calculatedTotal = pfAndTotal + calculatedTax;
       const roundedTotal = Math.round(calculatedTotal);
       setRoundOff(roundedTotal);
