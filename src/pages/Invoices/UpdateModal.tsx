@@ -46,16 +46,13 @@ const UpdateModal = ({
   const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [subTotal, setSubTotal] = useState<number>();
-  const [pfamount, setPfamount] = useState<number>(0);
+  const [pfPercent, setPfPercent] = useState<number>(10);
+  const [pfamount, setPfamount] = useState<number>();
   const [taxPercent, setTaxPercent] = useState<number>(18);
   const [tax, setTax] = useState<number>();
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
   const dropdownRef = useRef<HTMLDivElement>(null);
-   const [subTotalPlusPfAmount, setSubTotalPlusPfAmount] =
-      useState<number>(0);
-  
-   
   const options = [
     "Original for Recipient",
     "Duplicate for Transporter",
@@ -157,42 +154,40 @@ const UpdateModal = ({
   useEffect(() => {
     const calculateValues = () => {
       // Calculate Subtotal
-      const calculatedSubTotal = rows?.reduce((sum, row) => {
-        const quantity = row?.quantity || 0;
-        const rate = row?.rate || 0;
-        const discount = row?.discount || 0;
-  
-        const baseAmount = quantity * rate;
-        const amount = baseAmount - (baseAmount * discount) / 100;
-  
-        return sum + amount;
-      }, 0);
-  
+      const calculatedSubTotal = rows?.reduce(
+        (sum: number, row: ProductDetail) => {
+          const quantity = row?.quantity || 0;
+          const rate = row?.rate || 0;
+          const discount = row?.discount || 0;
+
+          const baseAmount = quantity * rate;
+          const amount = baseAmount - (baseAmount * discount) / 100;
+
+          return sum + amount;
+        },
+        0
+      );
+
       setSubTotal(calculatedSubTotal);
-  
-      
-      const pfAndTotal = Number(calculatedSubTotal) + Number(pfamount);
-      setSubTotalPlusPfAmount(pfAndTotal);
-  
-    
-      const calculatedTax = (taxPercent / 100) * pfAndTotal;
+
+      // Calculate PF Amount (e.g., 10% of Subtotal)
+      const calculatedPfAmount = (pfPercent / 100) * calculatedSubTotal;
+      setPfamount(Number(calculatedPfAmount.toFixed(2)));
+
+      // Calculate Tax (e.g., 18% of Subtotal)
+      const calculatedTax = (taxPercent / 100) * calculatedSubTotal;
       setTax(Number(calculatedTax.toFixed(2)));
-  
-      // ✅ Calculate Total and Round off
-      const calculatedTotal = pfAndTotal + calculatedTax;
+
+      // Calculate Total
+      const calculatedTotal =
+        calculatedSubTotal + calculatedPfAmount + calculatedTax;
       const roundedTotal = Math.round(calculatedTotal);
       setRoundOff(roundedTotal);
       setTotal(roundedTotal);
-  
-      console.log("SubTotal:", calculatedSubTotal);
-      console.log("SubTotal + PF =>", pfAndTotal);
-      console.log("Tax =>", calculatedTax);
-      console.log("Total =>", roundedTotal);
     };
-  
     calculateValues();
-  }, [rows, pfamount, taxPercent]);
-  
+  }, [rows]);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -510,7 +505,7 @@ const UpdateModal = ({
         const response = await updateInvoice(selectedId, data);
         const pdfData = { ...response.data, productDetails: rows };
         console.log(pdfData);
-        generateInvoicePDF(pdfData, selectedOption);
+        generateInvoicePDF(pdfData, "");
       } else {
         alert("Failed to update invoice. No selected ID provided.");
       }
@@ -1061,22 +1056,36 @@ const UpdateModal = ({
                       />
                     </div>
                   </div>
-                  
+                  {/* <div className="flex justify-between items-center  py-2">
+                <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
+                  Discount
+                </span>
+                <div className="w-[111px]">
+                  <InputField
+                    label=""
+                    inputBg="bg-white w-full "
+                    type="text"
+                    placeholder="₹ 0"
+                    name=""
+                    onChange={handleChange}
+                  />
+                </div>
+              </div> */}
                   <div className="flex justify-between items-center  py-2">
                     
                     <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
                       PF Amount
                     </span>
                     <div className="w-[111px]">
-                    <InputField
-                  label=""
-                  inputBg="bg-white w-full "
-                  type="number"
-                  placeholder="₹ 0"
-                  value={pfamount}
-                  name=""
-                  onChange={(e) => setPfamount(Number(e.target.value))}
-                />
+                      <InputField
+                        label=""
+                        inputBg="bg-white w-full "
+                        type="text"
+                        placeholder="₹ 0"
+                        value={pfamount}
+                        name=""
+                        onChange={handleChange}
+                      />
                     </div>
                   </div>
                   <div className="flex justify-between items-center  py-2">
