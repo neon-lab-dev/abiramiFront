@@ -72,6 +72,7 @@ export interface InvoicesResponse {
 }
 
 export interface InvoiceData {
+  invoiceId:string;
   id: string;
   clientName: string;
   date: string;

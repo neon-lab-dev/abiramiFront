@@ -4,7 +4,7 @@ import Button from "../Shared/Button/Button";
 import CatagoryCard from "../../Components/Inventory/CatagoryCard";
 import InputField from "../Shared/InputField/InputField";
 import { ICONS } from "../../assets";
-import { createCategory, getCategories } from "../../api/api";
+import { createCategory, deleteCategory, getCategories } from "../../api/api";
 import Loader from "../../lib/loader";
 import { useSearch } from "../../context/SearchContext";
 import { Category, CategoryResponse } from "../../types/category";
@@ -56,6 +56,18 @@ const CatagoryList = () => {
     navigate(`/inventory/InventoryTable/${id}`);
   };
 
+  const handleCardDelete = async (id: string) => {
+      if (window.confirm("Are you sure you want to delete?")) {
+        const response = await deleteCategory(id);
+        if (response.status === 200) {
+          alert("Client deleted Successfully!!!");
+          navigate(0);
+        }
+      } else {
+        console.log("Delete action canceled.");
+      }
+    };
+  
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
@@ -162,7 +174,8 @@ const CatagoryList = () => {
                   categories?.map((category: Category, index) => (
                     <CatagoryCard
                       key={index}
-                      onClick={handleCardClick}
+                      onClick={handleCardClick} 
+                      onClickDelete={ handleCardDelete}
                       category={category}
                     />
                   ))}
@@ -176,6 +189,7 @@ const CatagoryList = () => {
                       <CatagoryCard
                         key={index}
                         onClick={handleCardClick}
+                        onClickDelete={ handleCardDelete}
                         category={category}
                       />
                     )
@@ -226,7 +240,7 @@ const CatagoryList = () => {
                     color="text-primary-10 bg-none"
                   />
                   <Button
-                    text={isSubmitting ? "Updating..." : "Update Category"}
+                    text={isSubmitting ? "Updating..." : "Add Category"}
                     type="submit"
                     onClick={handleSubmit}
                     color="bg-primary-10 text-white"

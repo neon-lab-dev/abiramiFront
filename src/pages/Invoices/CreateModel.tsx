@@ -25,12 +25,32 @@ const CreateModel: React.FC<CreateModelProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const [subTotal, setSubTotal] = useState<number>();
-  const [pfPercent, setPfPercent] = useState<number>(10);
-  const [pfamount, setPfamount] = useState<number>();
-  const [taxPercent, setTaxPercent] = useState<number>(18);
+  const [igst, setIgst] = useState(18);
+    const [cgst, setCgst] = useState(9);
+    const [sgst, setSgst] = useState(9);
+  const [pfamount, setPfamount] = useState<number>(0);
+   const [subTotalPlusPfAmount, setSubTotalPlusPfAmount] =
+      useState<number>(0);
+  
   const [tax, setTax] = useState<number>();
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
+  const options = [
+      "Original for Recipient",
+      "Duplicate for Transporter",
+      "Triplicate for Supplier",
+      "Extra Copy",
+    ];
+    const [selectedOption, setSelectedOption] = useState(options[0]);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    
+    const handleToggle = () => {
+      setIsOpen(!isOpen);
+    };
+    const handleOptionSelect = (option: string) => {
+      setSelectedOption(option);
+      setIsOpen(false);
+    };
   const [loading, setLoading] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -91,29 +111,7 @@ const CreateModel: React.FC<CreateModelProps> = ({
   const removeRow = (index: number) => {
     setRows(rows.filter((_, idx) => idx !== index));
   };
-  // const handleInputChange = (
-  //   index: number,
-  //   field: keyof ProductDetail,
-  //   value: number
-  // ) => {
-  //   const updatedRows: ProductDetail[] = [...rows];
-  //   if (["quantity", "rate", "discount", "amount"].includes(field)) {
-  //     updatedRows[index][field] = parseFloat(value.toString()) || 0;
-  //   } else {
-  //     updatedRows[index][field] = value;
-  //   }
-
-  //   // Automatically calculate the amount if relevant fields are updated
-  //   if (["quantity", "rate", "discount"].includes(field)) {
-  //     const quantity = updatedRows[index].quantity || 0;
-  //     const rate = updatedRows[index].rate || 0;
-  //     const discount = updatedRows[index].discount || 0;
-
-  //     updatedRows[index].amount = quantity * rate * (1 - discount);
-  //   }
-  //   console.log(updatedRows);
-  //   setRows(updatedRows);
-  // };
+  
 
   const handleInputChange = (
     index: number,
@@ -305,7 +303,7 @@ const CreateModel: React.FC<CreateModelProps> = ({
       if (clientName) {
         const response = await createInvoicesByClientName(data, clientName);
         const pdfData = { ...response.data, productDetails: rows };
-        generateInvoicePDF(pdfData);
+        generateInvoicePDF(pdfData,selectedOption);
       }
       alert("Invoice created successfully!");
       navigate(0);
@@ -318,39 +316,44 @@ const CreateModel: React.FC<CreateModelProps> = ({
     }
   };
 
-  useEffect(() => {
-    const calculateValues = () => {
-      // Calculate Subtotal
-      const calculatedSubTotal = rows.reduce(
-        (sum: number, row: ProductDetail) => {
-          const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
-          const rate = parseFloat(row?.rate?.toString() || "0") || 0;
-          const discount = parseFloat(row?.discount?.toString() || "0") || 0;
-          const amount = Math.abs(quantity * rate * (1 - discount / 100));
-          return sum + amount;
-        },
-        0
-      );
-
-      setSubTotal(calculatedSubTotal);
-
-      // Calculate PF Amount (e.g., 10% of Subtotal)
-      const calculatedPfAmount = (pfPercent / 100) * calculatedSubTotal;
-      setPfamount(Number(calculatedPfAmount.toFixed(2)));
-
-      // Calculate Tax (e.g., 18% of Subtotal)
-      const calculatedTax = (taxPercent / 100) * calculatedSubTotal;
-      setTax(Number(calculatedTax.toFixed(2)));
-
-      // Calculate Total
-      const calculatedTotal =
-        calculatedSubTotal + calculatedPfAmount + calculatedTax;
-      const roundedTotal = Math.round(calculatedTotal);
-      setRoundOff(roundedTotal);
-      setTotal(roundedTotal);
-    };
-    calculateValues();
-  }, [rows]);
+useEffect(() => {
+     const calculateValues = () => {
+       // Calculate Subtotal
+       const calculatedSubTotal = rows.reduce((sum, row) => {
+         const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
+         const rate = parseFloat(row?.rate?.toString() || "0") || 0;
+         const discount = parseFloat(row?.discount?.toString() || "0") || 0;
+         const amount = Math.abs(quantity * rate * (1 - discount / 100));
+         return sum + amount;
+       }, 0);
+   
+       setSubTotal(calculatedSubTotal);
+   
+       // Use calculatedSubTotal directly here
+       const pfAndTotal = Number(calculatedSubTotal) + Number(pfamount);
+       console.log("SubTotal + PF =>", pfAndTotal);
+       setSubTotalPlusPfAmount(pfAndTotal);
+   
+       // Calculate Tax
+       let calculatedTax;
+       if (formData.taxtype === "IGST") {
+         calculatedTax = (pfAndTotal * igst) / 100;
+       } else {
+         calculatedTax = (pfAndTotal * cgst) / 100 + (pfAndTotal * sgst) / 100;
+       }
+       setTax(Number(calculatedTax.toFixed(2)));
+   
+       // Calculate Total
+       const calculatedTotal = pfAndTotal + calculatedTax;
+       const roundedTotal = Math.round(calculatedTotal);
+       setRoundOff(roundedTotal);
+       setTotal(roundedTotal);
+     };
+   
+     calculateValues();
+   }, [rows, pfamount, formData.taxtype, igst, cgst, sgst]);
+   
+ 
 
   useEffect(() => {
     if (formData.invoicetype.toLowerCase() == "cash invoice") {
@@ -946,12 +949,12 @@ const CreateModel: React.FC<CreateModelProps> = ({
                       <InputField
                         label=""
                         inputBg="bg-white w-full "
-                        type="text"
+                        type="number"
                         placeholder="₹ 0"
                         value={pfamount}
                         name=""
-                        onChange={handleChange}
-                      />
+                        onChange={(e) => setPfamount(Number(e.target.value))}
+                            />
                     </div>
                   </div>
                   <div className="flex justify-between items-center  py-2">
@@ -1016,6 +1019,37 @@ const CreateModel: React.FC<CreateModelProps> = ({
 
             {/* Buttons */}
             <div className="col-span-3 flex justify-end gap-4 my-8">
+               <div className="relative">
+                                    {/* Dropdown Button */}
+                                    <button
+                                      id="dropdownButton"
+                                      type="button"
+                                      className="flex gap-2 justify-center items-center py-2 pr-4 pl-2 border border-secondary-145 rounded-xl text-[16px] font-normal leading-6"
+                                      onClick={handleToggle}
+                                    >
+                                      <span className="w-[186px]">{selectedOption}</span>
+                                      <img src={ICONS.invoicedropdown} alt="dropdown" />
+                                    </button>
+              
+                                    {/* Dropdown Menu */}
+                                    {isOpen && (
+                                      <div className="absolute mt-2 w-full bg-white border border-secondary-145 rounded-xl shadow-lg z-10">
+                                        {options.map((option, index) => (
+                                          <button
+                                            key={index}
+                                            className={`block w-full text-left px-4 py-2 text-[16px] font-normal hover:bg-secondary-60 rounded-xl ${
+                                              option === selectedOption
+                                                ? "bg-secondary-60 font-semibold"
+                                                : ""
+                                            }`}
+                                            onClick={() => handleOptionSelect(option)}
+                                          >
+                                            {option}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
               <Button
                 onClick={handleSubmit}
                 text={isSubmitting ? "Submitting..." : "Save"}

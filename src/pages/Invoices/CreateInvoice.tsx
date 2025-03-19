@@ -6,9 +6,7 @@ import { ICONS } from "../../assets";
 import { convertNumberToWords, formatNumber } from "../../utils";
 import { createInvoices, getClients } from "../../api/api";
 import { useNavigate } from "react-router-dom";
-import { InvoiceData, ProductDetail } from "../../types/invoice";
-import { pdf, PDFDownloadLink } from "@react-pdf/renderer";
-import InvoicePDF from "../../utils/pdfGenerator";
+import { ProductDetail } from "../../types/invoice";
 import { generateInvoicePDF } from "../../utils/handleInvoice";
 import { Client } from "../../types/client";
 import {
@@ -27,28 +25,40 @@ const CreateInvoice = () => {
   const [showDropdown3, setShowDropdown3] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSaveSubmitting, setIsSaveSubmitting] = useState(false);
-  const [subTotal, setSubTotal] = useState<number>();
-  const [pfPercent, setPfPercent] = useState<number>(10);
+  const [subTotal, setSubTotal] = useState<number>(0);
   const [pfamount, setPfamount] = useState<number>(0);
   const [tax, setTax] = useState<number>();
-  const [subTotalPlusPfAmount, setSubTotalPlusPfAmount] = useState<SetStateAction<SetStateAction<number>>>(0);
+  const [subTotalPlusPfAmount, setSubTotalPlusPfAmount] =
+    useState<number>(0);
 
-  useEffect(() => {
-    setSubTotalPlusPfAmount(subTotal && Number(subTotal) + Number(pfamount));
-  }, [pfamount, subTotal])
-  console.log(subTotalPlusPfAmount);
-  
+ 
   const [taxPercent, setTaxPercent] = useState<number>(18);
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
   const [igst, setIgst] = useState(18);
   const [cgst, setCgst] = useState(9);
   const [sgst, setSgst] = useState(9);
-  // const [invoiceData, setInvoiceData] = useState<InvoiceData>();
   const [gstNumber, setGstNumber] = useState("");
 
-  const [clients, setClients] = useState<{ companyName: string; gstN: string }[]>([]);
+  const [clients, setClients] = useState<
+    { companyName: string; gstN: string }[]
+  >([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const options = [
+    "Original for Recipient",
+    "Duplicate for Transporter",
+    "Triplicate for Supplier",
+    "Extra Copy",
+  ];
+  const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+  const handleOptionSelect = (option: string) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
 
   // Fetch clients from API
   useEffect(() => {
@@ -56,12 +66,14 @@ const CreateInvoice = () => {
       setLoading(true);
       try {
         const response = await getClients();
-        const clientData = response.data.map((client: { companyName: string; GST: string }) => ({
-          companyName: client.companyName,
-          gstN: client.GST,
-        }));
+        const clientData = response.data.map(
+          (client: { companyName: string; GST: string }) => ({
+            companyName: client.companyName,
+            gstN: client.GST,
+          })
+        );
         setClients(clientData);
-        console.log(clients)
+        console.log(clients);
       } catch (err) {
         console.error(err);
       } finally {
@@ -301,38 +313,36 @@ const CreateInvoice = () => {
         const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
         const rate = parseFloat(row?.rate?.toString() || "0") || 0;
         const discount = parseFloat(row?.discount?.toString() || "0") || 0;
-        // const amount = quantity * rate - quantity * rate * (discount / 100);
         const amount = Math.abs(quantity * rate * (1 - discount / 100));
         return sum + amount;
       }, 0);
-
+  
       setSubTotal(calculatedSubTotal);
-
-      // Calculate PF Amount (e.g., 10% of Subtotal)
-      const calculatedPfAmount = (pfPercent / 100) * calculatedSubTotal;
-      // setPfamount(Number(calculatedPfAmount.toFixed(2)));
-      console.log(subTotalPlusPfAmount);
-      // Calculate Tax (e.g., 18% of Subtotal)
+  
+      // Use calculatedSubTotal directly here
+      const pfAndTotal = Number(calculatedSubTotal) + Number(pfamount);
+      console.log("SubTotal + PF =>", pfAndTotal);
+      setSubTotalPlusPfAmount(pfAndTotal);
+  
+      // Calculate Tax
       let calculatedTax;
       if (formData.taxtype === "IGST") {
-        // calculatedTax = (igst / 100) * subTotalPlusPfAmount
-        calculatedTax = (subTotalPlusPfAmount * igst) / 100
-        setTax(Number(calculatedTax.toFixed(2)));
+        calculatedTax = (pfAndTotal * igst) / 100;
       } else {
-        calculatedTax = ((subTotalPlusPfAmount * cgst) / 100) + ((subTotalPlusPfAmount * sgst) / 100)
-        // (cgst / 100) * subTotalPlusPfAmount + (sgst / 100) * subTotalPlusPfAmount;
-        setTax(Number(calculatedTax.toFixed(2)));
+        calculatedTax = (pfAndTotal * cgst) / 100 + (pfAndTotal * sgst) / 100;
       }
-
+      setTax(Number(calculatedTax.toFixed(2)));
+  
       // Calculate Total
-      const calculatedTotal =
-        subTotalPlusPfAmount + calculatedTax;
+      const calculatedTotal = pfAndTotal + calculatedTax;
       const roundedTotal = Math.round(calculatedTotal);
       setRoundOff(roundedTotal);
       setTotal(roundedTotal);
     };
+  
     calculateValues();
-  }, [rows]);
+  }, [rows, pfamount, formData.taxtype, igst, cgst, sgst]);
+  
 
   useEffect(() => {
     if (formData.invoicetype.toLowerCase() == "cash invoice") {
@@ -414,7 +424,7 @@ const CreateInvoice = () => {
     try {
       const response = await createInvoices(data);
       const pdfData = { ...response.data, productDetails: rows };
-      generateInvoicePDF(pdfData);
+      generateInvoicePDF(pdfData ,selectedOption);
       alert("Invoice created successfully!");
     } catch (error) {
       console.error("Error creating invoice:", error);
@@ -452,9 +462,12 @@ const CreateInvoice = () => {
                   key={client.companyName}
                   className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
                   onClick={() => {
-                    setFormData({ ...formData, ClientName: client.companyName });
+                    setFormData({
+                      ...formData,
+                      ClientName: client.companyName,
+                    });
                     setShowDropdown3(false);
-                    setGstNumber(client.gstN)
+                    setGstNumber(client.gstN);
                   }}
                 >
                   {client.companyName}
@@ -945,21 +958,6 @@ const CreateInvoice = () => {
                 />
               </div>
             </div>
-            {/* <div className="flex justify-between items-center  py-2">
-              <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
-                Discount
-              </span>
-              <div className="w-[111px]">
-                <InputField
-                  label=""
-                  inputBg="bg-white w-full "
-                  type="text"
-                  placeholder="₹ 0"
-                  name=""
-                  onChange={handleChange}
-                />
-              </div>
-            </div> */}
             <div className="flex justify-between items-center  py-2">
               <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
                 PF Amount
@@ -968,11 +966,11 @@ const CreateInvoice = () => {
                 <InputField
                   label=""
                   inputBg="bg-white w-full "
-                  type="text"
+                  type="number"
                   placeholder="₹ 0"
                   value={pfamount}
                   name=""
-                  onChange={(e) => setPfamount(e.target.value)}
+                  onChange={(e) => setPfamount(Number(e.target.value))}
                 />
               </div>
             </div>
@@ -1030,7 +1028,6 @@ const CreateInvoice = () => {
           </span>
           <span className="text-[rgba(28,28,28,0.4)] font-sans font-normal text-[14px] leading-[20px]">
             2.We are not responsible for any loss or damage of goods in transit.
-
           </span>
         </div>
       </div>
@@ -1038,6 +1035,37 @@ const CreateInvoice = () => {
 
       {/* Buttons */}
       <div className="col-span-3 flex justify-end gap-4 my-8">
+        <div className="relative">
+          {/* Dropdown Button */}
+          <button
+            id="dropdownButton"
+            type="button"
+            className="flex gap-2 justify-center items-center py-2 pr-4 pl-2 border border-secondary-145 rounded-xl text-[16px] font-normal leading-6"
+            onClick={handleToggle}
+          >
+            <span className="w-[186px]">{selectedOption}</span>
+            <img src={ICONS.invoicedropdown} alt="dropdown" />
+          </button>
+
+          {/* Dropdown Menu */}
+          {isOpen && (
+            <div className="absolute mt-2 w-full bg-white border border-secondary-145 rounded-xl shadow-lg z-10">
+              {options.map((option, index) => (
+                <button
+                  key={index}
+                  className={`block w-full text-left px-4 py-2 text-[16px] font-normal hover:bg-secondary-60 rounded-xl ${
+                    option === selectedOption
+                      ? "bg-secondary-60 font-semibold"
+                      : ""
+                  }`}
+                  onClick={() => handleOptionSelect(option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <Button
           onClick={handleSubmit}
           text={isSubmitting ? "Submitting..." : "Save"}
@@ -1045,10 +1073,6 @@ const CreateInvoice = () => {
           color="text-primary-10 bg-none"
           disabled={isSubmitting}
         />
-        {/* <PDFDownloadLink
-          document={<InvoicePDF invoiceData={invoiceData} />}
-          fileName="invoice.pdf"
-        ></PDFDownloadLink> */}
         <Button
           onClick={handleSavePrint}
           text={isSaveSubmitting ? "Submitting..." : "Save & Print"}

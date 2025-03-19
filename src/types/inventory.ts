@@ -21,6 +21,13 @@ export interface InventoryItem {
   updatedAt?: string;
   catgoryId: string;
 }
+export interface InventoryDownloadItem {
+  refrence: string;
+  quantity: number;
+  description: string;
+  warehouseLocation: string;
+  catgory: string;
+}
 
 export interface InventoryResponse {
   message: string;

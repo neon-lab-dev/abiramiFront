@@ -242,6 +242,15 @@ export const createCategory = async (data: any) => {
     throw error;
   }
 };
+export const deleteCategory = async (id: string | "") => {
+  try {
+    const response = await axiosInstance.delete(`/inventory/category/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete category error:", error);
+    throw error;
+  }
+};
 
 export const getInventoryData = async () => {
   try {

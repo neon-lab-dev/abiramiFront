@@ -6,7 +6,7 @@ import DownloadButton from "../../Components/Shared/Table/DownloadExcelBtn";
 import Button from "../../Components/Shared/Button/Button";
 import { deleteInventory, getInventoryByCategoryId, } from "../../api/api";
 import { useNavigate, useParams } from "react-router-dom";
-import { InventoryItem } from "../../types/inventory";
+import { InventoryDownloadItem, InventoryItem } from "../../types/inventory";
 import { Category } from "../../types/category";
 import UpdateModel from "./UpdateModel";
 import Loader from "../../lib/loader";
@@ -26,6 +26,7 @@ const InventoryListPageTable = () => {
   const [isInventoryLogsOpen, setInventoryLogsOpen] = useState<boolean>(false);
   const [category, setCategory] = useState<Category>();
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [inventoryDownload, setInventoryDownload] = useState<InventoryDownloadItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string>("");
   const [selectedLogId, setSelectedLogId] = useState<string>("");
@@ -215,7 +216,19 @@ const InventoryListPageTable = () => {
         if (id) {
           const data = await getInventoryByCategoryId(id);
           setInventory(data.data.inventory);
+          
           setCategory(data.data);
+          console.log(data)
+          const inventoryData = data.data.inventory.map((inventoryDownload: InventoryDownloadItem) => ({
+            refrence: inventoryDownload.refrence,
+            quantity: inventoryDownload.quantity,
+            description: inventoryDownload.description,
+            warehouseLocation: inventoryDownload.warehouseLocation,
+            categoryName: data.data.name, // Inject category name here
+          }));
+          setInventoryDownload(inventoryData);
+          
+          console.log(category);
         }
       } catch (err) {
         console.error(err);
@@ -286,16 +299,7 @@ const InventoryListPageTable = () => {
             LogToggleModel={LogToggleModel}
           />
           <div className=" flex justify-between">
-            <div className="flex justify-between md:gap-4 gap-3">
-              {/* <Button
-                text="Filter"
-                imgSrc={ICONS.filterGray}
-                color="border-neutral-80 border-2 bg-white text-[14px] text-black"
-                iconClassName="h-[16px] w-[16px]"
-                textClass="hidden"
-              /> */}
-            </div>
-            <DownloadButton data={inventory} />
+            <DownloadButton data={inventoryDownload} />
           </div>
           {isEditModalOpen && (
             <UpdateModel

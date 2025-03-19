@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
-import { createInvoices, getClients, getInvoiceById, updateInvoice } from "../../api/api";
+import {
+  createInvoices,
+  getClients,
+  getInvoiceById,
+  updateInvoice,
+} from "../../api/api";
 import { ICONS } from "../../assets";
 import Button from "../../Components/Shared/Button/Button";
 import InputField from "../../Components/Shared/InputField/InputField";
@@ -14,7 +19,13 @@ import {
 } from "../../types/invoice";
 import { useNavigate } from "react-router-dom";
 import { generateInvoicePDF } from "../../utils/handleInvoice";
-import { validateBankName, validateChequeNumber, validateClient, validatePONumber, validateVehicleNumber } from "../../utils/validation";
+import {
+  validateBankName,
+  validateChequeNumber,
+  validateClient,
+  validatePONumber,
+  validateVehicleNumber,
+} from "../../utils/validation";
 
 const UpdateModal = ({
   editToggleModel,
@@ -35,13 +46,27 @@ const UpdateModal = ({
   const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [subTotal, setSubTotal] = useState<number>();
-  const [pfPercent, setPfPercent] = useState<number>(10);
-  const [pfamount, setPfamount] = useState<number>();
-  const [taxPercent, setTaxPercent] = useState<number>(18);
+  
+   
+    const [igst, setIgst] = useState(18);
+    const [cgst, setCgst] = useState(9);
+    const [sgst, setSgst] = useState(9);
+  const [pfamount, setPfamount] = useState<number>(0);
+   const [subTotalPlusPfAmount, setSubTotalPlusPfAmount] =
+      useState<number>(0);
+  
   const [tax, setTax] = useState<number>();
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const options = [
+    "Original for Recipient",
+    "Duplicate for Transporter",
+    "Triplicate for Supplier",
+    "Extra Copy",
+  ];
+  const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [formData, setFormData] = useState<InvoiceRequest>({
     clientName: "",
     date: "",
@@ -64,8 +89,13 @@ const UpdateModal = ({
     vehicleNo: null,
     productDetails: [],
   });
-
-
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+  const handleOptionSelect = (option: string) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
   const [rows, setRows] = useState<ProductDetail[]>([
     {
       description: "",
@@ -104,7 +134,8 @@ const UpdateModal = ({
         if (i !== index) return row;
 
         const updatedRow = { ...row };
-        const parsedValue = typeof value === "number" ? value : parseFloat(value) || 0;
+        const parsedValue =
+          typeof value === "number" ? value : parseFloat(value) || 0;
 
         if (["quantity", "rate", "discount", "amount"].includes(field)) {
           updatedRow[field] = parsedValue as never;
@@ -127,41 +158,43 @@ const UpdateModal = ({
   };
 
   useEffect(() => {
-    const calculateValues = () => {
-      // Calculate Subtotal
-      const calculatedSubTotal = rows?.reduce(
-        (sum: number, row: ProductDetail) => {
-          const quantity = row?.quantity || 0;
-          const rate = row?.rate || 0;
-          const discount = row?.discount || 0;
-
-          const baseAmount = quantity * rate;
-          const amount = baseAmount - ((baseAmount * discount) / 100);
-
-          return sum + amount;
-        },
-        0
-      );
-
-      setSubTotal(calculatedSubTotal);
-
-      // Calculate PF Amount (e.g., 10% of Subtotal)
-      const calculatedPfAmount = (pfPercent / 100) * calculatedSubTotal;
-      setPfamount(Number(calculatedPfAmount.toFixed(2)));
-
-      // Calculate Tax (e.g., 18% of Subtotal)
-      const calculatedTax = (taxPercent / 100) * calculatedSubTotal;
-      setTax(Number(calculatedTax.toFixed(2)));
-
-      // Calculate Total
-      const calculatedTotal =
-        calculatedSubTotal + calculatedPfAmount + calculatedTax;
-      const roundedTotal = Math.round(calculatedTotal);
-      setRoundOff(roundedTotal);
-      setTotal(roundedTotal);
-    };
-    calculateValues();
-  }, [rows]);
+     const calculateValues = () => {
+       // Calculate Subtotal
+       const calculatedSubTotal = rows.reduce((sum, row) => {
+         const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
+         const rate = parseFloat(row?.rate?.toString() || "0") || 0;
+         const discount = parseFloat(row?.discount?.toString() || "0") || 0;
+         const amount = Math.abs(quantity * rate * (1 - discount / 100));
+         return sum + amount;
+       }, 0);
+   
+       setSubTotal(calculatedSubTotal);
+   
+       // Use calculatedSubTotal directly here
+       const pfAndTotal = Number(calculatedSubTotal) + Number(pfamount);
+       console.log("SubTotal + PF =>", pfAndTotal);
+       setSubTotalPlusPfAmount(pfAndTotal);
+   
+       // Calculate Tax
+       let calculatedTax;
+       if (formData.taxType === "IGST") {
+         calculatedTax = (pfAndTotal * igst) / 100;
+       } else {
+         calculatedTax = (pfAndTotal * cgst) / 100 + (pfAndTotal * sgst) / 100;
+       }
+       setTax(Number(calculatedTax.toFixed(2)));
+   
+       // Calculate Total
+       const calculatedTotal = pfAndTotal + calculatedTax;
+       const roundedTotal = Math.round(calculatedTotal);
+       setRoundOff(roundedTotal);
+       setTotal(roundedTotal);
+     };
+   
+     calculateValues();
+   }, [rows, pfamount, formData.taxType, igst, cgst, sgst]);
+   
+ 
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -171,34 +204,41 @@ const UpdateModal = ({
       ...prevData,
       [name]:
         name === "quantity" ||
-          name === "rate" ||
-          name === "discount" ||
-          name === "amount" ||
-          name === "chequeAmount"
+        name === "rate" ||
+        name === "discount" ||
+        name === "amount" ||
+        name === "chequeAmount"
           ? Number(value)
           : value,
     }));
   };
 
-   const [clients, setClients] = useState<string[]>([]); // Store only names
-  
-    // Fetch clients from API
-    useEffect(() => {
-      const fetchClients = async () => {
-        setLoading(true);
-        try {
-          const response = await getClients(); // Fetch data from API
-          const clientNames: string[] = response.data.map((client: { companyName: string }) => client.companyName);
-          setClients(clientNames);
-        } catch (err) {
-          console.error(err);
-        } finally {
-          setLoading(false);
-        }
-      };
-    
-      fetchClients();
-    }, []);
+  const [clients, setClients] = useState<
+    { companyName: string; gstN: string }[]
+  >([]);
+
+  // Fetch clients from API
+  useEffect(() => {
+    const fetchClients = async () => {
+      setLoading(true);
+      try {
+        const response = await getClients(); // Fetch data from API
+        const clientData = response.data.map(
+          (client: { companyName: string; GST: string }) => ({
+            companyName: client.companyName,
+            gstN: client.GST,
+          })
+        );
+        setClients(clientData);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchClients();
+  }, []);
   const states = [
     { name: "Jammu and Kashmir", code: "01" },
     { name: "Himachal Pradesh", code: "02" },
@@ -314,7 +354,7 @@ const UpdateModal = ({
     try {
       if (selectedId) {
         const response = await updateInvoice(selectedId, data);
-        setEditModalOpen && setEditModalOpen(false)
+        setEditModalOpen && setEditModalOpen(false);
       } else {
         alert("Failed to update invoice. No selected ID provided.");
       }
@@ -432,7 +472,7 @@ const UpdateModal = ({
     }
   }, [invoiceData]);
 
-  const rowsData = rows?.map(row => {
+  const rowsData = rows?.map((row) => {
     return {
       description: row.description,
       HSNno: row.HSNno,
@@ -440,9 +480,8 @@ const UpdateModal = ({
       rate: row.rate,
       discount: row.discount,
       amount: row.amount,
-    }
-  })
-
+    };
+  });
 
   const handleSavePrint = async () => {
     const data = {
@@ -467,27 +506,26 @@ const UpdateModal = ({
       roundOff: roundOff,
       productDetails: rowsData,
     };
-    setIsSaveSubmitting(true)
+    setIsSaveSubmitting(true);
     // setIsSubmitting(true);
-    try { 
+    try {
       if (selectedId) {
-      const response = await updateInvoice(selectedId, data);
-      const pdfData = { ...response.data, productDetails: rows };
-      console.log(pdfData);
-      generateInvoicePDF(pdfData);
-    } else {
-      alert("Failed to update invoice. No selected ID provided.");
-    }
+        const response = await updateInvoice(selectedId, data);
+        const pdfData = { ...response.data, productDetails: rows };
+        console.log(pdfData);
+        generateInvoicePDF(pdfData, selectedOption);
+      } else {
+        alert("Failed to update invoice. No selected ID provided.");
+      }
     } catch (error) {
       console.error("Error creating invoice:", error);
       alert("Failed to create invoice. Please try again.");
     } finally {
-      setIsSaveSubmitting(false)
+      setIsSaveSubmitting(false);
       // setIsSubmitting(false);
       navigate("/invoices");
     }
   };
-
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
@@ -576,7 +614,6 @@ const UpdateModal = ({
                 </div>
               </div>
 
-              
               <div className="flex-2 relative" ref={dropdownRef}>
                 <div className="" onClick={() => setShowDropdown1(true)}>
                   <InputField
@@ -677,7 +714,6 @@ const UpdateModal = ({
                     name="chequeAmount"
                     value={formData.chequeAmount}
                     onChange={handleChange}
-                   
                   />
                 </>
               )}
@@ -1044,6 +1080,7 @@ const UpdateModal = ({
                 </div>
               </div> */}
                   <div className="flex justify-between items-center  py-2">
+                    
                     <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
                       PF Amount
                     </span>
@@ -1051,11 +1088,11 @@ const UpdateModal = ({
                       <InputField
                         label=""
                         inputBg="bg-white w-full "
-                        type="text"
-                        placeholder="₹ 0"
-                        value={pfamount}
-                        name=""
-                        onChange={handleChange}
+                        type="number"
+                  placeholder="₹ 0"
+                  value={pfamount}
+                  name=""
+                  onChange={(e) => setPfamount(Number(e.target.value))}
                       />
                     </div>
                   </div>
@@ -1109,11 +1146,12 @@ const UpdateModal = ({
               </span>
               <div className="flex flex-col py-1">
                 <span className="text-[rgba(28,28,28,0.4)]  font-sans font-normal text-[14px] leading-[20px]">
-                  1.Goods once sold will not be taken back under any circumstances.
+                  1.Goods once sold will not be taken back under any
+                  circumstances.
                 </span>
                 <span className="text-[rgba(28,28,28,0.4)] font-sans font-normal text-[14px] leading-[20px]">
-                  2.We are not responsible for any loss or damage of goods in transit.
-
+                  2.We are not responsible for any loss or damage of goods in
+                  transit.
                 </span>
               </div>
             </div>
@@ -1121,6 +1159,37 @@ const UpdateModal = ({
 
             {/* Buttons */}
             <div className="col-span-3 flex justify-end gap-4 my-8">
+            <div className="relative">
+                      {/* Dropdown Button */}
+                      <button
+                        id="dropdownButton"
+                        type="button"
+                        className="flex gap-2 justify-center items-center py-2 pr-4 pl-2 border border-secondary-145 rounded-xl text-[16px] font-normal leading-6"
+                        onClick={handleToggle}
+                      >
+                        <span className="w-[186px]">{selectedOption}</span>
+                        <img src={ICONS.invoicedropdown} alt="dropdown" />
+                      </button>
+
+                      {/* Dropdown Menu */}
+                      {isOpen && (
+                        <div className="absolute mt-2 w-full bg-white border border-secondary-145 rounded-xl shadow-lg z-10">
+                          {options.map((option, index) => (
+                            <button
+                              key={index}
+                              className={`block w-full text-left px-4 py-2 text-[16px] font-normal hover:bg-secondary-60 rounded-xl ${
+                                option === selectedOption
+                                  ? "bg-secondary-60 font-semibold"
+                                  : ""
+                              }`}
+                              onClick={() => handleOptionSelect(option)}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
               <Button
                 onClick={handleSubmit}
                 text={isSaving ? "Submitting..." : "Save"}

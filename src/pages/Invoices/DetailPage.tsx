@@ -11,8 +11,6 @@ import {
   formatNumber,
 } from "../../utils";
 import Loader from "../../lib/loader";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import InvoicePDF from "../../utils/pdfGenerator";
 import { generateInvoicePDF } from "../../utils/handleInvoice";
 
 const DetailPage = () => {
@@ -139,7 +137,7 @@ const DetailPage = () => {
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="flex-1 font-sans text-xs font-[600] ">
-                    {invoiceData?.id}
+                    {invoiceData?.invoiceId}
                   </span>
                   <span className=" w-fit  h-[15px] p-1 border border-secondary-130 rounded-[2px] custom-gradient bg-secondary-35 text-[10px] text-secondary-75 flex items-center ">
                     {invoiceData?.billingStatus.toUpperCase() ===
@@ -362,7 +360,7 @@ const DetailPage = () => {
               <Button
                 text="Print"
                 onClick={() => {
-                  generateInvoicePDF(invoiceData);
+                  generateInvoicePDF(invoiceData,selectedOption,);
                 }}
                 color="bg-secondary-125 text-[14px] text-white text-xs h-10"
                 iconClassName="h-[24px] w-[31px] "
