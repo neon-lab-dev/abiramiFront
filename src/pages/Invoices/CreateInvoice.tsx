@@ -37,6 +37,7 @@ const CreateInvoice = () => {
     setSubTotalPlusPfAmount(subTotal && Number(subTotal) + Number(pfamount));
   }, [pfamount, subTotal])
   console.log(subTotalPlusPfAmount);
+  
   const [taxPercent, setTaxPercent] = useState<number>(18);
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
