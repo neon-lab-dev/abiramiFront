@@ -38,8 +38,9 @@ const CreateInvoice = () => {
   const [cgst, setCgst] = useState(9);
   const [sgst, setSgst] = useState(9);
   const [invoiceData, setInvoiceData] = useState<InvoiceData>();
+  const [gstNumber, setGstNumber] = useState("");
 
-  const [clients, setClients] = useState<string[]>([]); // Store only names
+  const [clients, setClients] = useState<{ companyName: string; gstN: string }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   // Fetch clients from API
@@ -47,18 +48,20 @@ const CreateInvoice = () => {
     const fetchClients = async () => {
       setLoading(true);
       try {
-        const response = await getClients(); // Fetch data from API
-        const clientNames: string[] = response.data.map(
-          (client: { companyName: string }) => client.companyName
-        );
-        setClients(clientNames);
+        const response = await getClients(); 
+        const clientData = response.data.map((client: { companyName: string; GST: string }) => ({
+          companyName: client.companyName,
+          gstN: client.GST,
+        }));
+        setClients(clientData);
+        console.log(clients)
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchClients();
   }, []);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -429,20 +432,22 @@ const CreateInvoice = () => {
               value={formData.ClientName}
               onChange={handleChange}
               validate={(value) => validateClient(value, clients)}
+              extraInfo={gstNumber}
             />
           </div>
           {showDropdown3 && (
             <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
               {clients.map((client) => (
                 <div
-                  key={client}
+                  key={client.companyName}
                   className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
                   onClick={() => {
-                    setFormData({ ...formData, ClientName: client });
+                    setFormData({ ...formData, ClientName: client.companyName });
                     setShowDropdown3(false);
+                    setGstNumber(client.gstN)
                   }}
                 >
-                  {client}
+                  {client.companyName}
                 </div>
               ))}
             </div>
@@ -459,7 +464,7 @@ const CreateInvoice = () => {
           value={formData.ivoicedate}
           onChange={handleChange}
         />
-        <div className=" flex gap-1">
+        <div className=" flex gap-1 items-center">
           <div className="flex-2 relative" ref={dropdownRef}>
             <div className="" onClick={() => setShowDropdown(true)}>
               <InputField
@@ -490,7 +495,7 @@ const CreateInvoice = () => {
           </div>
           <div className="flex items-end pb-[2px] flex-1">
             <InputField
-              label=""
+              label="code"
               inputBg=""
               type="number"
               placeholder="code"

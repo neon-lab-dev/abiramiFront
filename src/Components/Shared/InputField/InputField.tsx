@@ -12,7 +12,8 @@ type TInputProps = {
   value?: string | number | null;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   readOnly?: boolean;
-  validate?: (value: string) => string | null; // Validation function
+  validate?: (value: string) => string | null; 
+  extraInfo?: string
 };
 
 const InputField: React.FC<TInputProps> = ({
@@ -28,6 +29,7 @@ const InputField: React.FC<TInputProps> = ({
   onChange,
   readOnly,
   validate,
+  extraInfo
 }) => {
   const [error, setError] = useState<string | null>(null);
 
@@ -70,6 +72,7 @@ const InputField: React.FC<TInputProps> = ({
       </div>
 
       {/* Error Message */}
+      {extraInfo && <p className="text-gray-600 text-base ml-3 mt-1">{extraInfo}</p>}
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );

@@ -29,10 +29,16 @@ export const validatePincode = (value: string): string | null => {
   };
 
 // Validate if the entered client exists in the API response
-export const validateClient = (value: string, clientList: string[]): string | null => {
-  const clientExists = clientList.includes(value);
+export const validateClient = (
+  value: string,
+  clientList: { companyName: string; gstN: string }[]
+): string | null => {
+  const clientExists = clientList.some(
+    (client) => client.companyName.toLowerCase() === value.toLowerCase()
+  );
   return clientExists ? null : "Client not found";
 };
+
 
 // Validate Bank Name
 export const validateBankName = (value: string): string | null => {

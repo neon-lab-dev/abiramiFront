@@ -52,7 +52,7 @@ const Dashboard = () => {
             invoice.createdAt.startsWith(today)
           );
           setInvoices(todayInvoices);
-          console.log(data);
+          console.log(todayInvoices);
         } catch (err) {
           console.error(err);
         } finally {
