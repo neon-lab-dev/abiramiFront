@@ -45,9 +45,9 @@ const DashboardTable = ({
   const columns = [
     {
       header: "Invoice Id",
-      accessor: "id",
+      accessor: "invoiceId",
       cellClassName: " text-blue-20 ",
-      width: "300px",
+      width: "200px",
     },
     {
       header: (

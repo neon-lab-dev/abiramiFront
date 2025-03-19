@@ -47,7 +47,7 @@ const InvoiceListPageTable = ({
   const columns = [
     {
       header: "Invoice Id",
-      accessor: "id",
+      accessor: "invoiceId",
       cellClassName: " text-blue-20 ",
       width: "300px",
     },

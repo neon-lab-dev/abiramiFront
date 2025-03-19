@@ -253,12 +253,12 @@ const Table: React.FC<TableProps> = ({
                               >
                                 {row[col.accessor]}
                               </span>
-                            ) : col.accessor === "id" ? (
+                            ) : col.accessor === "invoiceId" ? (
                               <span
                                 className="text-blue-500 cursor-pointer hover:underline"
                                 onClick={() =>
                                   handleNavigateToInvoiceDetails(
-                                    row[col.accessor]
+                                    row?.id
                                   )
                                 }
                               >
