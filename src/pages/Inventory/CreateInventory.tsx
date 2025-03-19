@@ -151,7 +151,7 @@ const CreateInventory = () => {
             <h2 className="text-xl font-semibold">Inventory Information</h2>
 
             <div className="w-full  pb-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
-              <InputField
+              {/* <InputField
                 label="Refrence"
                 required={true}
                 inputBg=""
@@ -160,7 +160,7 @@ const CreateInventory = () => {
                 name="refrence"
                 value={formData.refrence}
                 onChange={handleChange}
-              />
+              /> */}
               <div className="flex-2 relative" ref={dropdownRef}>
                 <div className="" onClick={() => setShowDropdown2(true)}>
                   <InputField
@@ -191,6 +191,56 @@ const CreateInventory = () => {
                   </div>
                 )}
               </div>
+              
+              <InputField
+                label="Description"
+                inputBg=""
+                type="text"
+                placeholder="Enter description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+              />
+              <InputField
+                label="Quantity"
+                required={true}
+                inputBg=""
+                type="number"
+                placeholder="Enter quantity"
+                name="quantity"
+                value={formData.quantity}
+                onChange={handleChange}
+              />
+              
+              <InputField
+                label="Quantity Type"
+                inputBg=""
+                type="text"
+                placeholder="Enter Quantity Type"
+                name="quantityType"
+                value={formData.quantityType}
+                onChange={handleChange}
+              />
+              
+              <InputField
+                label="Alarm"
+                inputBg=""
+                type="number"
+                placeholder="Enter Alarm"
+                name="alarm"
+                value={formData.alarm}
+                onChange={handleChange}
+              />
+              
+              <InputField
+                label="Warehouse Location"
+                inputBg=""
+                type="text"
+                placeholder="Enter the Warehouse Location"
+                name="WarehouseLocation"
+                value={formData.WarehouseLocation}
+                onChange={handleChange}
+              />
               <div className=" relative group">
                 <InputField
                   label="Buying Cost"
@@ -208,25 +258,7 @@ const CreateInventory = () => {
                 </div>
               </div>
 
-              <InputField
-                label="Quantity"
-                required={true}
-                inputBg=""
-                type="number"
-                placeholder="Enter quantity"
-                name="quantity"
-                value={formData.quantity}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Description"
-                inputBg=""
-                type="text"
-                placeholder="Enter description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-              />
+              
               <InputField
                 label="SellingCost"
                 inputBg=""
@@ -234,33 +266,6 @@ const CreateInventory = () => {
                 placeholder="Enter Selling Cost"
                 name="sellingCost"
                 value={formData.sellingCost}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Warehouse Location"
-                inputBg=""
-                type="text"
-                placeholder="Enter the Warehouse Location"
-                name="WarehouseLocation"
-                value={formData.WarehouseLocation}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Quantity Type"
-                inputBg=""
-                type="text"
-                placeholder="Enter Quantity Type"
-                name="quantityType"
-                value={formData.quantityType}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Alarm"
-                inputBg=""
-                type="number"
-                placeholder="Enter Alarm"
-                name="alarm"
-                value={formData.alarm}
                 onChange={handleChange}
               />
             </div>

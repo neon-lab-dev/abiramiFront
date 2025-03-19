@@ -241,7 +241,9 @@ const InventoryListPageTable = () => {
       console.log("Delete action canceled.");
     }
   };
-
+  const handleNavigateToCreateInventory = () => {
+    navigate("/inventory/createInventory");
+  };
   return (
     <>
       {loading ? (
@@ -250,6 +252,18 @@ const InventoryListPageTable = () => {
         </div>
       ) : (
         <div>
+          <div className="flex justify-between">
+            <div>    InventoryTable</div>
+          <Button
+              text="Create Inventory"
+              imgSrc={ICONS.inventory}
+              color="bg-secondary-120 text-[14px] text-secondary-125"
+              iconClassName="flex h-[24px] w-[24px] justify-end"
+              onClick={handleNavigateToCreateInventory}
+            />
+          </div>
+      
+          
           <Table
             // data={sortedData}
             data={
