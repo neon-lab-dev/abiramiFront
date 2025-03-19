@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useRef, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
@@ -29,15 +29,21 @@ const CreateInvoice = () => {
   const [isSaveSubmitting, setIsSaveSubmitting] = useState(false);
   const [subTotal, setSubTotal] = useState<number>();
   const [pfPercent, setPfPercent] = useState<number>(10);
-  const [pfamount, setPfamount] = useState<number>();
-  const [taxPercent, setTaxPercent] = useState<number>(18);
+  const [pfamount, setPfamount] = useState<number>(0);
   const [tax, setTax] = useState<number>();
+  const [subTotalPlusPfAmount, setSubTotalPlusPfAmount] = useState<SetStateAction<SetStateAction<number>>>(0);
+
+  useEffect(() => {
+    setSubTotalPlusPfAmount(subTotal && Number(subTotal) + Number(pfamount));
+  }, [pfamount, subTotal])
+  console.log(subTotalPlusPfAmount);
+  const [taxPercent, setTaxPercent] = useState<number>(18);
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
   const [igst, setIgst] = useState(18);
   const [cgst, setCgst] = useState(9);
   const [sgst, setSgst] = useState(9);
-  const [invoiceData, setInvoiceData] = useState<InvoiceData>();
+  // const [invoiceData, setInvoiceData] = useState<InvoiceData>();
   const [gstNumber, setGstNumber] = useState("");
 
   const [clients, setClients] = useState<{ companyName: string; gstN: string }[]>([]);
@@ -48,7 +54,7 @@ const CreateInvoice = () => {
     const fetchClients = async () => {
       setLoading(true);
       try {
-        const response = await getClients(); 
+        const response = await getClients();
         const clientData = response.data.map((client: { companyName: string; GST: string }) => ({
           companyName: client.companyName,
           gstN: client.GST,
@@ -61,7 +67,7 @@ const CreateInvoice = () => {
         setLoading(false);
       }
     };
-  
+
     fetchClients();
   }, []);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -250,6 +256,7 @@ const CreateInvoice = () => {
     setShowDropdown1(false);
   };
 
+  // This is for "SAVE"
   const handleSubmit = async () => {
     const data = {
       clientName: formData.ClientName,
@@ -302,22 +309,23 @@ const CreateInvoice = () => {
 
       // Calculate PF Amount (e.g., 10% of Subtotal)
       const calculatedPfAmount = (pfPercent / 100) * calculatedSubTotal;
-      setPfamount(Number(calculatedPfAmount.toFixed(2)));
-
+      // setPfamount(Number(calculatedPfAmount.toFixed(2)));
+      console.log(subTotalPlusPfAmount);
       // Calculate Tax (e.g., 18% of Subtotal)
       let calculatedTax;
       if (formData.taxtype === "IGST") {
-        calculatedTax = (igst / 100) * calculatedSubTotal;
+        // calculatedTax = (igst / 100) * subTotalPlusPfAmount
+        calculatedTax = (subTotalPlusPfAmount * igst) / 100
         setTax(Number(calculatedTax.toFixed(2)));
       } else {
-        calculatedTax =
-          (cgst / 100) * calculatedSubTotal + (sgst / 100) * calculatedSubTotal;
+        calculatedTax = ((subTotalPlusPfAmount * cgst) / 100) + ((subTotalPlusPfAmount * sgst) / 100)
+        // (cgst / 100) * subTotalPlusPfAmount + (sgst / 100) * subTotalPlusPfAmount;
         setTax(Number(calculatedTax.toFixed(2)));
       }
 
       // Calculate Total
       const calculatedTotal =
-        calculatedSubTotal + calculatedPfAmount + calculatedTax;
+        subTotalPlusPfAmount + calculatedTax;
       const roundedTotal = Math.round(calculatedTotal);
       setRoundOff(roundedTotal);
       setTotal(roundedTotal);
@@ -377,6 +385,7 @@ const CreateInvoice = () => {
     }
   }, [formData.taxtype]);
 
+  // This is for "SAVE AND PRINT"
   const handleSavePrint = async () => {
     const data = {
       clientName: formData.ClientName,
@@ -418,7 +427,7 @@ const CreateInvoice = () => {
   return (
     <div>
       <span className="text-sm font-Inter font-[600] ">Billing Details</span>
-      <div className="w-full  pb-[44px] pt-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
+      <div className="w-full items-start pb-[44px] pt-[22px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
         <div className="flex-2 relative" ref={dropdownRef}>
           <div className="" onClick={() => setShowDropdown3(true)}>
             <InputField
@@ -468,7 +477,7 @@ const CreateInvoice = () => {
           <div className="flex-2 relative" ref={dropdownRef}>
             <div className="" onClick={() => setShowDropdown(true)}>
               <InputField
-                label="State & Code"
+                label="State"
                 required={true}
                 inputBg=""
                 type="text"
@@ -495,7 +504,8 @@ const CreateInvoice = () => {
           </div>
           <div className="flex items-end pb-[2px] flex-1">
             <InputField
-              label="code"
+              label="Code"
+              required={true}
               inputBg=""
               type="number"
               placeholder="code"
@@ -505,6 +515,7 @@ const CreateInvoice = () => {
             />
           </div>
         </div>
+
         <div className="flex-2 relative" ref={dropdownRef}>
           <div className="" onClick={() => setShowDropdown1(true)}>
             <InputField
@@ -960,7 +971,7 @@ const CreateInvoice = () => {
                   placeholder="₹ 0"
                   value={pfamount}
                   name=""
-                  onChange={handleChange}
+                  onChange={(e) => setPfamount(e.target.value)}
                 />
               </div>
             </div>
