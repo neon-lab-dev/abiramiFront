@@ -26,6 +26,7 @@ import {
   validatePONumber,
   validateVehicleNumber,
 } from "../../utils/validation";
+import { number } from "zod";
 
 const UpdateModal = ({
   editToggleModel,
@@ -45,13 +46,17 @@ const UpdateModal = ({
   const [isSaveSubmitting, setIsSaveSubmitting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [subTotal, setSubTotal] = useState<number>();
+  const [subTotal, setSubTotal] = useState<number>(0);
   const [pfPercent, setPfPercent] = useState<number>(10);
-  const [pfamount, setPfamount] = useState<number>();
+  const [pfamount, setPfamount] = useState<number>(0);
+  const [subTotalPlusPfAmount,setSubTotalPlusPfAmount]=useState<number>(0)
+  useEffect(() => {
+    setPfamount(Number(invoiceData?.pfAmount))
+  } , [invoiceData]);
   const [taxPercent, setTaxPercent] = useState<number>(18);
-  const [tax, setTax] = useState<number>();
-  const [roundOff, setRoundOff] = useState<number>();
-  const [total, setTotal] = useState<number>();
+  const [tax, setTax] = useState<number>(0);
+  const [roundOff, setRoundOff] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const options = [
     "Original for Recipient",
@@ -154,39 +159,36 @@ const UpdateModal = ({
   useEffect(() => {
     const calculateValues = () => {
       // Calculate Subtotal
-      const calculatedSubTotal = rows?.reduce(
-        (sum: number, row: ProductDetail) => {
-          const quantity = row?.quantity || 0;
-          const rate = row?.rate || 0;
-          const discount = row?.discount || 0;
-
-          const baseAmount = quantity * rate;
-          const amount = baseAmount - (baseAmount * discount) / 100;
-
-          return sum + amount;
-        },
-        0
-      );
-
+      const calculatedSubTotal = rows?.reduce((sum, row) => {
+        const quantity = row?.quantity || 0;
+        const rate = row?.rate || 0;
+        const discount = row?.discount || 0;
+  
+        const baseAmount = quantity * rate;
+        const amount = baseAmount - (baseAmount * discount) / 100;
+  
+        return sum + amount;
+      }, 0);
+  
       setSubTotal(calculatedSubTotal);
-
-      // Calculate PF Amount (e.g., 10% of Subtotal)
-      const calculatedPfAmount = (pfPercent / 100) * calculatedSubTotal;
-      setPfamount(Number(calculatedPfAmount.toFixed(2)));
-
-      // Calculate Tax (e.g., 18% of Subtotal)
-      const calculatedTax = (taxPercent / 100) * calculatedSubTotal;
+  
+      // ✅ Use pfamount directly here (not subTotalPlusPfAmount state)
+      const pfAndTotal = Number(calculatedSubTotal) + Number(pfamount);
+      setSubTotalPlusPfAmount(pfAndTotal);
+  
+      // ✅ Calculate tax based on pfAndTotal (local value)
+      const calculatedTax = (taxPercent / 100) * pfAndTotal;
       setTax(Number(calculatedTax.toFixed(2)));
-
-      // Calculate Total
-      const calculatedTotal =
-        calculatedSubTotal + calculatedPfAmount + calculatedTax;
-      const roundedTotal = Math.round(calculatedTotal);
+  
+      // ✅ Calculate Total and Round off
+      const calculatedTotal = pfAndTotal + calculatedTax;
+      const roundedTotal = Math.round(Number(calculatedTotal));
       setRoundOff(roundedTotal);
       setTotal(roundedTotal);
     };
+  
     calculateValues();
-  }, [rows]);
+  }, [rows, pfamount, taxPercent]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -272,6 +274,10 @@ const UpdateModal = ({
     { name: "Other Territory", code: "97" },
     { name: "Centre Jurisdiction", code: "99" },
   ];
+  
+  const filteredStates = states.filter((state) =>
+    state.name.toLowerCase().includes(formData.state.toLowerCase())
+  );
 
   const invoice = [
     { name: "Cash Invoice" },
@@ -329,15 +335,15 @@ const UpdateModal = ({
       totalAmount: total,
       taxGST: tax,
       bankName: formData.bankName,
-      chequeNumber: formData.chequeNumber,
-      chequeAmount: formData.chequeAmount,
+      chequeNumber: formData.chequeNumber || 0 || "",
+      chequeAmount: Number(formData.chequeAmount) || 0,
       transport: formData.transport,
       placeOfSupply: formData.placeOfSupply,
-      poNO: formData.poNO,
-      vehicleNo: formData.vehicleNo,
+      poNO: Number(formData.poNO) || 0,
+      vehicleNo: Number(formData.vehicleNo) || 0,
       taxType: formData.taxType,
       subTotal: subTotal,
-      pfAmount: pfamount,
+      pfAmount: Number(pfamount),
       roundOff: roundOff,
       productDetails: rows,
     };
@@ -347,6 +353,8 @@ const UpdateModal = ({
       if (selectedId) {
         const response = await updateInvoice(selectedId, data);
         setEditModalOpen && setEditModalOpen(false);
+        alert("Data updated successfully!!");
+        navigate(0);
       } else {
         alert("Failed to update invoice. No selected ID provided.");
       }
@@ -356,7 +364,6 @@ const UpdateModal = ({
     } finally {
       setIsSaving(false);
       // setLoading(false);
-      navigate(0);
     }
   };
 
@@ -480,23 +487,23 @@ const UpdateModal = ({
       clientName: formData.clientName,
       date: formData.date,
       state: formData.state,
-      code: Number(formData.code),
+      code: formData.code,
       billingStatus: formData.billingStatus,
       invoiceType: formData.invoiceType,
       totalAmount: total,
       taxGST: tax,
       bankName: formData.bankName,
-      chequeNumber: formData.chequeNumber,
-      chequeAmount: Number(formData.chequeAmount),
+      chequeNumber: formData.chequeNumber || 0 || "",
+      chequeAmount: Number(formData.chequeAmount) || 0,
       transport: formData.transport,
       placeOfSupply: formData.placeOfSupply,
-      poNo: formData.poNO,
-      vehicleNo: formData.vehicleNo,
+      poNO: Number(formData.poNO) || 0,
+      vehicleNo: Number(formData.vehicleNo) || 0,
       taxType: formData.taxType,
       subTotal: subTotal,
-      pfAmount: pfamount,
+      pfAmount: Number(pfamount),
       roundOff: roundOff,
-      productDetails: rowsData,
+      productDetails: rows,
     };
     setIsSaveSubmitting(true);
     // setIsSubmitting(true);
@@ -505,7 +512,7 @@ const UpdateModal = ({
         const response = await updateInvoice(selectedId, data);
         const pdfData = { ...response.data, productDetails: rows };
         console.log(pdfData);
-        generateInvoicePDF(pdfData, "");
+        generateInvoicePDF(pdfData, selectedOption);
       } else {
         alert("Failed to update invoice. No selected ID provided.");
       }
@@ -578,20 +585,22 @@ const UpdateModal = ({
                     />
                   </div>
                   {showDropdown && (
-                    <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto scroll-none w-full mt-1 z-10">
-                      {states.map((state) => (
-                        <div
-                          key={state.code}
-                          className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-                          onClick={() =>
-                            handleStateSelect(state.name, state.code)
-                          }
-                        >
-                          {state.name}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+    <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto w-full mt-1 z-10">
+      {filteredStates.length > 0 ? (
+        filteredStates.map((state) => (
+          <div
+            key={state.code}
+            className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+            onClick={() => handleStateSelect(state.name, state.code)}
+          >
+            {state.name}
+          </div>
+        ))
+      ) : (
+        <div className="px-4 py-2 text-gray-500">No results found</div>
+      )}
+    </div>
+  )}
                 </div>
                 <div className="flex items-end pb-[2px] flex-1">
                   <InputField
@@ -1077,16 +1086,16 @@ const UpdateModal = ({
                       PF Amount
                     </span>
                     <div className="w-[111px]">
-                      <InputField
+                    <InputField
                         label=""
                         inputBg="bg-white w-full "
                         type="text"
                         placeholder="₹ 0"
                         value={pfamount}
                         name=""
-                        onChange={handleChange}
+                        onChange={(e) => setPfamount(Number(e.target.value))}
                       />
-                    </div>
+                      </div>
                   </div>
                   <div className="flex justify-between items-center  py-2">
                     <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">

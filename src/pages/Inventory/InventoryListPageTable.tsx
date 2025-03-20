@@ -25,6 +25,7 @@ const InventoryListPageTable = () => {
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [isInventoryLogsOpen, setInventoryLogsOpen] = useState<boolean>(false);
   const [category, setCategory] = useState<Category>();
+  const [categoryName, setCategoryName] = useState("");
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [inventoryDownload, setInventoryDownload] = useState<InventoryDownloadItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -216,7 +217,7 @@ const InventoryListPageTable = () => {
         if (id) {
           const data = await getInventoryByCategoryId(id);
           setInventory(data.data.inventory);
-          
+          setCategoryName(data.data.name)
           setCategory(data.data);
           console.log(data)
           const inventoryData = data.data.inventory.map((inventoryDownload: InventoryDownloadItem) => ({
@@ -266,7 +267,7 @@ const InventoryListPageTable = () => {
       ) : (
         <div>
           <div className="flex justify-between">
-            <div>    InventoryTable</div>
+            <div>{categoryName}</div>
           <Button
               text="Create Inventory"
               imgSrc={ICONS.inventory}
