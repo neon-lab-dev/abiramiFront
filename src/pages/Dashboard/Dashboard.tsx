@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   deleteInvoice,
   getDashboardData,
+  getGraphData,
   // getGraphData,
   getInvoices,
 } from "../../api/api";
@@ -46,7 +47,11 @@ const Dashboard = () => {
         setLoading(true);
         try {
           const data: InvoicesResponse = await getInvoices();
-
+          const graphResponse = await getGraphData(); 
+          console.log(graphResponse)
+          setMonthlySales(graphResponse.data.sales);
+          setMonthlyPurchases(graphResponse.data.purchase);
+          console.log(monthlySales)
           // Filter invoices that are created today
           const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
           const todayInvoices = data.data.filter((invoice) =>
