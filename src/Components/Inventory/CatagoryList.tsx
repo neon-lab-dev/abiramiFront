@@ -42,7 +42,17 @@ const CatagoryList = () => {
     };
     setIsSubmitting(true);
     try {
-      await createCategory(data);
+      const response = await createCategory(data);
+      console.log(response);
+  
+      // Navigate with correct state keys
+      navigate("/inventory/createInventory", { 
+        state: { 
+          categoryId: response.data.id, 
+          categoryName: response.data.name 
+        } 
+      });
+  
       alert("Category created successfully");
     } catch (err) {
       console.error(err);
@@ -51,8 +61,9 @@ const CatagoryList = () => {
       toggleEditModal();
     }
   };
+  
 
-  const handleCardClick = (id: string) => {
+  const handleCardClick = (id: string ) => {
     navigate(`/inventory/InventoryTable/${id}`);
   };
 

@@ -256,7 +256,7 @@ const InventoryListPageTable = () => {
     }
   };
   const handleNavigateToCreateInventory = () => {
-    navigate("/inventory/createInventory");
+    navigate("/inventory/createInventory", { state: { categoryId: id, categoryName } });
   };
   return (
     <>

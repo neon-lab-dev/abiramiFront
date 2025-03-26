@@ -5,10 +5,12 @@ import Button from "../../Components/Shared/Button/Button";
 import UploadImage from "./UploadImage";
 import { ICONS } from "../../assets";
 import { createInventories, getCategories } from "../../api/api";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Category, InventoryListResponse } from "../../types/inventory";
 
 const CreateInventory = () => {
+  const location = useLocation();
+  const { categoryId, categoryName } = location.state || {};
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const [imageFiles, setImageFiles] = useState<File | object>({});
@@ -19,7 +21,7 @@ const CreateInventory = () => {
 
   const [formData, setFormData] = useState({
     refrence: "",
-    category: "",
+    category: categoryName,
     categoryId: "",
     description: "",
     buyingCost: "",

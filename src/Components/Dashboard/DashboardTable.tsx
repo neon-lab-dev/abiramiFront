@@ -235,7 +235,7 @@ const DashboardTable = ({
 
     {
       header: "Created Date",
-      accessor: "createdAt",
+      accessor: "updatedAt",
       type: "date",
       cellClassName:
         "text-black whitespace-nowrap overflow-hidden text-ellipsis",

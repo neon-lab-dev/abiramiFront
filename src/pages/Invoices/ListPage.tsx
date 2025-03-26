@@ -50,7 +50,7 @@ const ListPage = () => {
       try {
         const data: InvoicesResponse = await getInvoices();
         setInvoices(data);
-        // setSearchResults(data);
+       console.log(data)
       } catch (err) {
         console.error(err);
       } finally {

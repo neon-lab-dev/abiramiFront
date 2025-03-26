@@ -48,14 +48,14 @@ const Dashboard = () => {
         try {
           const data: InvoicesResponse = await getInvoices();
           const graphResponse = await getGraphData(); 
-          console.log(graphResponse)
+          // console.log(graphResponse)
           setMonthlySales(graphResponse.data.sales);
           setMonthlyPurchases(graphResponse.data.purchase);
           console.log(monthlySales)
           // Filter invoices that are created today
           const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
           const todayInvoices = data.data.filter((invoice) =>
-            invoice.createdAt.startsWith(today)
+            invoice.createdAt.startsWith(today) ||invoice.updatedAt.startsWith(today) 
           );
           setInvoices(todayInvoices);
           console.log(todayInvoices);

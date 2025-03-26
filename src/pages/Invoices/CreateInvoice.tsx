@@ -668,7 +668,6 @@ const CreateInvoice = () => {
             />
             <InputField
               label="P.O.No"
-              required={true}
               inputBg=""
               type="number"
               placeholder="Enter P.O.No"
@@ -679,7 +678,6 @@ const CreateInvoice = () => {
             />
             <InputField
               label="Vehicle Number"
-              required={true}
               inputBg=""
               type="string"
               placeholder=" Enter Vehicle Number"
