@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useRef, useEffect } from "react";
 import InputField from "../../Components/Shared/InputField/InputField";
@@ -16,7 +17,7 @@ const CreateInventory = () => {
   const [imageFiles, setImageFiles] = useState<File | object>({});
   const [loading, setLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]); // Ensure it's an array
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const navigate = useNavigate();
 
@@ -53,7 +54,7 @@ const CreateInventory = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-     setIsSubmitting(true);
+    setIsSubmitting(true);
     const data: any = {
       refrence: formData.refrence,
       categoryId: formData.categoryId,
@@ -69,18 +70,20 @@ const CreateInventory = () => {
     // Only add file if an image is uploaded
     if (imageFiles) {
       data.file = imageFiles;
+    } else {
+      data.file = [];
     }
 
-   
+
     try {
       await createInventories(data);
       alert("Inventory created successfully");
+      navigate("/inventory");
     } catch (error) {
       console.error("Error creating inventory:", error);
       alert("Failed to create inventory. Please try again.");
     } finally {
       setIsSubmitting(false);
-      navigate("/inventory");
     }
   };
 
