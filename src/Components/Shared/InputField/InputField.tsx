@@ -61,6 +61,7 @@ const InputField: React.FC<TInputProps> = ({
           onChange={handleChange}
           readOnly={readOnly}
           autoComplete="off"
+          required={required}
         />
         {icon && (
           <div

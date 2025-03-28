@@ -14,9 +14,10 @@ const CreateInventory = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const [imageFiles, setImageFiles] = useState<File | object>({});
-  const [imagePreviews, setImagePreviews] = useState<string | "">("");
   const [loading, setLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]); // Ensure it's an array
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -35,7 +36,7 @@ const CreateInventory = () => {
     state: "",
     country: "",
     status: "active",
-    image: imageFiles,
+    image: imageFiles || [],
     WarehouseLocation: "",
   });
   const [categories, setCategories] = useState<Category[]>();
@@ -52,19 +53,25 @@ const CreateInventory = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = {
+     setIsSubmitting(true);
+    const data: any = {
       refrence: formData.refrence,
-      catgoryId: formData.categoryId,
+      categoryId: formData.categoryId,
       description: formData.description,
-      buyingCost: Number(formData.buyingCost),
+      buyingCost: Number(formData.buyingCost) || 0,
       quantity: formData.quantity,
       quantityType: formData.quantityType,
       alarm: Number(formData.alarm),
-      sellingCost: Number(formData.sellingCost),
-      file: imageFiles,
+      sellingCost: Number(formData.sellingCost) || 0,
       warehouseLocation: formData.WarehouseLocation,
     };
-    setIsSubmitting(true);
+
+    // Only add file if an image is uploaded
+    if (imageFiles) {
+      data.file = imageFiles;
+    }
+
+   
     try {
       await createInventories(data);
       alert("Inventory created successfully");
@@ -80,7 +87,7 @@ const CreateInventory = () => {
   // remove selected image
   const removeImage = () => {
     setImageFiles({});
-    setImagePreviews("");
+    setImagePreviews([]);
   };
 
   // upload image
@@ -88,17 +95,15 @@ const CreateInventory = () => {
     const file = e.target.files?.[0];
 
     if (file) {
-      // setImageFiles((prev) => [...prev, file]);
       setImageFiles(file);
-
       const reader = new FileReader();
       reader.onloadend = () => {
-        // setImagePreviews((prev) => [...prev, reader.result as string]);
-        setImagePreviews(reader.result as string);
+        setImagePreviews([reader.result as string]); // Store in an array
       };
       reader.readAsDataURL(file);
     }
   };
+
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dropdownRef.current &&
@@ -153,7 +158,6 @@ const CreateInventory = () => {
             <h2 className="text-xl font-semibold">Inventory Information</h2>
 
             <div className="w-full  pb-[22px]  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
-             
               <div className="flex-2 relative" ref={dropdownRef}>
                 <div className="" onClick={() => setShowDropdown2(true)}>
                   <InputField
@@ -184,7 +188,7 @@ const CreateInventory = () => {
                   </div>
                 )}
               </div>
-              
+
               <InputField
                 label="Description"
                 inputBg=""
@@ -204,7 +208,7 @@ const CreateInventory = () => {
                 value={formData.quantity}
                 onChange={handleChange}
               />
-              
+
               <InputField
                 label="Quantity Type"
                 inputBg=""
@@ -214,7 +218,7 @@ const CreateInventory = () => {
                 value={formData.quantityType}
                 onChange={handleChange}
               />
-              
+
               <InputField
                 label="Alarm"
                 inputBg=""
@@ -224,7 +228,7 @@ const CreateInventory = () => {
                 value={formData.alarm}
                 onChange={handleChange}
               />
-              
+
               <InputField
                 label="Warehouse Location"
                 inputBg=""
@@ -251,7 +255,6 @@ const CreateInventory = () => {
                 </div>
               </div>
 
-              
               <InputField
                 label="SellingCost"
                 inputBg=""
@@ -267,7 +270,7 @@ const CreateInventory = () => {
             <UploadImage
               removeImage={removeImage}
               handleImageChange={handleImageChange}
-              imagePreviews={imagePreviews}
+              imagePreviews={imagePreviews} // Now it's an array
             />
           </div>
 
@@ -281,7 +284,6 @@ const CreateInventory = () => {
             <Button
               text={isSubmitting ? "Submitting..." : "Submit Form"}
               type="submit"
-              // onClick={handleSubmit}
               color="bg-primary-10 text-white"
               disabled={isSubmitting}
             />
