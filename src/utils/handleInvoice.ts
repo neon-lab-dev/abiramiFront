@@ -6,12 +6,12 @@ import { formatNumber } from ".";
 
 export const generateInvoicePDF = (invoiceData: InvoiceData, printType:string ) => {
   const doc = new jsPDF();
-  doc.setFillColor(2255,235,235); // Tomato color or any RGB
+  doc.setFillColor(235,235,235); // Tomato color or any RGB
 doc.rect(155, 40, 40, 8, "F"); // x, y, width, height, "F" for filled rectangle
 doc.setTextColor(0,0,0);
 doc.setFontSize(10);
 doc.text(`${invoiceData?.invoiceType}`, 170, 45, { align: "center" });
-doc.setFillColor(2255,235,235);
+doc.setFillColor(235,235,235);
 doc.rect(142, 54, 54, 8, "F"); // x, y, width, height, "F" for filled rectangle
 doc.setTextColor(0,0,0);
 doc.setFontSize(10);
@@ -49,8 +49,10 @@ doc.setTextColor(0, 0, 0);
       ],
     ],
     theme: "grid",
-    styles: { fontSize: 10, cellPadding: 2 },
-    headStyles: { fillColor: [255,235,235], textColor: 0, fontStyle: "bold" },
+    styles: { fontSize: 10, cellPadding: 2 ,lineWidth: 0.3, // Ensures visible borders
+      lineColor: [0, 0, 0]},
+   headStyles: { fillColor: [255,255,255], textColor: 0, fontStyle: "bold", lineWidth: 0.3, // Ensures visible borders
+      lineColor: [0, 0, 0]},
   });
 
   // Billing Details Table
@@ -67,10 +69,49 @@ doc.setTextColor(0, 0, 0);
       ],
     ],
     theme: "grid",
-    styles: { fontSize: 10, cellPadding: 2 },
-    headStyles: { fillColor: [255,235,235], textColor: 0, fontStyle: "bold" },
+    styles: { fontSize: 10, cellPadding: 2,lineWidth: 0.3, // Ensures visible borders
+      lineColor: [0, 0, 0] },
+   headStyles: { fillColor: [255,255,255], textColor: 0, fontStyle: "bold", lineWidth: 0.3, // Ensures visible borders
+      lineColor: [0, 0, 0]},
   });
-
+   // Billing Details Table
+  invoiceData.invoiceType == "Cheque Invoice" ?(
+    autoTable(doc, {
+      startY: (doc as any).autoTable.previous.finalY + 0,
+      head: [["Bank Name", "Cheque Number", "Tax Type", "Cheque Amount"]],
+      body: [
+        [
+          invoiceData?.bankName,
+          invoiceData?.chequeNumber,
+          invoiceData?.chequeAmount,
+        ],
+      ],
+      theme: "grid",
+      styles: { fontSize: 10, cellPadding: 2,lineWidth: 0.3, // Ensures visible borders
+        lineColor: [0, 0, 0] },
+     headStyles: { fillColor: [255,255,255], textColor: 0, fontStyle: "bold", lineWidth: 0.3, // Ensures visible borders
+        lineColor: [0, 0, 0]},
+    })
+  ):null;
+  invoiceData.invoiceType == "Tax Invoice" ?(
+    autoTable(doc, {
+      startY: (doc as any).autoTable.previous.finalY + 0,
+      head: [["Transport", "Place of Supply", "P.O.No", "Vehicle Number"]],
+      body: [
+        [
+          invoiceData?.transport,
+          invoiceData?.placeOfSupply,
+          invoiceData?.poNO,
+          invoiceData?.vehicleNo,
+        ],
+      ],
+      theme: "grid",
+      styles: { fontSize: 10, cellPadding: 2,lineWidth: 0.3, // Ensures visible borders
+        lineColor: [0, 0, 0] },
+     headStyles: { fillColor: [255,255,255], textColor: 0, fontStyle: "bold", lineWidth: 0.3, // Ensures visible borders
+        lineColor: [0, 0, 0]},
+    })
+  ):null;
   // Items Table
   autoTable(doc, {
     startY:(doc as any).autoTable.previous.finalY + 0,
@@ -85,8 +126,10 @@ doc.setTextColor(0, 0, 0);
       item?.amount,
     ]),
     theme: "grid",
-    styles: { fontSize: 10, cellPadding: 2 },
-    headStyles: { fillColor: [255,235,235], textColor: 0, fontStyle: "bold" },
+    styles: { fontSize: 10, cellPadding: 2 ,lineWidth: 0.3, // Ensures visible borders
+      lineColor: [0, 0, 0]},
+    headStyles: { fillColor: [255,255,255], textColor: 0, fontStyle: "bold", lineWidth: 0.3, // Ensures visible borders
+      lineColor: [0, 0, 0]},
   });
 
   // Totals Table
@@ -103,8 +146,10 @@ doc.setTextColor(0, 0, 0);
       ["Total", formatNumber(invoiceData?.totalAmount ?? 0)],
     ],
     theme: "grid",
-    styles: { fontSize: 10, cellPadding: 2 },
-    headStyles: { fillColor: [255,235,235], textColor: 0, fontStyle: "bold" },
+    styles: { fontSize: 10, cellPadding: 2 ,lineWidth: 0.3, // Ensures visible borders
+      lineColor: [0, 0, 0] },
+   headStyles: { fillColor: [255,255,255], textColor: 0, fontStyle: "bold", lineWidth: 0.3, // Ensures visible borders
+      lineColor: [0, 0, 0]},
   });
   const bankTableHeight = 60; // Adjust based on your QR size and cell padding
 const pageHeight = doc.internal.pageSize.height;
@@ -127,12 +172,16 @@ if (currentY + bankTableHeight > pageHeight) {
       ],
     ],
     theme: "grid",
-    styles: { fontSize: 10, cellPadding: 5, minCellHeight: 50 }, // Only applies to body
+    styles: { fontSize: 10, cellPadding: 5, minCellHeight: 50 ,lineWidth: 0.3, // Ensures visible borders
+      lineColor: [0, 0, 0]}, // Only applies to body
     headStyles: { 
-      fillColor: [255, 235, 235], 
+      fillColor: [255, 255, 255], 
       textColor: 0, 
       fontStyle: "bold",
-      minCellHeight: 10 // Reduce header height
+      minCellHeight: 10 ,
+      lineWidth: 0.3, // Ensures visible borders
+      lineColor: [0, 0, 0]
+
     },
   
     didDrawCell: (data) => {

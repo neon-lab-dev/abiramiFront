@@ -48,10 +48,11 @@ const Dashboard = () => {
         try {
           const data: InvoicesResponse = await getInvoices();
           const graphResponse = await getGraphData(); 
-          // console.log(graphResponse)
-          setMonthlySales(graphResponse.data.sales);
-          setMonthlyPurchases(graphResponse.data.purchase);
-          console.log(monthlySales)
+          console.log(graphResponse)
+          const totalSalesArray = graphResponse.data.sales.map((sale: { totalSales: any; }) => sale.totalSales);
+          const totalPurchaseArray = graphResponse.data.purchase.map((purchase: { totalPurchase: any; }) => purchase.totalPurchase);
+          setMonthlySales(totalSalesArray);
+          setMonthlyPurchases(totalPurchaseArray);
           // Filter invoices that are created today
           const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
           const todayInvoices = data.data.filter((invoice) =>

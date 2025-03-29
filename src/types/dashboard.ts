@@ -15,3 +15,8 @@ export interface DashboardApiResponse {
     statusText: string;
     data: DashboardData;
 }
+
+export interface DashboardSalesPurchaseResponse{
+    count: number;
+    total: number;
+}
