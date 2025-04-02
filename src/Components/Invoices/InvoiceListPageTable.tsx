@@ -11,10 +11,12 @@ const InvoiceListPageTable = ({
   invoices,
   editToggleModel,
   handleDelete,
+  handlePrint
 }: {
   invoices: InvoiceResponse[];
   editToggleModel?: (id?: string) => void;
   handleDelete?: (id?: string) => void;
+  handlePrint?: (id: string, state?: string | undefined) => Promise<void>;
 }) => {
   const [dropdownOpen1, setDropdownOpen1] = useState<boolean>(false);
   const [dropdownOpen2, setDropdownOpen2] = useState<boolean>(false);
@@ -294,6 +296,8 @@ const InvoiceListPageTable = ({
         handleDelete={handleDelete}
         editToggleModel={editToggleModel}
         handleViewAction={removeFilter}
+        LogToggleModel={handlePrint}
+        showDropDown={true}
       />
       {/* <div className=" flex justify-between">
         <div className="flex justify-between md:gap-4 gap-3">

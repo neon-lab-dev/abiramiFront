@@ -9,10 +9,13 @@ const DashboardTable = ({
   invoices,
   editToggleModel,
   handleDelete,
+  handlePrint,
 }: {
   invoices: InvoiceResponse[] | undefined;
   editToggleModel: (id?: string) => void;
   handleDelete?: (id?: string) => void;
+  handlePrint?: (id: string, state?: string | undefined) => Promise<void>;
+
 }) => {
   const [dropdownOpen1, setDropdownOpen1] = useState(false);
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
@@ -285,6 +288,8 @@ const DashboardTable = ({
         handleDelete={handleDelete}
         editToggleModel={editToggleModel}
         handleViewAction={handleViewAction}
+        LogToggleModel={handlePrint}
+        showDropDown={true}
       />
     </div>
   );

@@ -4,13 +4,14 @@ import { ICONS } from "../../assets";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import DashboardTable from "../../Components/Dashboard/DashboardTable";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteClient, getClientById } from "../../api/api";
+import { deleteClient, getClientById, getInvoiceById } from "../../api/api";
 import { formatDateWithOrdinal, formatNumber } from "../../utils";
 import Loader from "../../lib/loader";
 import UpdateModal from "../Invoices/UpdateModal";
 import UpdateClientModal from "./UpdateModal";
 import CreateModel from "../Invoices/CreateModel";
 import { Client, SingleClientResponse } from "../../types/client";
+import { generateInvoicePDF } from "../../utils/handleInvoice";
 
 const DetailPage = () => {
   const { id } = useParams();
@@ -38,7 +39,16 @@ const DetailPage = () => {
   const createToggleModel = () => {
     navigate("/Invoices/CreateInvoices");
   };
-
+  const handlePrint =async (id: string, state?: string) => {
+    if (!state) {
+      console.error("State is undefined");
+      return;
+    }
+    const invoiceData = await getInvoiceById(id);
+    const pdfData = invoiceData.data;
+    console.log(pdfData);
+    generateInvoicePDF(pdfData ,state);
+  }
   useEffect(() => {
     const fetchClient = async () => {
       setLoading(true);
@@ -183,7 +193,7 @@ const DetailPage = () => {
                     {/* Plot No. 21, KIADB Industrial Area, Phase 2, Peenya
                     Industrial Estate, Tumkur Road, Bangalore - 560058,
                     Karnataka, India */}
-                    {client?.addressLine1}
+                    {client?.addressLine1 }{ client?.addressLine2 }{client?.addressLine3}
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -240,6 +250,7 @@ const DetailPage = () => {
               invoices={client?.invoice}
               editToggleModel={editToggleModel}
               handleDelete={handleDelete}
+              handlePrint={handlePrint}
             />
           </div>
           {/* Modal Overlay */}

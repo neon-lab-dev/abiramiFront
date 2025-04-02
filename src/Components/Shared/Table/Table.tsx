@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { ICONS } from "../../../assets";
 import { useLocation, useNavigate } from "react-router-dom";
 import { formatDateWithOrdinal } from "../../../utils";
+import { number } from "zod";
 
 interface Column {
   header: string | JSX.Element;
@@ -24,6 +25,7 @@ interface TableProps {
   columns: Column[];
   tableName?: string;
   showViewAll?: boolean;
+  showDropDown?: boolean;
   enablePagination?: boolean;
   rowsPerPage?: number;
   tableHeight?: string;
@@ -39,8 +41,8 @@ interface TableProps {
   onActionClick?: any;
   editToggleModel?: (id?: string) => void;
   handleDelete?: (id: string) => void;
-  LogToggleModel?: (id: string) => void;
-  handleViewAction?: () => void;
+  LogToggleModel?: (id:string ,state?:string ) => void;
+  handleViewAction?: () => void
 }
 
 const formatDate = (date: Date) => {
@@ -57,6 +59,7 @@ const Table: React.FC<TableProps> = ({
   columns,
   tableName,
   showViewAll,
+  showDropDown=false,
   enablePagination = false,
   rowsPerPage = 5,
   tableWidth = "full",
@@ -71,7 +74,29 @@ const Table: React.FC<TableProps> = ({
   handleViewAction,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
+  const handleToggle = (index:any) => {
+    setOpenDropdownIndex(openDropdownIndex === index ? null : index);
+  };
+  const options = [
+    "Original for Recipient",
+    "Duplicate for Transporter",
+    "Triplicate for Supplier",
+    "Extra Copy",
+  ];
+  const [selectedOptions, setSelectedOptions] = useState(
+    data?.map(() => options[0]) || []
+  );
   const location = useLocation();
+  const handleOptionSelect = (index:any, option:string) => {
+    setSelectedOptions((prev) => {
+      const newOptions = [...prev];
+      newOptions[index] = option;
+      return newOptions;
+    });
+    setOpenDropdownIndex(null);
+  };
+
 
   const totalPages = enablePagination
     ? Math.ceil(data?.length / rowsPerPage)
@@ -111,11 +136,14 @@ const Table: React.FC<TableProps> = ({
     }
   };
 
-  const onTickClick = (id: string) => {
-    if (LogToggleModel) {
+  const onTickClick = (id: string, rowIndex: number) => {
+    if (LogToggleModel && showDropDown) {
+       LogToggleModel(id, selectedOptions[rowIndex]); // Pass only the selected option for that row
+    } else if (LogToggleModel) {
       LogToggleModel(id);
     }
   };
+  
 
   const handleView=(()=>{
    if(handleViewAction){
@@ -290,17 +318,7 @@ const Table: React.FC<TableProps> = ({
                     
                      {icons &&( <td>
                         <div className="flex gap-4 pl-2">
-                          <button
-                            key="i1"
-                            onClick={() => onTickClick(row?.id)}
-                            className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
-                          >
-                            <img
-                              src={icons?.i1}
-                              alt="Edit"
-                              className="h-4 w-4"
-                            />
-                          </button>
+                          
                           <button
                             key="i2"
                             onClick={() => onEditClick(row.id)}
@@ -323,6 +341,43 @@ const Table: React.FC<TableProps> = ({
                               className="h-4 w-4"
                             />
                           </button>
+                          <button
+                            key="i1"
+                            onClick={() => onTickClick(row?.id ,rowIndex)}
+                            className={`rounded-full h-6 w-6 flex items-center justify-center  ${bg_i1}  `}
+                          >
+                            <img
+                              src={icons?.i1}
+                              alt="Edit"
+                              className="h-4 w-4"
+                            />
+                          </button>
+                          {showDropDown && (
+                          <div className="relative">
+                            <button
+                              type="button"
+                              className="flex gap-2 justify-center items-center py-2 pr-4 pl-2 border border-secondary-145 rounded-xl text-[16px]"
+                              onClick={() => handleToggle(rowIndex)}
+                            >
+                              <span className="w-[186px]">{selectedOptions[rowIndex]}</span>
+                              <img src={ICONS.invoicedropdown} alt="dropdown" />
+                            </button>
+                            {openDropdownIndex === rowIndex && (
+                              <div className="absolute mt-2 w-full bg-white border border-secondary-145 rounded-xl shadow-lg z-10">
+                                {options.map((option, index) => (
+                                  <button
+                                    key={index}
+                                    className="block w-full text-left px-4 py-2 text-[16px] font-normal hover:bg-secondary-60 rounded-xl"
+                                    onClick={() => handleOptionSelect(rowIndex, option)}
+                                  >
+                                    {option}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         </div>
                       </td>)}
                       <td>

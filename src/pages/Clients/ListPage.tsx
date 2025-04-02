@@ -53,7 +53,7 @@ const ListPage = () => {
       console.log("Delete action canceled.");
     }
   };
-
+ 
   return (
     <>
       {loading ? (
@@ -108,6 +108,7 @@ const ListPage = () => {
             }
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}
+    
           />
         </div>
       )}

@@ -7,6 +7,7 @@ import {
   deleteInvoice,
   getDashboardData,
   getGraphData,
+  getInvoiceById,
   // getGraphData,
   getInvoices,
 } from "../../api/api";
@@ -17,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import UpdateModal from "../Invoices/UpdateModal";
 import { InvoiceResponse, InvoicesResponse } from "../../types/invoice";
 import RevenueChart from "../../Components/Dashboard/RevenueChart";
+import { generateInvoicePDF } from "../../utils/handleInvoice";
 const Dashboard = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [invoices, setInvoices] = useState<InvoiceResponse[]>();
@@ -37,6 +39,7 @@ const Dashboard = () => {
           // setMonthlySales(graphResponse.data.sales)
           // setMonthlyPurchases(graphResponse.data.purchase)
           setDashboard(response.data);
+          console.log(response.data);
         } catch (error) {
           console.error("Failed to fetch dashboard data:", error);
         } finally {
@@ -47,19 +50,23 @@ const Dashboard = () => {
         setLoading(true);
         try {
           const data: InvoicesResponse = await getInvoices();
-          const graphResponse = await getGraphData(); 
-          console.log(graphResponse)
-          const totalSalesArray = graphResponse.data.sales.map((sale: { totalSales: any; }) => sale.totalSales);
-          const totalPurchaseArray = graphResponse.data.purchase.map((purchase: { totalPurchase: any; }) => purchase.totalPurchase);
+          const graphResponse = await getGraphData();
+          const totalSalesArray = graphResponse.data.sales.map(
+            (sale: { totalSales: any }) => sale.totalSales
+          );
+          const totalPurchaseArray = graphResponse.data.purchase.map(
+            (purchase: { totalPurchase: any }) => purchase.totalPurchase
+          );
           setMonthlySales(totalSalesArray);
           setMonthlyPurchases(totalPurchaseArray);
           // Filter invoices that are created today
           const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
-          const todayInvoices = data.data.filter((invoice) =>
-            invoice.createdAt.startsWith(today) ||invoice.updatedAt.startsWith(today) 
+          const todayInvoices = data.data.filter(
+            (invoice) =>
+              invoice.createdAt.startsWith(today) ||
+              invoice.updatedAt.startsWith(today)
           );
           setInvoices(todayInvoices);
-          console.log(todayInvoices);
         } catch (err) {
           console.error(err);
         } finally {
@@ -79,7 +86,7 @@ const Dashboard = () => {
     setSelectedId(id);
     setEditModalOpen(!isEditModalOpen);
   };
-
+  useEffect(() => {}, [invoices]);
   const handleDelete = async (id?: string) => {
     if (window.confirm("Are you sure you want to delete?")) {
       const response = await deleteInvoice(id ?? "");
@@ -90,6 +97,16 @@ const Dashboard = () => {
     } else {
       console.log("Delete action canceled.");
     }
+  };
+  const handlePrint = async (id: string, state?: string) => {
+    if (!state) {
+      console.error("State is undefined");
+      return;
+    }
+    const invoiceData = await getInvoiceById(id);
+    const pdfData = invoiceData.data;
+    console.log(pdfData);
+    generateInvoicePDF(pdfData, state);
   };
 
   return (
@@ -164,9 +181,10 @@ const Dashboard = () => {
             purchaseData={monthlyPurchases}
           />
           <DashboardTable
-            invoices={invoices ?? []}
+            invoices={invoices}
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}
+            handlePrint={handlePrint}
           />
           {isEditModalOpen && (
             <UpdateModal

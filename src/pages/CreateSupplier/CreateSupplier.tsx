@@ -120,7 +120,6 @@ const CreateSupplier = () => {
 
           <InputField
             label="GST Number"
-            required={true}
             inputBg=""
             type="text"
             placeholder="Enter the GST number"
@@ -139,7 +138,6 @@ const CreateSupplier = () => {
         <div className="w-full py-5 border-b-2 border-dashed grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <InputField
             label="Mobile Number"
-            required={true}
             inputBg=""
             type="text"
             placeholder="Enter mobile number"

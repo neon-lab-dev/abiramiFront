@@ -48,12 +48,17 @@ const SuppliersTable = ({
       width: "140px",
     },
     {
-      header: "Address",
-      accessor: "addressLine1",
-      cellClassName: "text-black",
-      icon1: ICONS.search,
-      width: "200px",
-    },
+          header: "Address",
+          accessor: "address",
+          width: "250px",
+          cellRenderer: (row: Supplier) => (
+            <span>
+              {row.addressLine1 && <>{row.addressLine1} <br /></>}
+              {row.addressLine2 && <>{row.addressLine2} <br /></>}
+              {row.addressLine3 && <>{row.addressLine3}</>}
+            </span>
+          ),
+        },
     {
       header: "Created Date",
       accessor: "createdAt",

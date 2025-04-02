@@ -4,11 +4,12 @@ import Button from "../../Components/Shared/Button/Button";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import { ICONS } from "../../assets";
 import { useNavigate } from "react-router-dom";
-import { deleteInvoice, getInvoices } from "../../api/api";
+import { deleteInvoice, getInvoiceById, getInvoices } from "../../api/api";
 import UpdateModal from "./UpdateModal";
 import Loader from "../../lib/loader";
 import { useSearch } from "../../context/SearchContext";
 import { InvoicesResponse } from "../../types/invoice";
+import { generateInvoicePDF } from "../../utils/handleInvoice";
 
 const ListPage = () => {
   const { searchQuery, searchResults } = useSearch();
@@ -70,7 +71,16 @@ const ListPage = () => {
       setIsOpen(false);
     }
   };
-
+  const handlePrint =async (id: string, state?: string) => {
+      if (!state) {
+        console.error("State is undefined");
+        return;
+      }
+      const invoiceData = await getInvoiceById(id);
+      const pdfData = invoiceData.data;
+      console.log(pdfData);
+      generateInvoicePDF(pdfData ,state);
+    }
   React.useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -182,6 +192,7 @@ const ListPage = () => {
               }
               editToggleModel={editToggleModel}
               handleDelete={handleDelete}
+              handlePrint={handlePrint}
             />
           </div>
           {/* Modal Overlay */}

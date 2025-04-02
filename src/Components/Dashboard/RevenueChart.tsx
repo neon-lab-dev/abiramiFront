@@ -35,7 +35,7 @@ const options = {
     tooltip: {
       callbacks: {
         label: (tooltipItem: TooltipItem<"line">) => {
-          return `${tooltipItem.dataset.label}: ${tooltipItem.raw} units`;
+          return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
         },
       },
     },
