@@ -22,7 +22,7 @@ const CreateInventory = () => {
   const [formData, setFormData] = useState({
     refrence: "",
     category: categoryName,
-    categoryId: "",
+    categoryId: categoryId,
     description: "",
     buyingCost: "",
     quantity: "",
