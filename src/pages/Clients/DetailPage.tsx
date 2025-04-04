@@ -193,7 +193,7 @@ const DetailPage = () => {
                     {/* Plot No. 21, KIADB Industrial Area, Phase 2, Peenya
                     Industrial Estate, Tumkur Road, Bangalore - 560058,
                     Karnataka, India */}
-                    {client?.addressLine1 }{ client?.addressLine2 }{client?.addressLine3}
+                    {client?.addressLine1 }{ client?.addressLine2 }{client?.addressLine3} {client?.city}{client?.state}  {client?.country}{client?.pincode}
                   </span>
                 </div>
                 <div className="flex gap-2">

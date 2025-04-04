@@ -53,9 +53,13 @@ const SuppliersTable = ({
           width: "250px",
           cellRenderer: (row: Supplier) => (
             <span>
-              {row.addressLine1 && <>{row.addressLine1} <br /></>}
-              {row.addressLine2 && <>{row.addressLine2} <br /></>}
-              {row.addressLine3 && <>{row.addressLine3}</>}
+                {row.addressLine1 && <>{row.addressLine1} <br /></>}
+          {row.addressLine2 && <>{row.addressLine2} <br /></>}
+          {row.addressLine3 && <>{row.addressLine3} <br/></>}
+          {row.city && <>{row.city} {" "}</>}
+          {row.state && <>{row.state} <br /></>}
+          {row.country && <>{row.country}{" "} </>}
+          {row.pincode && <>{row.pincode}<br/></>}
             </span>
           ),
         },
