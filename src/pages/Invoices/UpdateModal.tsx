@@ -60,8 +60,8 @@ const UpdateModal = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const options = [
     "Original for Recipient",
-    "Duplicate for Transporter",
-    "Triplicate for Supplier",
+    "Duplicate for  Supplier ",
+    "Triplicate for Transporter",
     "Extra Copy",
   ];
   const [selectedOption, setSelectedOption] = useState(options[0]);
