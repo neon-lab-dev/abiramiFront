@@ -56,6 +56,7 @@ const DetailPage = () => {
         if (id) {
           const response: InvoiceResponseWithClient = await getInvoiceById(id);
           setInvoiceData(response.data);
+          console.log("Invoice Data:", response.data);
         }
       } catch (error) {
         console.error("Error fetching invoice data:", error);
