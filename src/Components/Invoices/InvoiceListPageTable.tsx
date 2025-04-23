@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Table from "../Shared/Table/Table";
 import { ICONS } from "../../assets/index";
-import DownloadButton from "../Shared/Table/DownloadExcelBtn";
-import Button from "../Shared/Button/Button";
 import { Invoice } from "../../types/client";
 import { formatNumber } from "../../utils";
 import { InvoiceResponse } from "../../types/invoice";

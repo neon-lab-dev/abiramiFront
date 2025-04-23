@@ -466,7 +466,7 @@ export const generateInvoicePDF = (
   const lastTableY = (doc as any).autoTable?.previous?.finalY ;
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
-  doc.text("For ABIRAMI ENTERPRISES", 175, lastTableY + 16, { align: "center" });
+  doc.text("For ABIRAMI ENTERPRISES", 175, lastTableY + 24, { align: "center" });
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);

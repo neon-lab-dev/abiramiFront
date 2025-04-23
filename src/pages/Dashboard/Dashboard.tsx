@@ -21,7 +21,7 @@ import RevenueChart from "../../Components/Dashboard/RevenueChart";
 import { generateInvoicePDF } from "../../utils/handleInvoice";
 const Dashboard = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [invoices, setInvoices] = useState<InvoiceResponse[]>();
+  const [invoices, setInvoices] = useState<InvoicesResponse>();
   const [dashboard, setDashboard] = useState<DashboardData>();
   const [selectedId, setSelectedId] = useState<string>("");
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
@@ -50,6 +50,7 @@ const Dashboard = () => {
         setLoading(true);
         try {
           const data: InvoicesResponse = await getInvoices();
+          setInvoices(data);
           const graphResponse = await getGraphData();
           const totalSalesArray = graphResponse.data.sales.map(
             (sale: { totalSales: any }) => sale.totalSales
@@ -59,14 +60,7 @@ const Dashboard = () => {
           );
           setMonthlySales(totalSalesArray);
           setMonthlyPurchases(totalPurchaseArray);
-          // Filter invoices that are created today
-          const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
-          const todayInvoices = data.data.filter(
-            (invoice) =>
-              invoice.createdAt.startsWith(today) ||
-              invoice.updatedAt.startsWith(today)
-          );
-          setInvoices(todayInvoices);
+         
         } catch (err) {
           console.error(err);
         } finally {
@@ -181,7 +175,7 @@ const Dashboard = () => {
             purchaseData={monthlyPurchases}
           />
           <DashboardTable
-            invoices={invoices}
+            invoices={invoices?.data}
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}
             handlePrint={handlePrint}

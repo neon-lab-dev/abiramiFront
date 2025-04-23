@@ -316,36 +316,42 @@ const CreateInvoice = () => {
         const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
         const rate = parseFloat(row?.rate?.toString() || "0") || 0;
         const discount = parseFloat(row?.discount?.toString() || "0") || 0;
-        const amount = Math.abs(quantity * rate * (1 - discount / 100));
+        // Consider removing Math.abs unless specifically needed
+        const amount = quantity * rate * (1 - discount / 100);
         return sum + amount;
       }, 0);
-  
       setSubTotal(calculatedSubTotal);
-  
-      // Use calculatedSubTotal directly here
-      const pfAndTotal = Number(calculatedSubTotal) + Number(pfamount);
-      console.log("SubTotal + PF =>", pfAndTotal);
-      setSubTotalPlusPfAmount(pfAndTotal);
-  
+
+      // Ensure pfamount is a number, default to 0 if not
+      const currentPfAmount = Number(pfamount) || 0;
+
+      // SubTotal + PF
+      const subTotalPlusPf = calculatedSubTotal + currentPfAmount;
+      // setSubTotalPlusPfAmount(subTotalPlusPf); // This state seems redundant now
+
       // Calculate Tax
       let calculatedTax;
       if (formData.taxtype === "IGST") {
-        calculatedTax = (pfAndTotal * igst) / 100;
-      } else {
-        calculatedTax = (pfAndTotal * cgst) / 100 + (pfAndTotal * sgst) / 100;
+        calculatedTax = (subTotalPlusPf * igst) / 100;
+      } else { // Assuming CGST & SGST
+        calculatedTax = (subTotalPlusPf * cgst) / 100 + (subTotalPlusPf * sgst) / 100;
       }
-      setTax(Number(calculatedTax.toFixed(2)));
-  
-      // Calculate Total
-      const calculatedTotal = pfAndTotal + calculatedTax;
-      const roundedTotal = Math.round(calculatedTotal);
-      setRoundOff(roundedTotal);
-      setTotal(roundedTotal);
+      const taxValue = Number(calculatedTax.toFixed(2)); // Ensure 2 decimal places for tax
+      setTax(taxValue);
+
+      // Calculate Total and RoundOff
+      const exactTotal = subTotalPlusPf + taxValue;
+      const roundedTotal = Math.round(exactTotal);
+      // Calculate the actual rounding difference
+      const calculatedRoundOff = Number((roundedTotal - exactTotal).toFixed(2));
+
+      setTotal(roundedTotal); // Final total amount
+      setRoundOff(calculatedRoundOff); // The amount added/subtracted by rounding
     };
-  
+
     calculateValues();
-  }, [rows, pfamount, formData.taxtype, igst, cgst, sgst]);
-  
+  }, [rows, pfamount, formData.taxtype, igst, cgst, sgst]); // Dependencies remain the same
+
 
   useEffect(() => {
     if (formData.invoicetype.toLowerCase() == "cash invoice") {
@@ -977,7 +983,7 @@ const CreateInvoice = () => {
                   placeholder="₹ 0"
                   value={pfamount}
                   name=""
-                  onChange={(e) => setPfamount(Number(e.target.value))}
+                  onChange={(e) => setPfamount(Number(e.target.value) || 0 )}
                 />
               </div>
             </div>
