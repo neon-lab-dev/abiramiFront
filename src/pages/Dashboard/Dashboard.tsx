@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ICONS } from "../../assets";
 import StatusCard from "../../Components/Shared/StatusCard/StatusCard";
 import DashboardTable from "../../Components/Dashboard/DashboardTable";
@@ -21,7 +22,7 @@ import RevenueChart from "../../Components/Dashboard/RevenueChart";
 import { generateInvoicePDF } from "../../utils/handleInvoice";
 const Dashboard = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [invoices, setInvoices] = useState<InvoicesResponse>();
+  const [invoices, setInvoices] = useState<InvoiceResponse[]>();
   const [dashboard, setDashboard] = useState<DashboardData>();
   const [selectedId, setSelectedId] = useState<string>("");
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
@@ -30,51 +31,40 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
   useEffect(() => {
-    try {
-      const fetchDashboardData = async () => {
+    const fetchAllData = async () => {
+      try {
         setLoading(true);
-        try {
-          const response: DashboardApiResponse = await getDashboardData();
-          // // const graphResponse=await getGraphData();
-          // setMonthlySales(graphResponse.data.sales)
-          // setMonthlyPurchases(graphResponse.data.purchase)
-          setDashboard(response.data);
-          console.log(response.data);
-        } catch (error) {
-          console.error("Failed to fetch dashboard data:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      const fetchInvoices = async () => {
-        setLoading(true);
-        try {
-          const data: InvoicesResponse = await getInvoices();
-          setInvoices(data);
-          const graphResponse = await getGraphData();
-          const totalSalesArray = graphResponse.data.sales.map(
-            (sale: { totalSales: any }) => sale.totalSales
-          );
-          const totalPurchaseArray = graphResponse.data.purchase.map(
-            (purchase: { totalPurchase: any }) => purchase.totalPurchase
-          );
-          setMonthlySales(totalSalesArray);
-          setMonthlyPurchases(totalPurchaseArray);
-         
-        } catch (err) {
-          console.error(err);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchInvoices();
-
-      fetchDashboardData();
-    } catch (error) {
-      console.log(error);
-    }
+  
+        const [dashboardRes, invoiceRes, graphRes] = await Promise.all([
+          getDashboardData(),
+          getInvoices(),
+          getGraphData(),
+        ]);
+  
+        setDashboard(dashboardRes.data);
+  
+        const totalSalesArray = graphRes.data.sales.map((sale: { totalSales: number }) => sale.totalSales);
+        const totalPurchaseArray = graphRes.data.purchase.map((purchase: { totalPurchase: number }) => purchase.totalPurchase);
+        setMonthlySales(totalSalesArray);
+        setMonthlyPurchases(totalPurchaseArray);
+  
+        const today = new Date().toISOString().split("T")[0];
+        const todayInvoices = invoiceRes.data.filter(
+          (invoice:InvoiceResponse) =>
+            invoice.createdAt.startsWith(today) || invoice.updatedAt.startsWith(today)
+        );
+        setInvoices(todayInvoices);
+  
+      } catch (error) {
+        console.error("Error fetching dashboard or invoice data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchAllData();
   }, []);
+  
 
   const editToggleModel = (id: string = "") => {
     setSelectedId(id);
@@ -175,7 +165,7 @@ const Dashboard = () => {
             purchaseData={monthlyPurchases}
           />
           <DashboardTable
-            invoices={invoices?.data}
+            invoices={invoices}
             editToggleModel={editToggleModel}
             handleDelete={handleDelete}
             handlePrint={handlePrint}

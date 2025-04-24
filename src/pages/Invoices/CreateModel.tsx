@@ -67,6 +67,7 @@ const CreateModel: React.FC<CreateModelProps> = ({
 
   const [rows, setRows] = useState<ProductDetail[]>([
     {
+      serialNo:null,
       description: "",
       HSNno: "",
       quantity: null,
@@ -78,7 +79,8 @@ const CreateModel: React.FC<CreateModelProps> = ({
   const addRow = () => {
     setRows([
       ...rows,
-      {
+      { 
+        serialNo:null,
         description: "",
         HSNno: "",
         quantity: null,

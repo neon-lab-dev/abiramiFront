@@ -28,10 +28,8 @@ const CreateInvoice = () => {
   const [subTotal, setSubTotal] = useState<number>(0);
   const [pfamount, setPfamount] = useState<number>(0);
   const [tax, setTax] = useState<number>();
-  const [subTotalPlusPfAmount, setSubTotalPlusPfAmount] =
-    useState<number>(0);
+  const [subTotalPlusPfAmount, setSubTotalPlusPfAmount] = useState<number>(0);
 
- 
   const [taxPercent, setTaxPercent] = useState<number>(18);
   const [roundOff, setRoundOff] = useState<number>();
   const [total, setTotal] = useState<number>();
@@ -116,6 +114,7 @@ const CreateInvoice = () => {
   });
   const [rows, setRows] = useState<ProductDetail[]>([
     {
+      serialNo: null,
       description: "",
       HSNno: "",
       quantity: null,
@@ -129,6 +128,7 @@ const CreateInvoice = () => {
     setRows([
       ...rows,
       {
+        serialNo: null,
         description: "",
         HSNno: "",
         quantity: null,
@@ -146,31 +146,52 @@ const CreateInvoice = () => {
   const handleInputChange = (
     index: number,
     field: keyof ProductDetail,
-    value: string | number
+    value: string | number // Value from input event is typically string
   ) => {
     setRows((prevRows) =>
       prevRows.map((row, i) => {
-        if (i !== index) return row;
-
-        const updatedRow = { ...row };
-
-        const parsedValue =
-          typeof value === "number" ? value : parseFloat(value) || 0;
-
-        if (["quantity", "rate", "discount", "amount"].includes(field)) {
-          updatedRow[field] = parsedValue as never;
-        } else {
-          updatedRow[field] = value as never;
+        if (i !== index) return row; // Skip rows that are not being edited
+  
+        const updatedRow = { ...row }; // Create a copy of the row to modify
+  
+        // --- Logic specifically for serialNo ---
+        // This block already converts the input value to a number for the serialNo field
+        if (field === "serialNo") {
+          // Ensure value is treated as string for parseInt
+          const stringValue = String(value);
+          const parsedInt = parseInt(stringValue, 10);
+          // Assign number if parsing is successful, otherwise null
+          updatedRow.serialNo = !isNaN(parsedInt) ? parsedInt : null; // Matches `number | null` type
         }
-
+        // --- End of specific serialNo logic ---
+  
+        // --- General numeric field handling (excluding serialNo handled above) ---
+        else if (["quantity", "rate", "discount", "amount"].includes(field)) {
+           // Use parseFloat for potentially decimal numbers, default to 0 if parsing fails
+          const parsedValue = typeof value === 'number' ? value : parseFloat(String(value)) || 0;
+          // Assign the parsed numeric value.
+          // The 'as never' is often used to bypass strict type checking,
+          // but ideally, types should align. Assuming ProductDetail fields match.
+          updatedRow[field] = parsedValue as never;
+        }
+        // --- Handling for other (likely string) fields ---
+        else {
+           // Assign the value directly (assuming it's intended to be a string)
+           // Convert value to string just in case it was passed as a number unexpectedly
+           updatedRow[field] = String(value) as never;
+        }
+  
+        // --- Recalculate amount if relevant fields changed ---
+        // This check should ideally happen *after* all fields have been potentially updated
         if (["quantity", "rate", "discount"].includes(field)) {
           const quantity = updatedRow.quantity || 0;
           const rate = updatedRow.rate || 0;
           const discount = updatedRow.discount || 0;
+          // Ensure amount is always non-negative and calculated correctly
           updatedRow.amount = Math.abs(quantity * rate * (1 - discount / 100));
         }
-
-        return updatedRow;
+  
+        return updatedRow; // Return the modified row
       })
     );
   };
@@ -184,7 +205,7 @@ const CreateInvoice = () => {
       [name]: value,
     }));
   };
-  
+
   const states = [
     { name: "Andaman and Nicobar Islands", code: "35" },
     { name: "Andhra Pradesh (Before Division)", code: "28" },
@@ -316,42 +337,35 @@ const CreateInvoice = () => {
         const quantity = parseFloat(row?.quantity?.toString() || "0") || 0;
         const rate = parseFloat(row?.rate?.toString() || "0") || 0;
         const discount = parseFloat(row?.discount?.toString() || "0") || 0;
-        // Consider removing Math.abs unless specifically needed
-        const amount = quantity * rate * (1 - discount / 100);
+        const amount = Math.abs(quantity * rate * (1 - discount / 100));
         return sum + amount;
       }, 0);
+
       setSubTotal(calculatedSubTotal);
-
-      // Ensure pfamount is a number, default to 0 if not
       const currentPfAmount = Number(pfamount) || 0;
-
-      // SubTotal + PF
-      const subTotalPlusPf = calculatedSubTotal + currentPfAmount;
-      // setSubTotalPlusPfAmount(subTotalPlusPf); // This state seems redundant now
+      // Use calculatedSubTotal directly here
+      const pfAndTotal = Number(calculatedSubTotal) + currentPfAmount;
+      console.log("SubTotal + PF =>", pfAndTotal);
+      setSubTotalPlusPfAmount(pfAndTotal);
 
       // Calculate Tax
       let calculatedTax;
       if (formData.taxtype === "IGST") {
-        calculatedTax = (subTotalPlusPf * igst) / 100;
-      } else { // Assuming CGST & SGST
-        calculatedTax = (subTotalPlusPf * cgst) / 100 + (subTotalPlusPf * sgst) / 100;
+        calculatedTax = (pfAndTotal * igst) / 100;
+      } else {
+        calculatedTax = (pfAndTotal * cgst) / 100 + (pfAndTotal * sgst) / 100;
       }
-      const taxValue = Number(calculatedTax.toFixed(2)); // Ensure 2 decimal places for tax
-      setTax(taxValue);
+      setTax(Number(calculatedTax.toFixed(2)));
 
-      // Calculate Total and RoundOff
-      const exactTotal = subTotalPlusPf + taxValue;
-      const roundedTotal = Math.round(exactTotal);
-      // Calculate the actual rounding difference
-      const calculatedRoundOff = Number((roundedTotal - exactTotal).toFixed(2));
-
-      setTotal(roundedTotal); // Final total amount
-      setRoundOff(calculatedRoundOff); // The amount added/subtracted by rounding
+      // Calculate Total
+      const calculatedTotal = pfAndTotal + calculatedTax;
+      const roundedTotal = Math.round(calculatedTotal);
+      setRoundOff(roundedTotal);
+      setTotal(roundedTotal);
     };
 
     calculateValues();
-  }, [rows, pfamount, formData.taxtype, igst, cgst, sgst]); // Dependencies remain the same
-
+  }, [rows, pfamount, formData.taxtype, igst, cgst, sgst]);
 
   useEffect(() => {
     if (formData.invoicetype.toLowerCase() == "cash invoice") {
@@ -433,7 +447,7 @@ const CreateInvoice = () => {
     try {
       const response = await createInvoices(data);
       const pdfData = { ...response.data, productDetails: rows };
-      generateInvoicePDF(pdfData ,selectedOption);
+      generateInvoicePDF(pdfData, selectedOption);
       alert("Invoice created successfully!");
     } catch (error) {
       console.error("Error creating invoice:", error);
@@ -497,39 +511,41 @@ const CreateInvoice = () => {
           onChange={handleChange}
         />
         <div className=" flex gap-1 items-center">
-        <div className="flex-2 relative" ref={dropdownRef}>
-  <div onClick={() => setShowDropdown(true)}>
-    <InputField
-      label="State"
-      required={true}
-      inputBg=""
-      type="text"
-      icon={ICONS.invoicesearch}
-      placeholder="Search"
-      name="Stateandcode"
-      value={formData.Stateandcode}
-      onChange={handleChange}
-    />
-  </div>
+          <div className="flex-2 relative" ref={dropdownRef}>
+            <div onClick={() => setShowDropdown(true)}>
+              <InputField
+                label="State"
+                required={true}
+                inputBg=""
+                type="text"
+                icon={ICONS.invoicesearch}
+                placeholder="Search"
+                name="Stateandcode"
+                value={formData.Stateandcode}
+                onChange={handleChange}
+              />
+            </div>
 
-  {showDropdown && (
-    <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto w-full mt-1 z-10">
-      {filteredStates.length > 0 ? (
-        filteredStates.map((state) => (
-          <div
-            key={state.code}
-            className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-            onClick={() => handleStateSelect(state.name, state.code)}
-          >
-            {state.name}
+            {showDropdown && (
+              <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto w-full mt-1 z-10">
+                {filteredStates.length > 0 ? (
+                  filteredStates.map((state) => (
+                    <div
+                      key={state.code}
+                      className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+                      onClick={() => handleStateSelect(state.name, state.code)}
+                    >
+                      {state.name}
+                    </div>
+                  ))
+                ) : (
+                  <div className="px-4 py-2 text-gray-500">
+                    No results found
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        ))
-      ) : (
-        <div className="px-4 py-2 text-gray-500">No results found</div>
-      )}
-    </div>
-  )}
-</div>
           <div className="flex items-end pb-[2px] flex-1">
             <InputField
               label="Code"
@@ -543,7 +559,6 @@ const CreateInvoice = () => {
             />
           </div>
         </div>
-
 
         <div className="flex-2 relative" ref={dropdownRef}>
           <div className="" onClick={() => setShowDropdown1(true)}>
@@ -730,7 +745,15 @@ const CreateInvoice = () => {
               {rows.map((row, index) => (
                 <tr>
                   <td className=" px-4 py-2 text-center text-sm font-normal leading-5 font-inter text-neutral-5 opacity-[0.6]">
-                    {index + 1}
+                  <input
+                    type="number"
+                    placeholder="Sr. no"
+                    value={row.serialNo ?? ""}
+                    onChange={(e) =>
+                      handleInputChange(index, "serialNo", e.target.value )
+                    }
+                    className="w-full p-2 border border-secondary-145 rounded mt-1"
+                  />
                   </td>
                   <td className=" px-4 py-2">
                     <input
@@ -818,7 +841,15 @@ const CreateInvoice = () => {
             {rows.map((row, index) => (
               <>
                 <div className="flex items-center justify-between">
-                  <span>S. No: {index + 1}</span>
+                  <input
+                    type="number"
+                    placeholder="Sr. no"
+                    value={row.serialNo ?? ""}
+                    onChange={(e) =>
+                      handleInputChange(index, "serialNo", e.target.value)
+                    }
+                    className="w-full p-2 border border-secondary-145 rounded mt-1"
+                  />
                   <Button
                     text=""
                     imgSrc={ICONS.invoicedelete}
@@ -983,7 +1014,7 @@ const CreateInvoice = () => {
                   placeholder="₹ 0"
                   value={pfamount}
                   name=""
-                  onChange={(e) => setPfamount(Number(e.target.value) || 0 )}
+                  onChange={(e) => setPfamount(Number(e.target.value) || 0)}
                 />
               </div>
             </div>

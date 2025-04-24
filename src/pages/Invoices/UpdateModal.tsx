@@ -97,6 +97,7 @@ const UpdateModal = ({
   };
   const [rows, setRows] = useState<ProductDetail[]>([
     {
+      serialNo:null,
       description: "",
       HSNno: "",
       quantity: null,
@@ -110,6 +111,7 @@ const UpdateModal = ({
     setRows([
       ...rows,
       {
+        serialNo:null,
         description: "",
         HSNno: "",
         quantity: null,
@@ -123,35 +125,55 @@ const UpdateModal = ({
     setRows(rows.filter((_, idx) => idx !== index));
   };
 
-  const handleInputChange = (
+const handleInputChange = (
     index: number,
     field: keyof ProductDetail,
-    value: string | number
+    value: string | number // Value from input event is typically string
   ) => {
     setRows((prevRows) =>
       prevRows.map((row, i) => {
-        if (i !== index) return row;
-
-        const updatedRow = { ...row };
-        const parsedValue =
-          typeof value === "number" ? value : parseFloat(value) || 0;
-
-        if (["quantity", "rate", "discount", "amount"].includes(field)) {
-          updatedRow[field] = parsedValue as never;
-        } else {
-          updatedRow[field] = value as never;
+        if (i !== index) return row; // Skip rows that are not being edited
+  
+        const updatedRow = { ...row }; // Create a copy of the row to modify
+  
+        // --- Logic specifically for serialNo ---
+        // This block already converts the input value to a number for the serialNo field
+        if (field === "serialNo") {
+          // Ensure value is treated as string for parseInt
+          const stringValue = String(value);
+          const parsedInt = parseInt(stringValue, 10);
+          // Assign number if parsing is successful, otherwise null
+          updatedRow.serialNo = !isNaN(parsedInt) ? parsedInt : null; // Matches `number | null` type
         }
-
-        // Correct discount calculation
+        // --- End of specific serialNo logic ---
+  
+        // --- General numeric field handling (excluding serialNo handled above) ---
+        else if (["quantity", "rate", "discount", "amount"].includes(field)) {
+           // Use parseFloat for potentially decimal numbers, default to 0 if parsing fails
+          const parsedValue = typeof value === 'number' ? value : parseFloat(String(value)) || 0;
+          // Assign the parsed numeric value.
+          // The 'as never' is often used to bypass strict type checking,
+          // but ideally, types should align. Assuming ProductDetail fields match.
+          updatedRow[field] = parsedValue as never;
+        }
+        // --- Handling for other (likely string) fields ---
+        else {
+           // Assign the value directly (assuming it's intended to be a string)
+           // Convert value to string just in case it was passed as a number unexpectedly
+           updatedRow[field] = String(value) as never;
+        }
+  
+        // --- Recalculate amount if relevant fields changed ---
+        // This check should ideally happen *after* all fields have been potentially updated
         if (["quantity", "rate", "discount"].includes(field)) {
           const quantity = updatedRow.quantity || 0;
           const rate = updatedRow.rate || 0;
           const discount = updatedRow.discount || 0;
-
-          updatedRow.amount = quantity * rate * (1 - discount / 100);
+          // Ensure amount is always non-negative and calculated correctly
+          updatedRow.amount = Math.abs(quantity * rate * (1 - discount / 100));
         }
-
-        return updatedRow;
+  
+        return updatedRow; // Return the modified row
       })
     );
   };
@@ -459,6 +481,7 @@ const UpdateModal = ({
       });
       setRows(
         invoiceData.productDetails.map((product: ProductDetail) => ({
+          serialNo:product.serialNo,
           id: product.id || "",
           description: product.description || "",
           HSNno: product.HSNno.toString() || "",
@@ -510,9 +533,12 @@ const UpdateModal = ({
     try {
       if (selectedId) {
         const response = await updateInvoice(selectedId, data);
-        const pdfData = { ...response.data, productDetails: rows };
-        console.log(pdfData);
+        const invoiceData = await getInvoiceById(selectedId);
+    const pdfData = invoiceData.data;
+    console.log(pdfData);
+    
         generateInvoicePDF(pdfData, selectedOption);
+
       } else {
         alert("Failed to update invoice. No selected ID provided.");
       }
@@ -801,7 +827,15 @@ const UpdateModal = ({
                     {rows?.map((row, index) => (
                       <tr>
                         <td className=" px-4 py-2 text-center text-sm font-normal leading-5 font-inter text-neutral-5 opacity-[0.6]">
-                          {index + 1}
+                        <input
+                    type="number"
+                    placeholder="Sr. no"
+                    value={row.serialNo ?? "" }
+                    onChange={(e) =>
+                      handleInputChange(index, "serialNo", e.target.value)
+                    }
+                    className="w-full p-2 border border-secondary-145 rounded mt-1"
+                  />
                         </td>
                         <td className=" px-4 py-2">
                           <input
@@ -903,7 +937,15 @@ const UpdateModal = ({
                   {rows?.map((row, index) => (
                     <>
                       <div className="flex items-center justify-between">
-                        <span>S. No: {index + 1}</span>
+                      <input
+                    type="number"
+                    placeholder="Sr. no"
+                    value={row.serialNo ?? ""}
+                    onChange={(e) =>
+                      handleInputChange(index, "serialNo", e.target.value)
+                    }
+                    className="w-full p-2 border border-secondary-145 rounded mt-1"
+                  />
                         <Button
                           text=""
                           imgSrc={ICONS.invoicedelete}

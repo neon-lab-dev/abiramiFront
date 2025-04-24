@@ -1,6 +1,7 @@
 import { Client } from "./client";
 
 export interface ProductDetail {
+  serialNo:number|null;
   id?: string;
   description: string;
   HSNno: string;
