@@ -4,7 +4,7 @@ import InputField from "../../Components/Shared/InputField/InputField";
 import Button from "../../Components/Shared/Button/Button";
 import { ICONS } from "../../assets";
 import { convertNumberToWords, formatNumber } from "../../utils";
-import { createInvoices, getClients } from "../../api/api";
+import { createInvoices, getClients, getInvoiceById } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { ProductDetail } from "../../types/invoice";
 import { generateInvoicePDF } from "../../utils/handleInvoice";
@@ -71,7 +71,6 @@ const CreateInvoice = () => {
           })
         );
         setClients(clientData);
-        console.log(clients);
       } catch (err) {
         console.error(err);
       } finally {
@@ -322,7 +321,6 @@ const CreateInvoice = () => {
       await createInvoices(data);
       alert("Invoice created successfully!");
     } catch (error) {
-      console.error("Error creating invoice:", error);
       alert("Failed to create invoice. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -345,7 +343,6 @@ const CreateInvoice = () => {
       const currentPfAmount = Number(pfamount) || 0;
       // Use calculatedSubTotal directly here
       const pfAndTotal = Number(calculatedSubTotal) + currentPfAmount;
-      console.log("SubTotal + PF =>", pfAndTotal);
       setSubTotalPlusPfAmount(pfAndTotal);
 
       // Calculate Tax
@@ -443,11 +440,12 @@ const CreateInvoice = () => {
       roundOff: roundOff,
       productDetails: rows,
     };
-    console.log("form",data);
     setIsSaveSubmitting(true);
     try {
       const response = await createInvoices(data);
-      const pdfData = { ...response.data, productDetails: rows };
+    const selectedId =response.data.id
+       const invoiceData = await getInvoiceById(selectedId);
+       const pdfData = invoiceData.data;
       generateInvoicePDF(pdfData, selectedOption);
       alert("Invoice created successfully!");
     } catch (error) {

@@ -30,7 +30,7 @@ export interface InvoiceRequest {
   transport: string;
   placeOfSupply: string;
   poNO: string | null;
-  vehicleNo: string | null;
+  vehicleNo: string;
   productDetails: ProductDetail[];
 }
 

@@ -49,10 +49,10 @@ const UpdateModal = ({
   const [subTotal, setSubTotal] = useState<number>(0);
   const [pfPercent, setPfPercent] = useState<number>(10);
   const [pfamount, setPfamount] = useState<number>(0);
-  const [subTotalPlusPfAmount,setSubTotalPlusPfAmount]=useState<number>(0)
+  const [subTotalPlusPfAmount, setSubTotalPlusPfAmount] = useState<number>(0);
   useEffect(() => {
-    setPfamount(Number(invoiceData?.pfAmount))
-  } , [invoiceData]);
+    setPfamount(Number(invoiceData?.pfAmount));
+  }, [invoiceData]);
   const [taxPercent, setTaxPercent] = useState<number>(18);
   const [tax, setTax] = useState<number>(0);
   const [roundOff, setRoundOff] = useState<number>(0);
@@ -84,8 +84,8 @@ const UpdateModal = ({
     chequeAmount: null,
     transport: "",
     placeOfSupply: "",
-    poNO: null,
-    vehicleNo: null,
+    poNO: "",
+    vehicleNo: "",
     productDetails: [],
   });
   const handleToggle = () => {
@@ -97,7 +97,7 @@ const UpdateModal = ({
   };
   const [rows, setRows] = useState<ProductDetail[]>([
     {
-      serialNo:null,
+      serialNo: null,
       description: "",
       HSNno: "",
       quantity: null,
@@ -111,7 +111,7 @@ const UpdateModal = ({
     setRows([
       ...rows,
       {
-        serialNo:null,
+        serialNo: null,
         description: "",
         HSNno: "",
         quantity: null,
@@ -125,7 +125,7 @@ const UpdateModal = ({
     setRows(rows.filter((_, idx) => idx !== index));
   };
 
-const handleInputChange = (
+  const handleInputChange = (
     index: number,
     field: keyof ProductDetail,
     value: string | number // Value from input event is typically string
@@ -133,9 +133,9 @@ const handleInputChange = (
     setRows((prevRows) =>
       prevRows.map((row, i) => {
         if (i !== index) return row; // Skip rows that are not being edited
-  
+
         const updatedRow = { ...row }; // Create a copy of the row to modify
-  
+
         // --- Logic specifically for serialNo ---
         // This block already converts the input value to a number for the serialNo field
         if (field === "serialNo") {
@@ -146,11 +146,12 @@ const handleInputChange = (
           updatedRow.serialNo = !isNaN(parsedInt) ? parsedInt : null; // Matches `number | null` type
         }
         // --- End of specific serialNo logic ---
-  
+
         // --- General numeric field handling (excluding serialNo handled above) ---
         else if (["quantity", "rate", "discount", "amount"].includes(field)) {
-           // Use parseFloat for potentially decimal numbers, default to 0 if parsing fails
-          const parsedValue = typeof value === 'number' ? value : parseFloat(String(value)) || 0;
+          // Use parseFloat for potentially decimal numbers, default to 0 if parsing fails
+          const parsedValue =
+            typeof value === "number" ? value : parseFloat(String(value)) || 0;
           // Assign the parsed numeric value.
           // The 'as never' is often used to bypass strict type checking,
           // but ideally, types should align. Assuming ProductDetail fields match.
@@ -158,11 +159,11 @@ const handleInputChange = (
         }
         // --- Handling for other (likely string) fields ---
         else {
-           // Assign the value directly (assuming it's intended to be a string)
-           // Convert value to string just in case it was passed as a number unexpectedly
-           updatedRow[field] = String(value) as never;
+          // Assign the value directly (assuming it's intended to be a string)
+          // Convert value to string just in case it was passed as a number unexpectedly
+          updatedRow[field] = String(value) as never;
         }
-  
+
         // --- Recalculate amount if relevant fields changed ---
         // This check should ideally happen *after* all fields have been potentially updated
         if (["quantity", "rate", "discount"].includes(field)) {
@@ -172,7 +173,7 @@ const handleInputChange = (
           // Ensure amount is always non-negative and calculated correctly
           updatedRow.amount = Math.abs(quantity * rate * (1 - discount / 100));
         }
-  
+
         return updatedRow; // Return the modified row
       })
     );
@@ -185,30 +186,30 @@ const handleInputChange = (
         const quantity = row?.quantity || 0;
         const rate = row?.rate || 0;
         const discount = row?.discount || 0;
-  
+
         const baseAmount = quantity * rate;
         const amount = baseAmount - (baseAmount * discount) / 100;
-  
+
         return sum + amount;
       }, 0);
-  
+
       setSubTotal(calculatedSubTotal);
-  
+
       // ✅ Use pfamount directly here (not subTotalPlusPfAmount state)
       const pfAndTotal = Number(calculatedSubTotal) + Number(pfamount);
       setSubTotalPlusPfAmount(pfAndTotal);
-  
+
       // ✅ Calculate tax based on pfAndTotal (local value)
       const calculatedTax = (taxPercent / 100) * pfAndTotal;
       setTax(Number(calculatedTax.toFixed(2)));
-  
+
       // ✅ Calculate Total and Round off
       const calculatedTotal = pfAndTotal + calculatedTax;
       const roundedTotal = Math.round(Number(calculatedTotal));
       setRoundOff(roundedTotal);
       setTotal(roundedTotal);
     };
-  
+
     calculateValues();
   }, [rows, pfamount, taxPercent]);
 
@@ -223,7 +224,6 @@ const handleInputChange = (
         name === "rate" ||
         name === "discount" ||
         name === "amount" ||
-        name === "poNO" ||
         // name === "vehicleNo" ||
         name === "chequeAmount"
           ? Number(value)
@@ -257,6 +257,7 @@ const handleInputChange = (
 
     fetchClients();
   }, []);
+
   const states = [
     { name: "Jammu and Kashmir", code: "01" },
     { name: "Himachal Pradesh", code: "02" },
@@ -298,7 +299,7 @@ const handleInputChange = (
     { name: "Other Territory", code: "97" },
     { name: "Centre Jurisdiction", code: "99" },
   ];
-  
+
   const filteredStates = states.filter((state) =>
     state.name.toLowerCase().includes(formData.state.toLowerCase())
   );
@@ -363,23 +364,22 @@ const handleInputChange = (
       chequeAmount: Number(formData.chequeAmount) || 0,
       transport: formData.transport,
       placeOfSupply: formData.placeOfSupply,
-      poNO: Number(formData.poNO) || 0,
-      vehicleNo: String(formData.vehicleNo) || null,
+      poNO: String(formData.poNO) || "",
+      vehicleNo: String(formData.vehicleNo) || "",
       taxType: formData.taxType,
       subTotal: subTotal,
       pfAmount: Number(pfamount),
       roundOff: roundOff,
       productDetails: rows,
     };
-    console.log(formData,"fomdata")
     setIsSaving(true);
     // setLoading(true);
-    
+
     try {
       if (selectedId) {
         const response = await updateInvoice(selectedId, data);
         setEditModalOpen && setEditModalOpen(false);
-        
+
         alert("Data updated successfully!!");
         navigate(0);
       } else {
@@ -403,8 +403,8 @@ const handleInputChange = (
         bankName: "",
         transport: "",
         placeOfSupply: "",
-        poNO: null,
-        vehicleNo: null,
+        poNO: "",
+        vehicleNo: "",
       });
     }
     if (formData.invoiceType.toLowerCase() != "cheque invoice") {
@@ -420,8 +420,8 @@ const handleInputChange = (
         ...formData,
         transport: "",
         placeOfSupply: "",
-        poNO: null,
-        vehicleNo: null,
+        poNO: "",
+        vehicleNo: "",
       });
     }
     if (formData.invoiceType.toLowerCase() == "quote invoice") {
@@ -432,8 +432,8 @@ const handleInputChange = (
         bankName: "",
         transport: "",
         placeOfSupply: "",
-        poNO: null,
-        vehicleNo: null,
+        poNO: "",
+        vehicleNo: "",
       });
     }
   }, []);
@@ -447,7 +447,7 @@ const handleInputChange = (
           const data: InvoiceResponseWithClient = await getInvoiceById(
             selectedId
           );
-          setInvoiceData(data.data);
+          setInvoiceData(data?.data);
         }
       } catch (err) {
         console.error(err);
@@ -475,8 +475,8 @@ const handleInputChange = (
         billingStatus: invoiceData.billingStatus || "",
         transport: invoiceData.transport || "",
         placeOfSupply: invoiceData.placeOfSupply || "",
-        poNO: invoiceData.poNO || null,
-        vehicleNo: invoiceData.vehicleNo || null,
+        poNO: invoiceData.poNO || "",
+        vehicleNo: invoiceData.vehicleNo || "",
         subTotal: invoiceData.subTotal || 0,
         pfAmount: invoiceData.pfAmount || 0,
         roundOff: invoiceData.roundOff || 0,
@@ -486,7 +486,7 @@ const handleInputChange = (
       });
       setRows(
         invoiceData.productDetails.map((product: ProductDetail) => ({
-          serialNo:product.serialNo,
+          serialNo: product.serialNo,
           id: product.id || "",
           description: product.description || "",
           HSNno: product.HSNno.toString() || "",
@@ -510,6 +510,8 @@ const handleInputChange = (
     };
   });
 
+  console.log(invoiceData);
+
   const handleSavePrint = async () => {
     const data = {
       clientName: formData.clientName,
@@ -525,8 +527,8 @@ const handleInputChange = (
       chequeAmount: Number(formData.chequeAmount) || 0,
       transport: formData.transport,
       placeOfSupply: formData.placeOfSupply,
-      poNO: Number(formData.poNO) || 0,
-      vehicleNo: Number(formData.vehicleNo) || 0,
+      poNO: String(formData.poNO) || "",
+      vehicleNo: String(formData.vehicleNo) || "",
       taxType: formData.taxType,
       subTotal: subTotal,
       pfAmount: Number(pfamount),
@@ -539,11 +541,10 @@ const handleInputChange = (
       if (selectedId) {
         const response = await updateInvoice(selectedId, data);
         const invoiceData = await getInvoiceById(selectedId);
-    const pdfData = invoiceData.data;
-    console.log(pdfData);
-    
-        generateInvoicePDF(pdfData, selectedOption);
+        const pdfData = invoiceData.data;
 
+        generateInvoicePDF(pdfData, selectedOption);
+        console.log(pdfData);
       } else {
         alert("Failed to update invoice. No selected ID provided.");
       }
@@ -616,22 +617,26 @@ const handleInputChange = (
                     />
                   </div>
                   {showDropdown && (
-    <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto w-full mt-1 z-10">
-      {filteredStates.length > 0 ? (
-        filteredStates.map((state) => (
-          <div
-            key={state.code}
-            className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
-            onClick={() => handleStateSelect(state.name, state.code)}
-          >
-            {state.name}
-          </div>
-        ))
-      ) : (
-        <div className="px-4 py-2 text-gray-500">No results found</div>
-      )}
-    </div>
-  )}
+                    <div className="absolute bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto w-full mt-1 z-10">
+                      {filteredStates.length > 0 ? (
+                        filteredStates.map((state) => (
+                          <div
+                            key={state.code}
+                            className="px-4 py-2 cursor-pointer hover:bg-secondary-150 hover:text-white"
+                            onClick={() =>
+                              handleStateSelect(state.name, state.code)
+                            }
+                          >
+                            {state.name}
+                          </div>
+                        ))
+                      ) : (
+                        <div className="px-4 py-2 text-gray-500">
+                          No results found
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-end pb-[2px] flex-1">
                   <InputField
@@ -775,7 +780,7 @@ const handleInputChange = (
                   <InputField
                     label="P.O.No"
                     inputBg=""
-                    type="number"
+                    type="text"
                     placeholder="Enter P.O.No"
                     name="poNO"
                     value={formData.poNO}
@@ -832,15 +837,19 @@ const handleInputChange = (
                     {rows?.map((row, index) => (
                       <tr>
                         <td className=" px-4 py-2 text-center text-sm font-normal leading-5 font-inter text-neutral-5 opacity-[0.6]">
-                        <input
-                    type="number"
-                    placeholder="Sr. no"
-                    value={row.serialNo ?? "" }
-                    onChange={(e) =>
-                      handleInputChange(index, "serialNo", e.target.value)
-                    }
-                    className="w-full p-2 border border-secondary-145 rounded mt-1"
-                  />
+                          <input
+                            type="number"
+                            placeholder="Sr. no"
+                            value={row.serialNo ?? ""}
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "serialNo",
+                                e.target.value
+                              )
+                            }
+                            className="w-full p-2 border border-secondary-145 rounded mt-1"
+                          />
                         </td>
                         <td className=" px-4 py-2">
                           <input
@@ -942,15 +951,15 @@ const handleInputChange = (
                   {rows?.map((row, index) => (
                     <>
                       <div className="flex items-center justify-between">
-                      <input
-                    type="number"
-                    placeholder="Sr. no"
-                    value={row.serialNo ?? ""}
-                    onChange={(e) =>
-                      handleInputChange(index, "serialNo", e.target.value)
-                    }
-                    className="w-full p-2 border border-secondary-145 rounded mt-1"
-                  />
+                        <input
+                          type="number"
+                          placeholder="Sr. no"
+                          value={row.serialNo ?? ""}
+                          onChange={(e) =>
+                            handleInputChange(index, "serialNo", e.target.value)
+                          }
+                          className="w-full p-2 border border-secondary-145 rounded mt-1"
+                        />
                         <Button
                           text=""
                           imgSrc={ICONS.invoicedelete}
@@ -1126,12 +1135,11 @@ const handleInputChange = (
                 </div>
               </div> */}
                   <div className="flex justify-between items-center  py-2">
-                    
                     <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
                       PF Amount
                     </span>
                     <div className="w-[111px]">
-                    <InputField
+                      <InputField
                         label=""
                         inputBg="bg-white w-full "
                         type="text"
@@ -1140,7 +1148,7 @@ const handleInputChange = (
                         name=""
                         onChange={(e) => setPfamount(Number(e.target.value))}
                       />
-                      </div>
+                    </div>
                   </div>
                   <div className="flex justify-between items-center  py-2">
                     <span className="text-neutral-5 opacity-[0.5] font-inter text-[14px] font-normal ">
@@ -1205,37 +1213,37 @@ const handleInputChange = (
 
             {/* Buttons */}
             <div className="col-span-3 flex justify-end gap-4 my-8">
-            <div className="relative">
-                      {/* Dropdown Button */}
-                      <button
-                        id="dropdownButton"
-                        type="button"
-                        className="flex gap-2 justify-center items-center py-2 pr-4 pl-2 border border-secondary-145 rounded-xl text-[16px] font-normal leading-6"
-                        onClick={handleToggle}
-                      >
-                        <span className="w-[186px]">{selectedOption}</span>
-                        <img src={ICONS.invoicedropdown} alt="dropdown" />
-                      </button>
+              <div className="relative">
+                {/* Dropdown Button */}
+                <button
+                  id="dropdownButton"
+                  type="button"
+                  className="flex gap-2 justify-center items-center py-2 pr-4 pl-2 border border-secondary-145 rounded-xl text-[16px] font-normal leading-6"
+                  onClick={handleToggle}
+                >
+                  <span className="w-[186px]">{selectedOption}</span>
+                  <img src={ICONS.invoicedropdown} alt="dropdown" />
+                </button>
 
-                      {/* Dropdown Menu */}
-                      {isOpen && (
-                        <div className="absolute mt-2 w-full bg-white border border-secondary-145 rounded-xl shadow-lg z-10">
-                          {options.map((option, index) => (
-                            <button
-                              key={index}
-                              className={`block w-full text-left px-4 py-2 text-[16px] font-normal hover:bg-secondary-60 rounded-xl ${
-                                option === selectedOption
-                                  ? "bg-secondary-60 font-semibold"
-                                  : ""
-                              }`}
-                              onClick={() => handleOptionSelect(option)}
-                            >
-                              {option}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                {/* Dropdown Menu */}
+                {isOpen && (
+                  <div className="absolute mt-2 w-full bg-white border border-secondary-145 rounded-xl shadow-lg z-10">
+                    {options.map((option, index) => (
+                      <button
+                        key={index}
+                        className={`block w-full text-left px-4 py-2 text-[16px] font-normal hover:bg-secondary-60 rounded-xl ${
+                          option === selectedOption
+                            ? "bg-secondary-60 font-semibold"
+                            : ""
+                        }`}
+                        onClick={() => handleOptionSelect(option)}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               <Button
                 onClick={handleSubmit}
                 text={isSaving ? "Submitting..." : "Save"}
