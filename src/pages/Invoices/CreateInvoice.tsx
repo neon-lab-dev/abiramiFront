@@ -443,6 +443,7 @@ const CreateInvoice = () => {
       roundOff: roundOff,
       productDetails: rows,
     };
+    console.log("form",data);
     setIsSaveSubmitting(true);
     try {
       const response = await createInvoices(data);

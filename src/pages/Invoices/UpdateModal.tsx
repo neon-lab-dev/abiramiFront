@@ -223,6 +223,8 @@ const handleInputChange = (
         name === "rate" ||
         name === "discount" ||
         name === "amount" ||
+        name === "poNO" ||
+        // name === "vehicleNo" ||
         name === "chequeAmount"
           ? Number(value)
           : value,
@@ -362,19 +364,22 @@ const handleInputChange = (
       transport: formData.transport,
       placeOfSupply: formData.placeOfSupply,
       poNO: Number(formData.poNO) || 0,
-      vehicleNo: Number(formData.vehicleNo) || 0,
+      vehicleNo: String(formData.vehicleNo) || null,
       taxType: formData.taxType,
       subTotal: subTotal,
       pfAmount: Number(pfamount),
       roundOff: roundOff,
       productDetails: rows,
     };
+    console.log(formData,"fomdata")
     setIsSaving(true);
     // setLoading(true);
+    
     try {
       if (selectedId) {
         const response = await updateInvoice(selectedId, data);
         setEditModalOpen && setEditModalOpen(false);
+        
         alert("Data updated successfully!!");
         navigate(0);
       } else {
@@ -725,7 +730,7 @@ const handleInputChange = (
                     label="Cheque Number"
                     required={true}
                     inputBg=""
-                    type="string"
+                    type="text"
                     placeholder="Enter Cheque Number"
                     name="chequeNumber"
                     value={formData.chequeNumber}
@@ -736,7 +741,7 @@ const handleInputChange = (
                     label="Cheque Amount"
                     required={true}
                     inputBg=""
-                    type="string"
+                    type="number"
                     placeholder="Enter amount"
                     name="chequeAmount"
                     value={formData.chequeAmount}
@@ -772,7 +777,7 @@ const handleInputChange = (
                     inputBg=""
                     type="number"
                     placeholder="Enter P.O.No"
-                    name="poNo"
+                    name="poNO"
                     value={formData.poNO}
                     onChange={handleChange}
                     validate={validatePONumber}
@@ -780,12 +785,12 @@ const handleInputChange = (
                   <InputField
                     label="Vehicle Number"
                     inputBg=""
-                    type="string"
+                    type="text"
                     placeholder=" Enter Vehicle Number"
                     name="vehicleNo"
                     value={formData.vehicleNo}
                     onChange={handleChange}
-                    validate={validateVehicleNumber}
+                    // validate={validateVehicleNumber}
                   />{" "}
                 </>
               )}

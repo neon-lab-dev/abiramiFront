@@ -37,7 +37,7 @@ export const generateInvoicePDF = (
   doc.addImage(logoBase64, "PNG", 13, 10, 25, 34);
   // Header Section
   doc.setFontSize(10);
-  doc.text("KULAJA PRAHANAME NAMAHA", 105, 10, { align: "center" });
+  doc.text("KULALA PRAHMANE NAMAHAA", 105, 10, { align: "center" });
   doc.setFontSize(39);
   doc.setFont("helvetica", "medium");
   doc.text("Abirami Enterprises", 105, 30, { align: "center" });

@@ -92,6 +92,7 @@ const Dashboard = () => {
     console.log(pdfData);
     generateInvoicePDF(pdfData, state);
   };
+  console.log(invoices);
 
   return (
     <>

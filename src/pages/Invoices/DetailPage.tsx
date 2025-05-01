@@ -290,7 +290,7 @@ const DetailPage = () => {
                       IGST | @ 18%
                     </span>
                     <span className="text-right font-sans font-medium text-[12px] leading-[1.32] tracking-[0.06px] w-[109px]">
-                      ₹ 3,000.98
+                    ₹ {formatNumber(invoiceData?.taxGST ?? 0)}
                     </span>
                   </div>
                 )}
